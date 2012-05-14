@@ -7,3 +7,7 @@ yaplot
 *.o
 autom4te.cache/*
 autom4te.cache/requests
+
+.yapviewstack
+
+gmon.out
