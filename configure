@@ -702,7 +702,7 @@ YAPLOT
 PKG_CONFIG
 GTK_CFLAGS
 GTK_LIBS
-GDK_PIXBUF_CONFIG
+GDK_PIXBUF_CSOURCE
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -6062,6 +6062,10 @@ fi
 
 
 
+
+
+
+
 YAPLOT=yaplot
       # Check whether --enable-gtktest was given.
 if test "${enable_gtktest+set}" = set; then
@@ -6379,16 +6383,16 @@ echo "$as_me: error: Test for GTK failed." >&2;}
 
   X_LIBS=$GTK_LIBS
   X_CFLAGS=$GTK_CFLAGS
-  # Extract the first word of "gdk-pixbuf-config", so it can be a program name with args.
-set dummy gdk-pixbuf-config; ac_word=$2
+    # Extract the first word of "gdk-pixbuf-csource", so it can be a program name with args.
+set dummy gdk-pixbuf-csource; ac_word=$2
 { echo "$as_me:$LINENO: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
-if test "${ac_cv_path_GDK_PIXBUF_CONFIG+set}" = set; then
+if test "${ac_cv_path_GDK_PIXBUF_CSOURCE+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  case $GDK_PIXBUF_CONFIG in
+  case $GDK_PIXBUF_CSOURCE in
   [\\/]* | ?:[\\/]*)
-  ac_cv_path_GDK_PIXBUF_CONFIG="$GDK_PIXBUF_CONFIG" # Let the user override the test with a path.
+  ac_cv_path_GDK_PIXBUF_CSOURCE="$GDK_PIXBUF_CSOURCE" # Let the user override the test with a path.
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
@@ -6398,7 +6402,7 @@ do
   test -z "$as_dir" && as_dir=.
   for ac_exec_ext in '' $ac_executable_extensions; do
   if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GDK_PIXBUF_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    ac_cv_path_GDK_PIXBUF_CSOURCE="$as_dir/$ac_word$ac_exec_ext"
     echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -6406,18 +6410,60 @@ done
 done
 IFS=$as_save_IFS
 
-  test -z "$ac_cv_path_GDK_PIXBUF_CONFIG" && ac_cv_path_GDK_PIXBUF_CONFIG="no"
+  test -z "$ac_cv_path_GDK_PIXBUF_CSOURCE" && ac_cv_path_GDK_PIXBUF_CSOURCE="no"
   ;;
 esac
 fi
-GDK_PIXBUF_CONFIG=$ac_cv_path_GDK_PIXBUF_CONFIG
-if test -n "$GDK_PIXBUF_CONFIG"; then
-  { echo "$as_me:$LINENO: result: $GDK_PIXBUF_CONFIG" >&5
-echo "${ECHO_T}$GDK_PIXBUF_CONFIG" >&6; }
+GDK_PIXBUF_CSOURCE=$ac_cv_path_GDK_PIXBUF_CSOURCE
+if test -n "$GDK_PIXBUF_CSOURCE"; then
+  { echo "$as_me:$LINENO: result: $GDK_PIXBUF_CSOURCE" >&5
+echo "${ECHO_T}$GDK_PIXBUF_CSOURCE" >&6; }
 else
   { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
 fi
+
+
+  # Extract the first word of "pkg-config", so it can be a program name with args.
+set dummy pkg-config; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_PKG_CONFIG+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $PKG_CONFIG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PKG_CONFIG="$PKG_CONFIG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_path_PKG_CONFIG" && ac_cv_path_PKG_CONFIG="no"
+  ;;
+esac
+fi
+PKG_CONFIG=$ac_cv_path_PKG_CONFIG
+if test -n "$PKG_CONFIG"; then
+  { echo "$as_me:$LINENO: result: $PKG_CONFIG" >&5
+echo "${ECHO_T}$PKG_CONFIG" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
 
 
 
@@ -6681,75 +6727,8 @@ _ACEOF
 fi
 
   CPPFLAGS="$CPPFLAGS -DYAPLOT_GTK"
-  if test "$GDK_PIXBUF_CONFIG" = "no" ; then
-    { echo "$as_me:$LINENO: WARNING: Could not find gdk-pixbuf, recording feature is disabled." >&5
-echo "$as_me: WARNING: Could not find gdk-pixbuf, recording feature is disabled." >&2;}
-  else
-
-{ echo "$as_me:$LINENO: checking for main in -lpng" >&5
-echo $ECHO_N "checking for main in -lpng... $ECHO_C" >&6; }
-if test "${ac_cv_lib_png_main+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lpng  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
-
-
-int
-main ()
-{
-return main ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (ac_try="$ac_link"
-case "(($ac_try" in
-  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
-  *) ac_try_echo=$ac_try;;
-esac
-eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
-  (eval "$ac_link") 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && {
-	 test -z "$ac_c_werror_flag" ||
-	 test ! -s conftest.err
-       } && test -s conftest$ac_exeext &&
-       $as_test_x conftest$ac_exeext; then
-  ac_cv_lib_png_main=yes
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
-	ac_cv_lib_png_main=no
-fi
-
-rm -f core conftest.err conftest.$ac_objext conftest_ipa8_conftest.oo \
-      conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ echo "$as_me:$LINENO: result: $ac_cv_lib_png_main" >&5
-echo "${ECHO_T}$ac_cv_lib_png_main" >&6; }
-if test $ac_cv_lib_png_main = yes; then
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBPNG 1
-_ACEOF
-
-  LIBS="-lpng $LIBS"
-
-fi
-
+  if test "$PKG_CONFIG" != "no" ; then
+    if pkg-config gdk-pixbuf-2.0 ; then
 
 { echo "$as_me:$LINENO: checking for main in -ljpeg" >&5
 echo $ECHO_N "checking for main in -ljpeg... $ECHO_C" >&6; }
@@ -6815,10 +6794,11 @@ _ACEOF
 
 fi
 
-    { echo "$as_me:$LINENO: WARNING: gdk-pixbuf is found, recording feature is enabled." >&5
+      { echo "$as_me:$LINENO: WARNING: gdk-pixbuf is found, recording feature is enabled." >&5
 echo "$as_me: WARNING: gdk-pixbuf is found, recording feature is enabled." >&2;}
-    LIBS="$LIBS          `$GDK_PIXBUF_CONFIG --libs`"
-    CPPFLAGS="$CPPFLAGS -DRECORD `$GDK_PIXBUF_CONFIG --cflags`"
+      LIBS="$LIBS          `$PKG_CONFIG --libs gdk-pixbuf-2.0`"
+      LIBS="$LIBS          `$PKG_CONFIG --libs libpng`"
+      CPPFLAGS="$CPPFLAGS -DRECORD `$PKG_CONFIG --cflags gdk-pixbuf-2.0`"
 
 for ac_header in gdk-pixbuf/gdk-pixbuf.h
 do
@@ -6959,9 +6939,14 @@ fi
 
 done
 
+    else
+      { echo "$as_me:$LINENO: WARNING: Could not find gdk-pixbuf, recording feature is disabled." >&5
+echo "$as_me: WARNING: Could not find gdk-pixbuf, recording feature is disabled." >&2;}
+    fi
+  else
+    { echo "$as_me:$LINENO: WARNING: Could not find pkg-config...." >&5
+echo "$as_me: WARNING: Could not find pkg-config...." >&2;}
   fi
-
-
 
 
 #GNOME_COMMON_INIT
@@ -7701,7 +7686,7 @@ YAPLOT!$YAPLOT$ac_delim
 PKG_CONFIG!$PKG_CONFIG$ac_delim
 GTK_CFLAGS!$GTK_CFLAGS$ac_delim
 GTK_LIBS!$GTK_LIBS$ac_delim
-GDK_PIXBUF_CONFIG!$GDK_PIXBUF_CONFIG$ac_delim
+GDK_PIXBUF_CSOURCE!$GDK_PIXBUF_CSOURCE$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF

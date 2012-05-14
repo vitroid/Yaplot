@@ -8,8 +8,7 @@ After those libraries are installed, simply type the following commands:
 
 If you failed to find gtk library, try the following:
 
-% aclocal
-% autoconf
+% make -f Makefile.autoconf
 % ./configure
 % make
 

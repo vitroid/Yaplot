@@ -29,6 +29,10 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
 
+
+AC_SUBST(X_LIBS)
+AC_SUBST(X_CFLAGS)
+
 dnl AC_ARG_PROGRAM
 
 AC_SUBST(YAPLOT)
@@ -41,7 +45,10 @@ dnl if test "$with_gtk" != "no" ; then
   AM_PATH_GTK_2_0(2.0.0,, [AC_MSG_ERROR(Test for GTK failed.)])
   X_LIBS=$GTK_LIBS
   X_CFLAGS=$GTK_CFLAGS
-  AC_PATH_PROG(GDK_PIXBUF_CONFIG, gdk-pixbuf-config, no)
+  dnl AC_PATH_PROG(GDK_PIXBUF_CONFIG, gdk-pixbuf-config, no)
+  AC_PATH_PROG(GDK_PIXBUF_CSOURCE,[gdk-pixbuf-csource],no)
+  AC_PATH_PROG(PKG_CONFIG,[pkg-config],no)
+
   dnl Replace `main' with a function in -lgdk:
   AC_CHECK_LIB(gdk, main)
   dnl Replace `main' with a function in -lglib:
@@ -51,15 +58,20 @@ dnl if test "$with_gtk" != "no" ; then
   dnl Replace `main' with a function in -lgtk:
   AC_CHECK_LIB(gtk, main)
   CPPFLAGS="$CPPFLAGS -DYAPLOT_GTK"
-  if test "$GDK_PIXBUF_CONFIG" = "no" ; then
-    AC_MSG_WARN([Could not find gdk-pixbuf, recording feature is disabled.])
+  if test "$PKG_CONFIG" != "no" ; then
+    if pkg-config gdk-pixbuf-2.0 ; then
+      dnl AC_CHECK_LIB(png, main)
+      AC_CHECK_LIB(jpeg, main)
+      AC_MSG_WARN([gdk-pixbuf is found, recording feature is enabled.])
+      LIBS="$LIBS          `$PKG_CONFIG --libs gdk-pixbuf-2.0`"
+      LIBS="$LIBS          `$PKG_CONFIG --libs libpng`"
+      CPPFLAGS="$CPPFLAGS -DRECORD `$PKG_CONFIG --cflags gdk-pixbuf-2.0`"
+      AC_CHECK_HEADERS(gdk-pixbuf/gdk-pixbuf.h)
+    else
+      AC_MSG_WARN([Could not find gdk-pixbuf, recording feature is disabled.])
+    fi
   else
-    AC_CHECK_LIB(png, main)
-    AC_CHECK_LIB(jpeg, main)
-    AC_MSG_WARN([gdk-pixbuf is found, recording feature is enabled.])
-    LIBS="$LIBS          `$GDK_PIXBUF_CONFIG --libs`"
-    CPPFLAGS="$CPPFLAGS -DRECORD `$GDK_PIXBUF_CONFIG --cflags`"
-    AC_CHECK_HEADERS(gdk-pixbuf/gdk-pixbuf.h)
+    AC_MSG_WARN([Could not find pkg-config....])
   fi
 dnl fi
 dnl if test "$with_glut" != "no" ; then
@@ -75,8 +87,6 @@ dnl  AC_CHECK_LIB(Xi, main)
 dnl  AC_CHECK_LIB(Xext, main)
 dnl  dnl opengl done
 dnl fi
-AC_SUBST(X_LIBS)
-AC_SUBST(X_CFLAGS)
 
 
 #GNOME_COMMON_INIT

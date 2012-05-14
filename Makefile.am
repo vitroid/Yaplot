@@ -5,7 +5,7 @@ pkgdata_DATA	= help.yap yaplot.col
 EXTRA_PROGRAMS	= yaplot #yaplot_gtk #yaplot_glut yaplot gnome_yaplot gaplot_example
 
 #gaplot_example_SOURCES	= gaplot.h gaplot.c gaplot_example.c
-yaplot_CFLAGS	= -g -Wall -Werror -pg
+yaplot_CFLAGS	= -Wall -Werror # -g -pg
 yaplot_SOURCES	= unixwrap.c varray.c reality0.c reality1.c reality2.c reality3.c reality4.c Hash.c cache.c yaplot.c Hash.h      os.h        varray.h    yaplot.h common.h   cache.h     gui.h       unixwrap.h gtk.h gtk.c
 #yaplot_glut_SOURCES	= unixwrap.c varray.c reality0.c reality1.c reality2.c reality3.c reality4.c Hash.c cache.c yaplot.c Hash.h      os.h        varray.h    yaplot.h common.h   cache.h     gui.h       unixwrap.h glut.h glut.c
 #yaplot_SOURCES	= unixwrap.c varray.c reality0.c reality1.c reality2.c reality3.c reality4.c Hash.c cache.c yaplot.c Hash.h      os.h        varray.h    yaplot.h  common.h   cache.h     gui.h       unixwrap.h x11wrap.c x11wrap.h
