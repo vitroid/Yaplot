@@ -1,0 +1,10 @@
+SRC=win32wrap.o varray.o reality0.o reality1.o reality2.o reality3.o reality4.o Hash.o cache.o yaplot.o gtk.o
+OBJ=win32wrap.o varray.o reality0.o reality1.o reality2.o reality3.o reality4.o Hash.o cache.o yaplot.o gtk.o
+HDR=Hash.h      gtk.h       os.h        varray.h    yaplot.h    cache.h     gui.h       win32wrap.h  x11wrap.h   
+
+GLIBPATH=c:/borland/glib-dev-20001226[1]/src/
+GTKPATH=c:/borland/gtk+-dev-20001226/src/gtk+/
+yaplot: $(OBJ)
+	gcc -static $^ -o $@ -lm $(GLIBPATH)/glib/libglib-1.3.a $(GTKPATH)/gtk/libgtk-1.3.a $(GTKPATH)/gdk/libgdk-1.3.a
+%.o: %.c $(HDR) Makefile
+	gcc -Dwin32 -static -c  -g -fnative-struct -I$(GLIBPATH)/glib -I$(GTKPATH) -I$(GTKPATH)/gdk $<

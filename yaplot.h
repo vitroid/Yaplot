@@ -1,0 +1,35 @@
+#ifndef _YAPLOT_H
+#define _YAPLOT_H
+#include "common.h"
+/*prototypes for yaplot.c and related sources.*/
+int Reality0(NewOinfo *o,Winfo *w);
+int Reality1(NewOinfo *o,Winfo *w);
+int Reality2(NewOinfo *o,Winfo *w);
+int Reality3(NewOinfo *o,Winfo *w);
+int Reality4(NewOinfo *o,Winfo *w);
+void WindowMotion(Winfo *w,float head,float bank);
+void W_Sync(Winfo *to,Winfo *from);
+void W_setvectors(Winfo *w);
+Winfo *W_Init(int n);
+void EyeMotion(Winfo *w,float prop);
+#ifndef HAVE_POWIF
+float powi(float x,int n);
+#endif
+int eWiden(Ginfo *g,Winfo w[],int i,int jumpto);
+int eGoRelativeFrame(Ginfo *g,Winfo w[],int i,int jumpto,int keepmoving);
+int eBanking(Ginfo *g,Winfo w[],int i,int jumpto);
+int eHeading(Ginfo *g,Winfo w[],int i,int jumpto);
+int eToggleSync(Ginfo *g,Winfo w[],int i);
+int eRelativeThickness(Ginfo *g,Winfo w[],int i,int jumpto);
+int eZoom(Ginfo *g,Winfo w[],int i,int jumpto);
+int eStopRotation(Ginfo *g,Winfo w[],int i);
+int eStopMotion(Ginfo *g,Winfo w[],int i);
+int eQuit(Ginfo *g,Winfo w[],int i);
+int eStartRecording(Ginfo *g,Winfo w[],int i);
+int eStopRecording(Ginfo *g,Winfo w[],int i);
+int eToggleVerbosity(Ginfo *g,Winfo w[],int i);
+int eGotoFrame(Ginfo *g,Winfo w[],int i,int jumpto);
+int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto);
+int eResetView(Ginfo *g,Winfo w[],int i);
+int eToggleLayer(Ginfo *g,Winfo w[],int i,int layer);
+#endif

@@ -1,0 +1,23 @@
+Yaplot 3.0 requires gtk, and for additional recording facility,
+gdk-pixbuf is also required.
+
+After those libraries are installed, simply type the following commands:
+
+% ./configure
+% make
+
+If you failed to find gtk library, try the following:
+
+% aclocal
+% autoconf
+% ./configure
+% make
+
+
+
+Install them with the command,
+
+# make install
+
+
+Have fun!

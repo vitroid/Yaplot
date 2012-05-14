@@ -1,0 +1,153 @@
+#!/usr/local/bin/perl
+#convert x y z file to mol3 format
+
+$XAXISLEN = 20;
+$YAXISLEN = 20;
+$ZAXISLEN = 20;
+$XNTICS = 5;
+$YNTICS = 5;
+$ZNTICS = 5;
+$MODE="point";
+
+$xmax=-1e50;
+$xmin=+1e50;
+$ymax=-1e50;
+$ymin=+1e50;
+$zmax=-1e50;
+$zmin=+1e50;
+
+$line="";
+while(<STDIN>){
+    chop;
+    split;
+    if($#_ < 0){
+	push(@lineset,$line);
+	$line="";
+    }else{
+	$x=$_[0];
+	$y=$_[1];
+	$z=$_[2];
+	$line .= $x.",".$y.",".$z.",";
+#	print "$line\n";
+	$xsum+=$x;
+	$ysum+=$y;
+	$zsum+=$z;
+	if($x>$xmax){
+	    $xmax=$x;
+	}
+	if($x<$xmin){
+	    $xmin=$x;
+	}
+	if($y>$ymax){
+	    $ymax=$y;
+	}
+	if($y<$ymin){
+	    $ymin=$y;
+	}
+	if($z>$zmax){
+	    $zmax=$z;
+	}
+	if($z<$zmin){
+	    $zmin=$z;
+	}
+	$n++;
+    }
+}
+push(@lineset,$line);
+
+$xsum/=$n;
+$ysum/=$n;
+$zsum/=$n;
+$xwidth=$xmax-$xmin;
+$ywidth=$ymax-$ymin;
+$zwidth=$zmax-$zmin;
+
+sub detic{
+    local($xp0)=@_;
+    local($xp);
+    $xp  = int(log($xp0)/log(10));
+    $xp  = 10**$xp;
+    if($xp0 > $xp*5){
+	$xp *= 5;
+    }elsif($xp0 > $xp*2){
+	$xp *= 2;
+    }
+    $xp;
+}
+$xtic = &detic($xwidth/$XNTICS);
+$ytic = &detic($ywidth/$YNTICS);
+$ztic = &detic($zwidth/$ZNTICS);
+
+
+sub xconv{
+    local($_)=@_;
+    (($_ - $xmin)/$xwidth-0.5)*$XAXISLEN;
+}
+sub yconv{
+    local($_)=@_;
+    (($_ - $ymin)/$ywidth-0.5)*$YAXISLEN;
+}
+sub zconv{
+    local($_)=@_;
+    (($_ - $zmin)/$zwidth-0.5)*$YAXISLEN;
+}
+
+sub drawaxes{
+    local($xh,$yh,$zh);
+    $xh = $XAXISLEN/2;
+    $yh = $YAXISLEN/2;
+    $zh = $ZAXISLEN/2;
+    print "@ 0\n";
+    print "l -$xh -$yh -$zh $xh -$yh -$zh\n";
+    print "l -$xh -$yh -$zh -$xh $yh -$zh\n";
+    print "l -$xh -$yh -$zh -$xh -$yh $zh\n";
+}
+
+&drawaxes();
+sub drawtics{
+    local($xh,$yh,$zh);
+    print "@ 3\n";
+    $xh = $XAXISLEN/2;
+    $yh = $YAXISLEN/2;
+    $zh = $ZAXISLEN/2;
+    $x0 = int($xmin/$xtic+1)*$xtic;
+    while($x0<$xmax){
+	$x0c = &xconv($x0);
+	print "t $x0c -$yh -$zh $x0\n";
+	$x0 += $xtic;
+    }
+    $y0 = int($ymin/$ytic+1)*$ytic;
+    while($y0<$ymax){
+	$y0c = &yconv($y0);
+	print "t -$xh $y0c -$zh $y0\n";
+	$y0 += $ytic;
+    }
+    $z0 = int($zmin/$ztic+1)*$ztic;
+    while($z0<$zmax){
+	$z0c = &zconv($z0);
+	print "t -$xh -$yh $z0c $z0\n";
+	$z0 += $ztic;
+    }
+}
+
+&drawtics();
+
+
+$color=4;
+#print $#lineset;
+#exit 0;
+if($MODE =~ /point/){
+#    print $_;
+    foreach $_ (@lineset){
+	split(/,/);
+#	print STDERR "$color $_\n";
+	print "@ $color\nr 0.1\n";
+	for($i=0;$i<=$#_;$i+=3){
+	    $x=&xconv($_[$i]);
+	    $y=&yconv($_[$i+1]);
+	    $z=&zconv($_[$i+2]);
+	    print "o $x $y $z\n";
+	}
+	$color++;
+    }
+}

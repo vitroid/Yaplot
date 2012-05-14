@@ -1,0 +1,20 @@
+#This makefile prepares distribution-source from development-source
+all:
+#run "autoscan" and rename configure.scan to configure.in, or
+#prepare configure.in
+#prepare Makefile.am
+#prepare acconfig.h
+#prepare NEWS, README, AUTHORS, ChangeLog
+	-rm config.cache
+	# aclocal -I /usr/share/aclocal/gnome2-macros #linux
+	#aclocal -I /opt/local/share/aclocal #macports
+	aclocal -I /usr/local/share/aclocal #homebrew
+#	gettextize
+	autoheader
+	automake -c -a
+	autoconf
+#	./configure
+#	./configure --includedir=/opt/local/include/gtk-1.2/
+#	./configure --includedir=/usr/local/include/gtk-1.2/
+tarball:
+	pwd=`pwd`; basename=`basename $$pwd`; echo $$basename; tar --exclude=CVS -C .. -zcvf ../$$basename.tar.gz $$basename

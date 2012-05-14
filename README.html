@@ -1,0 +1,152 @@
+<HTML>
+  <HEAD>
+    <TITLE>Yaplot: Easy 3D Modeller for X</TITLE>
+  </HEAD>
+  <BODY bgcolor=white>
+<center><a href="samples/percfull.gif"><img src="samples/perc.gif"></a><br>
+Sample image of the yaplot animation. <br>
+(Visualization of 3-Dimensional percolation. Fullsize image: 35kbytes)
+</center>
+<hr>
+<font color="white">yaplot mol3 xyzplot plot 3-D 3d three dimention wireframe wire frame</font>
+<hr>
+<ul>
+  <li><a href="WelcomeJ.html">In Japanese</a>
+  <li><IMG SRC="/imgsrc/new.gif"><a href="http://www.chem.nagoya-u.ac.jp/matto/japlot/">Yet another yaplot in Java is available now!</a>
+</ul>
+<hr>
+<center>
+<h1>yaplot</h1>
+(yet another plot in 3-D)
+</center>
+<ul>
+  <LI><H2>What is yaplot?</H2>
+      <h3>Features of Yaplot</h3>
+      <ul>
+	<li>Simple appearance
+	<li>Simple and universal data style
+	<li>Easy animation
+      </ul>
+      Yaplot is an easy 3D modeller and animator
+      for visualizing the results from computer
+      simulation easily.
+      You can browse the motion of the 3 dimentional wire frame model
+      with text labels and
+      some marks on the cheap PC based X terminals.
+      Data format is simple and intuitive.
+      It is the least beautiful and not durable for presentation, but
+      enough quick and smooth for daily use.
+      (Do not expect much to yaplot!)
+  <li><h2>Installation</h2>
+      GTK+ library is necessary for compilation. gtk library is available at ****, or install by your OS's package installer.
+      To install Yaplot on unix system, extract the source code and type simply,
+<pre>
+      % make -f Makefile.unix install
+</pre>
+      will produce yaplot, the execulable file.
+  <LI><H2>Invoking Yaplot</H2>
+      <OL>
+	<LI>Prepare the yaplot command, data file (e.g. <A HREF="test.mol">test.mol</A>), and the palette file (<A HREF="yaplot.col">yaplot.col</A>). The name of the palette file must be "yaplot.col". 
+	<LI>Type<BR>
+	    <CODE>  % yaplot test.mol</CODE><BR>
+	    on the command line.
+      </OL>
+      Another <a href="perc.pl">sample script "perc.pl"</a> is also
+      available, which visualizes 3-dimensional percolation in a
+      periodical box (shown at the top of this page) by just
+      typing:<br>
+      <code> % perc.pl | yaplot -</code><br>
+  <li><h2>Command Line Usage</h2>
+<pre>
+usage : yaplot [options] infiles...
+        -e x,y,z        set eyepoint
+        -l x,y,z        set lookpoint
+        -u x,y,z        set upvector
+        -c filename     specify palette file(default: yaplot.col)
+        -C n            cache n frames on the memory (will speed up animation)
+        infiles         multiple command files
+</pre>
+
+      You can specify single "-" for command file, which means
+      stdin. Multiple frame animation is, however, not available
+      because stdin cannot be accessed randomly by fseek().<p>
+
+      If you do not specify the palette file, "yaplot.col" in current
+      directory is searched. If not found, the environment variable
+      "YAPLOTCOL" is used instead. If not found, "yaplot.col" in your home
+      directory will be used.<p>
+
+      When the command is invoked, a 512x512 window is displayed. You can
+      rotate, translate, or proceed frames by keys.<p>
+      
+      Eye point conversion rule is just same as that used in Rayshade. You
+      can easily convert coordinate data into rayshade format.<p>
+
+  <LI><H2>Command keys</H2>
+      <dl>
+	<dt>Up and Down Arrows
+	<dd>Pitching rotation. Press again and again if you want to rotate quicker.
+	<dt>Left and Right Arrows
+	<dd>Heading rotation.
+	<dt>Drag by Mouse
+	<dd>Immediate rotation.
+	<dt>Pause
+	<dd>Stop rotation.
+	<dt>Tab
+	<dd>Reset rotations.
+	<dt>"*" and "/"
+	<dd>Zoom in / out
+	<dt>"[" and "]"
+	<dd>Narrow/widen field of view (telescopic and wide)
+	<dt>PageDown or "n"
+	<dd>Next frame ( Animated if key is shifted. )
+	<dt>PageUp or "p"
+	<dd>Previous frame
+	<dt>number keys followed by "g" or Enter
+	<dd>Jump to the specified frame.
+	<dt>SPACE
+	<dd>Stop all motions.
+	<dt>"+" or "-"
+	<dd>Change image quality.
+	<dt>Insert or Delete
+	<dd>Change the Line width.
+	<dt>"q" or Break
+	<dd>Quit yaplot.
+	<dt>Function keys, or number keys followed by "f"
+	<dd>Toggle layers.
+      </dl>
+  <LI><H2>Data file format</H2>
+      All command lines in the data file are made of the single
+      command character at the first column, followed by
+      parameters. No parameters can be omitted.
+      You can easily make the data file by Fortran or other scripting
+      languages.
+      <TABLE>
+	<TR><TH>r {radius}</TH><TD>Specify the radius of the circle, ring, and stick</TR>
+	<TR><TH>l {x} {y} {z} {x} {y} {z}</TH><TD>Draw a line</TR>
+	<TR><TH>s {x} {y} {z} {x} {y} {z}</TH><TD>Draw a stick</TR>
+	<TR><TH>p {x} {y} {z} {x} {y} {z} {x} {y} {z} ...</TH><TD>Draw a filled polygon</TR>
+	<TR><TH>c {x} {y} {z}</TH><TD>Draw a circle</TR>
+	<TR><TH>o {x} {y} {z}</TH><TD>Draw a ring mark</TR>
+	<TR><TH>3 {x} {y} {z}</TH><TD>Draw a small triangle mark</TR>
+	<TR><TH>4 {x} {y} {z}</TH><TD>Draw a small square mark</TR>
+	<TR><TH>5 {x} {y} {z}</TH><TD>Draw a small pentagon mark</TR>
+	<TR><TH>6 {x} {y} {z}</TH><TD>Draw a small hexagon mark</TR>
+	<TR><TH>t {x} {y} {z} {text....}</TH><TD>Draw a string</TR>
+	<TR><TH>@ {palette}</TH><TD>Change the current palette</TR>
+	<TR><TH># {comment}</TH><TD>Comment(ignored)</TR>
+	<TR><TH>NULL line</TH><TD>End of a frame</TR>
+      </TABLE>
+  <LI><H2>Palette file format</H2>
+      Each line of the palette file specifies the Red, Green and Blue
+      intensity of the pallete. First line describes the color for
+      palette 0. As the palettes 0 to 2 are reserved for system color
+      (Black, Gray, and White), you should not modify them.
+      
+</UL>
+</BODY>
+<HR>
+<A HREF="mailto:matto@aqua.chem.nagoya-u.ac.jp">
+<ADDRESS>matto@aqua.chem.nagoya-u.ac.jp</ADDRESS>
+</A>
+</HTML>
