@@ -711,7 +711,8 @@ void W_SaveSnapShot(Winfo *w,int windowid)
       image->rgb[j][i] = buf[i+j*rowstride];
     }
   }
-  gdk_pixbuf_unref(gp);
+  //gdk_pixbuf_unref(gp);
+  g_object_unref(gp);
   //pclose(file);
   sprintf(filename,"yaplot%02d_%05d.png",windowid,w->currentframe);
   FILE* file=fopen(filename,"w");
