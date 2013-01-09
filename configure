@@ -199,12 +199,21 @@ test -x / || exit 1"
 test \$(( 1 + 1 )) = 2 || exit 1"
   if (eval "$as_required") 2>/dev/null; then :
   as_have_required=yes
+<<<<<<< HEAD
 else
   as_have_required=no
 fi
   if test x$as_have_required = xyes && (eval "$as_suggested") 2>/dev/null; then :
 
 else
+=======
+else
+  as_have_required=no
+fi
+  if test x$as_have_required = xyes && (eval "$as_suggested") 2>/dev/null; then :
+
+else
+>>>>>>> Automatic changes by automake.
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 as_found=false
 for as_dir in /bin$PATH_SEPARATOR/usr/bin$PATH_SEPARATOR$PATH
@@ -1146,6 +1155,7 @@ done
 if test -n "$ac_prev"; then
   ac_option=--`echo $ac_prev | sed 's/_/-/g'`
   as_fn_error $? "missing argument to $ac_option"
+<<<<<<< HEAD
 fi
 
 if test -n "$ac_unrecognized_opts"; then
@@ -1156,6 +1166,18 @@ if test -n "$ac_unrecognized_opts"; then
   esac
 fi
 
+=======
+fi
+
+if test -n "$ac_unrecognized_opts"; then
+  case $enable_option_checking in
+    no) ;;
+    fatal) as_fn_error $? "unrecognized options: $ac_unrecognized_opts" ;;
+    *)     $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2 ;;
+  esac
+fi
+
+>>>>>>> Automatic changes by automake.
 # Check all directory arguments for consistency.
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
@@ -1638,6 +1660,7 @@ $as_echo "$ac_res" >&6; }
   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
 
 } # ac_fn_c_check_func
+<<<<<<< HEAD
 
 # ac_fn_c_try_run LINENO
 # ----------------------
@@ -1679,6 +1702,49 @@ fi
   eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
   as_fn_set_status $ac_retval
 
+=======
+
+# ac_fn_c_try_run LINENO
+# ----------------------
+# Try to link conftest.$ac_ext, and return whether this succeeded. Assumes
+# that executables *can* be run.
+ac_fn_c_try_run ()
+{
+  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+  if { { ac_try="$ac_link"
+case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_link") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; } && { ac_try='./conftest$ac_exeext'
+  { { case "(($ac_try" in
+  *\"* | *\`* | *\\*) ac_try_echo=\$ac_try;;
+  *) ac_try_echo=$ac_try;;
+esac
+eval ac_try_echo="\"\$as_me:${as_lineno-$LINENO}: $ac_try_echo\""
+$as_echo "$ac_try_echo"; } >&5
+  (eval "$ac_try") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  ac_retval=0
+else
+  $as_echo "$as_me: program exited with status $ac_status" >&5
+       $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+       ac_retval=$ac_status
+fi
+  rm -rf conftest.dSYM conftest_ipa8_conftest.oo
+  eval $as_lineno_stack; ${as_lineno_stack:+:} unset as_lineno
+  as_fn_set_status $ac_retval
+
+>>>>>>> Automatic changes by automake.
 } # ac_fn_c_try_run
 
 # ac_fn_c_check_header_mongrel LINENO HEADER VAR INCLUDES
@@ -1789,9 +1855,15 @@ if ac_fn_c_try_compile "$LINENO"; then :
   eval "$3=yes"
 else
   eval "$3=no"
+<<<<<<< HEAD
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
+=======
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+>>>>>>> Automatic changes by automake.
 eval ac_res=\$$3
 	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
 $as_echo "$ac_res" >&6; }
@@ -2531,11 +2603,20 @@ esac
   fi
 else
   STRIP="$ac_cv_prog_STRIP"
+<<<<<<< HEAD
+=======
 fi
 
+>>>>>>> Automatic changes by automake.
 fi
 INSTALL_STRIP_PROGRAM="\$(install_sh) -c -s"
 
+<<<<<<< HEAD
+fi
+INSTALL_STRIP_PROGRAM="\$(install_sh) -c -s"
+
+=======
+>>>>>>> Automatic changes by automake.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a thread-safe mkdir -p" >&5
 $as_echo_n "checking for a thread-safe mkdir -p... " >&6; }
 if test -z "$MKDIR_P"; then
@@ -2577,12 +2658,15 @@ fi
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $MKDIR_P" >&5
 $as_echo "$MKDIR_P" >&6; }
+<<<<<<< HEAD
 
 mkdir_p="$MKDIR_P"
 case $mkdir_p in
   [\\/$]* | ?:[\\/]*) ;;
   */*) mkdir_p="\$(top_builddir)/$mkdir_p" ;;
 esac
+=======
+>>>>>>> Automatic changes by automake.
 
 for ac_prog in gawk mawk nawk awk
 do
@@ -2687,6 +2771,7 @@ fi
 
 
 # Define the identity of the package.
+
  PACKAGE=yaplot
  VERSION=3.4
 
@@ -2716,6 +2801,15 @@ AUTOHEADER=${AUTOHEADER-"${am_missing_run}autoheader"}
 
 MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 
+<<<<<<< HEAD
+=======
+# For better backward compatibility.  To be removed once Automake 1.9.x
+# dies out for good.  For more background, see:
+# <http://lists.gnu.org/archive/html/automake/2012-07/msg00001.html>
+# <http://lists.gnu.org/archive/html/automake/2012-07/msg00014.html>
+mkdir_p='$(MKDIR_P)'
+
+>>>>>>> Automatic changes by automake.
 # We need awk for the "check" target.  The system "awk" is bad on
 # some platforms.
 # Always define AMTAR for backward compatibility.  Yes, it's still used

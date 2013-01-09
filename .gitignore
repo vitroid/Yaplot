@@ -14,8 +14,13 @@ autom4te.cache/traces.0
 autom4te.cache/traces.1
 config.h
 <<<<<<< HEAD
+<<<<<<< HEAD
 *.bz2
 *~
 =======
 .DS_Store
 >>>>>>> .
+=======
+*.bz2
+*~
+>>>>>>> Automatic changes by automake.
