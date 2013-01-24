@@ -25,6 +25,7 @@ pkgincludedir = $(includedir)/@PACKAGE@
 package = @PACKAGE@
 version = @VERSION@
 
+
 %.h: %.h.in
 	sed -e 's!@pkgdatadir@!$(pkgdatadir)!g' $< > $@
 %.spec: %.spec.in
