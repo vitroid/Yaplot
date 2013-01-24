@@ -16,7 +16,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifdef HAVE_LIBGTK
+#ifdef YAPLOT_GTK
 #include <gtk/gtk.h>
 #else
 #include <X11/Xlib.h>
@@ -91,24 +91,24 @@ vector3;
 #define MAXVERBOSE 3
 #define HASHSIZE 240007
 #define LASTFRAME 999999
-/*$BF~NO%G!<%?$N@:EY!#>.?tE@0J2<$r$3$3$GBG$A@Z$j!"0lCW$9$kE@$OF10l$H$_$J$9!#(B*/
+/*入力データの精度。小数点以下をここで打ち切り、一致する点は同一とみなす。*/
 #define ACCURACY 1024.0
 #define IACC     (1.0/ACCURACY)
 
-/*$B$9$Y$F$NAk$K6&DL$N>pJs(B*/
+/*すべての窓に共通の情報*/
 typedef struct GINFO
 {
   char commandname[256];
   int numColors;
   int verbose;
   
-  /*$BAk$N?t(B*/
+  /*窓の数*/
   int nwindow;
   /*clipping distance*/
   float clip;
-  /*X11$B$K0MB8$9$kJQ?t(B*/
-  /*colormap$B$O(BGinfo$B$G0lC6=i4|2=$7!"3F%&%#%s%I%&MQ$K%3%T!<$7$F;HMQ$9$k!#(B*/
-#ifdef HAVE_LIBGTK
+  /*X11に依存する変数*/
+  /*colormapはGinfoで一旦初期化し、各ウィンドウ用にコピーして使用する。*/
+#ifdef YAPLOT_GTK
   GdkColor mastercolortable[256];
 #else
   XColor mastercolortable[256];
@@ -116,7 +116,7 @@ typedef struct GINFO
   int screen;
 #endif
   /*GdkColormap *colormap;*/
-  /*UNIX$B$K0MB8$9$kJQ?t(B*/
+  /*UNIXに依存する変数*/
   FILE *palettefile;
 } Ginfo;
 /*
@@ -135,30 +135,30 @@ typedef struct OINFO
 }
 NewOinfo;
 
-/*$B%"%K%a!<%7%g%s$N>pJs(B*/
+/*アニメーションの情報*/
 typedef struct AINFO
 {
-  /*$B0J2<$O6&DL(B*/
+  /*以下は共通*/
   int cachesize;
 } Ainfo;
 
-/*$B%U%!%$%k(B($BAk(B)$B$K8GM-$N>pJs(B*/
+/*ファイル(窓)に固有の情報*/
 typedef struct WINFO
 {
-  FILE *inputfile;/*$BAk$4$H$KJL(B*/
-  varray *framepos;/*$BAk$4$H$KJL(B*/
-  /*$B$b$C$H$bIA2hMWAG$,B?$+$C$?%U%l!<%`$NMWAG?t(B*/
+  FILE *inputfile;/*窓ごとに別*/
+  varray *framepos;/*窓ごとに別*/
+  /*もっとも描画要素が多かったフレームの要素数*/
   int maxprim;
 
 
   char inputfilename[256];
-  NewOinfo **oo;/*EventLoop$BFb$G3d$jEv$F$i$l!"3+J|$5$l$J$$!#(B*/
+  NewOinfo **oo;/*EventLoop内で割り当てられ、開放されない。*/
   /*Cache*/
   Cache *c;
   /*asynchronous mode*/
   int async;
   int status;
-  /*$B<B:]$KI=<($9$kMWAG$N8D?t(B*/
+  /*実際に表示する要素の個数*/
   int nrealize;
   int screenwidth,screenheight;
   float screendepth;
@@ -175,7 +175,7 @@ typedef struct WINFO
   float e[3],u[3],h[3];
   float fov;
   int thick;
-  /*$BI=<($9$k%l%$%d(B*/
+  /*表示するレイヤ*/
   int layermask;
   int AbsoluteRotationMode;
   /*accumulated rotation angle (for the next frame)*/
@@ -187,10 +187,12 @@ typedef struct WINFO
   int RecordMode;
 #endif
   int lastColor;
-  /*X11$B$K0MB8$9$kItJ,(B*/
-#ifdef HAVE_LIBGTK
+  /*X11に依存する部分*/
+#ifdef YAPLOT_GTK
   GtkWidget *window,*drawarea;
   GdkPixmap *pixmap;
+  //for stipples
+  GdkPixmap *bitmap[16];
   GdkGC *gc;
   GdkFont *font;
   GdkColor colortable[256];
@@ -202,7 +204,7 @@ typedef struct WINFO
   GC gc;
   Colormap colormap;
 #endif
-  /*$B$3$3$^$G(B*/
+  /*ここまで*/
 }
 Winfo;
 

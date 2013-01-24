@@ -16,3 +16,4 @@ config.h
 *.bz2
 *~
 .DS_Store
+common.h
