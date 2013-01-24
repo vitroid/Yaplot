@@ -13,5 +13,9 @@ autom4te.cache/output.1
 autom4te.cache/traces.0
 autom4te.cache/traces.1
 config.h
+<<<<<<< HEAD
 *.bz2
 *~
+=======
+.DS_Store
+>>>>>>> .
