@@ -82,7 +82,7 @@ while(<STDIN>){
 	$newlayer=$table[$layer];
 	print $_;
     }elsif(/^y\s/){
-	split(/\s+/);
+	@_ = split(/\s+/);
 	$layer = $_[1];
 	$newlayer=$table[$layer];
 	if($newlayer){
@@ -101,7 +101,7 @@ while(<STDIN>){
 	    #
 	    #それ以外は、記憶しておく。
 	    #
-	    split( /\s+/, $_ );
+	    @_ = split( /\s+/, $_ );
 	    if ( $_[0] eq '@' ){
 		if ( $#_>1 ){
 		    #
