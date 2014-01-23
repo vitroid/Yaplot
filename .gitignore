@@ -17,3 +17,4 @@ config.h
 *~
 .DS_Store
 common.h
+*.gz
