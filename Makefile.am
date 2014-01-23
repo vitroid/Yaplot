@@ -3,6 +3,7 @@ bin_PROGRAMS	= @YAPLOT@
 EXTRA_DIST	= common.h.in help.yap yaplot.col README.html WelcomeJ.html Makefile.dos README README.j yaplot.spec.in
 pkgdata_DATA	= help.yap yaplot.col
 EXTRA_PROGRAMS	= yaplot #yaplot_gtk #yaplot_glut yaplot gnome_yaplot gaplot_example
+AM_CPPFLAGS = ${GTK_CFLAGS}
 
 #gaplot_example_SOURCES	= gaplot.h gaplot.c gaplot_example.c
 yaplot_CFLAGS	= -Wall -Werror # -g -pg
@@ -12,7 +13,7 @@ yaplot_SOURCES	= unixwrap.c varray.c reality0.c reality1.c reality2.c reality3.c
 #gnome_yaplot_SOURCES	= gnome_yaplot.c
 #gnome_yaplot_LDADD	= #$(GNOME_LIBDIR) $(GNOMEUI_LIBS) #$(INTLLIBS)
 #EXTRA_yaplot_SOURCES = win32wrap.c win32wrap.h
-
+yaplot_LDADD    = ${GTK_LIBS}
 #yaplot_CFLAGS	= -g -Wall -Werror
 INCLUDES	= @X_CFLAGS@ -I$(includedir) -I/usr/lib/gnome-libs/include
 LDADD		= @X_LIBS@ -lX11 
@@ -37,5 +38,5 @@ README: README.html
 README.j: WelcomeJ.html
 	lynx -dump $< > $@
 
-@PACKAGE@-dos.zip: $(wildcard *.dll) yaplot.exe yaplot.col help.yap
-	zip $@ $^
+#@PACKAGE@-dos.zip: $(wildcard *.dll) yaplot.exe yaplot.col help.yap
+#	zip $@ $^

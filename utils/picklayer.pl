@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
-#$B;XDj$5$l$?(Blayer$B$@$1$rCj=P(B
-#$B$?$@$7(Bglobal setting$B$JL?Na$ODL$9!#(B
+#指定されたlayerだけを抽出
+#ただしglobal settingな命令は通す。
 #
-#$BJ?@.(B15$BG/(B1$B7n(B27$BF|(B($B7n(B)global$BL?Na$N$&$A!"ITMW$J$b$N$O$G$-$k$@$1$J$/$9!#$=(B
-#$B$N>l@_Dj%Q%l%C%H$b!";H$C$?$b$N$@$1$rDj5A$9$k!#(B
+#平成15年1月27日(月)global命令のうち、不要なものはできるだけなくす。そ
+#の場設定パレットも、使ったものだけを定義する。
 #
 
 sub usage{
@@ -13,12 +13,12 @@ sub usage{
 }
 
 sub ParseRanges{
-    #min,max$B$O>JN,;~$NHO0O(B
+    #min,maxは省略時の範囲
     my ($ranges,$min,$max) = @_;
     my @ranges;
     foreach my $range ( split(/,/,$ranges) ){
 	my $lastto=$min-1;
-	#$BHO0O;XDj$N>l9g(B
+	#範囲指定の場合
 	if($range =~ /-/){
 	    my ($a,$b)=split(/-/,$range);
 	    if($a !~ /^[0-9]+$/){
@@ -58,7 +58,7 @@ while( $_=shift @ranges ){
     }
 }
 if( $compress ){
-    #$B6u$-%l%$%d$r5M$a$k!#(B
+    #空きレイヤを詰める。
     my $i=$first+1;
     for( my $j = $i; $j<=20; $j ++ ){
 	next if $table[$j] == $first;
@@ -90,7 +90,7 @@ while(<STDIN>){
 	}
     }elsif(/^[\#r\@]/){
 	#global in page
-	#comment$B$^$?$O(Bset palette$B$J$i$=$N$^$^I=<((B
+	#commentまたはset paletteならそのまま表示
 	my $asis=0;
 	if(/^\#/){
 	    $asis++;
@@ -99,18 +99,18 @@ while(<STDIN>){
 	    print $_;
 	}else{
 	    #
-	    #$B$=$l0J30$O!"5-21$7$F$*$/!#(B
+	    #それ以外は、記憶しておく。
 	    #
 	    @_ = split( /\s+/, $_ );
 	    if ( $_[0] eq '@' ){
 		if ( $#_>1 ){
 		    #
-		    #palette$B$r(Bset$B$7$?>l9g$O$=$N$^$^5-21$9$k!#(B
+		    #paletteをsetした場合はそのまま記憶する。
 		    #
 		    $palette[$_[1]] = join(" ",$_[2],$_[3],$_[4]);
 		}elsif ( $_[1] != $currentPalette ){
 		    #
-		    #palette$B$r@Z$j$+$($k>l9g$b$=$NHV9f$r5-21$9$k!#(B
+		    #paletteを切りかえる場合もその番号を記憶する。
 		    #
 		    $currentPalette = $_[1];
 		    $paletteChanged = 1;

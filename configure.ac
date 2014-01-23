@@ -1,5 +1,5 @@
 AC_INIT(yaplot.c)
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE(yaplot,3.4)
 
 dnl Checks for programs.
@@ -35,6 +35,9 @@ AC_SUBST(X_CFLAGS)
 
 dnl AC_ARG_PROGRAM
 
+dnl Test for pkg-config
+PKG_PROG_PKG_CONFIG([0.22])
+
 AC_SUBST(YAPLOT)
 dnl AC_ARG_WITH(gtk,[  --with-gtk              use gtk to compile yaplot])
 dnl AC_ARG_WITH(glut,[  --with-glut              use glut to compile yaplot])
@@ -42,7 +45,9 @@ YAPLOT=yaplot
 dnl if test "$with_gtk" != "no" ; then
   dnl YAPLOT="$YAPLOT yaplot_gtk"
   dnl AM_PATH_GTK(1.2.0,,AC_MSG_ERROR($PACKAGE $VERSION needs gtk))
-  AM_PATH_GTK_2_0(2.0.0,, [AC_MSG_ERROR(Test for GTK failed.)])
+  dnl AM_PATH_GTK_2_0(2.0.0,, [AC_MSG_ERROR(Test for GTK failed.)])
+  PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.12])
+  
   X_LIBS=$GTK_LIBS
   X_CFLAGS=$GTK_CFLAGS
   dnl AC_PATH_PROG(GDK_PIXBUF_CONFIG, gdk-pixbuf-config, no)
@@ -78,6 +83,7 @@ dnl if test "$with_glut" != "no" ; then
 dnl   AC_MSG_WARN([Yaplot will be compiled with glut.])
 dnl  YAPLOT="$YAPLOT yaplot_glut"
 dnl  X_LIBS="$X_LIBS -lglut -lGLU -lGL"
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH":teststring
 dnl  dnl for OpenGL/glut
 dnl  AC_CHECK_LIB(GL, main)
 dnl  AC_CHECK_LIB(GLU, main)

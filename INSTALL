@@ -9,6 +9,7 @@ After those libraries are installed, simply type the following commands:
 If you failed to find gtk library, try the following:
 
 % make -f Makefile.autoconf
+% export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/opt/X11/lib/pkgconfig
 % ./configure
 % make
 
