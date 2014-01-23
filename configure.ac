@@ -1,6 +1,6 @@
 AC_INIT(yaplot.c)
 AC_CONFIG_HEADERS(config.h)
-AM_INIT_AUTOMAKE(yaplot,3.4)
+AM_INIT_AUTOMAKE(yaplot,3.5)
 
 dnl Checks for programs.
 AC_PROG_AWK
