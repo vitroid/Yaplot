@@ -49,7 +49,7 @@ Vertex;
 
 typedef struct
 {
-  short x,y;
+  int x,y;
 }
 ivector2;
 
