@@ -10,7 +10,7 @@ class Yaplot < Formula
   def install
     ENV.x11 # if your formula requires any X11 headers
 
-    system "./configure", ""
+    system "export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig ./configure", ""
     system "make"
     system "make install"
   end

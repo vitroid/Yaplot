@@ -87,7 +87,7 @@ vector3;
 #define BUFFER0 240
 #define BUFFER1 15
 #define MAXREALITY 4
-#define MAXLAYER 12
+#define MAXLAYER 30
 #define MAXVERBOSE 3
 #define HASHSIZE 240007
 #define LASTFRAME 999999

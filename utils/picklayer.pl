@@ -7,7 +7,7 @@
 #
 
 sub usage{
-    print "usage: $* layers < file.yap\n";
+    print "usage: $0 layers < file.yap\n";
     print "layers: 1,3,5-9,...\n";
     exit 1;
 }

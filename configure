@@ -2225,7 +2225,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 ac_config_headers="$ac_config_headers config.h"
 
-am__api_version='1.13'
+am__api_version='1.14'
 
 ac_aux_dir=
 for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
@@ -5634,7 +5634,6 @@ $as_echo "$as_me: WARNING: Could not find gdk-pixbuf, recording feature is disab
     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Could not find pkg-config...." >&5
 $as_echo "$as_me: WARNING: Could not find pkg-config...." >&2;}
   fi
-PKG_CONFIG_PATH="$PKG_CONFIG_PATH":teststring
 
 
 #GNOME_COMMON_INIT

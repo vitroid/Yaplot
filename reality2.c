@@ -14,7 +14,7 @@ Reality2(NewOinfo *o,Winfo *w)
   float thickness,thickdelta;
   int ithickness,oldthickness;
     
-  /*$BK\Mh$O!"2DJQD9G[Ns$NMWAG?t$O35?t$J$N$G!"$3$N$h$&$J;XDj$O@5$7$/$J$$!#(B*/
+  /*本来は、可変長配列の要素数は概数なので、このような指定は正しくない。*/
   /*if(o->n==0)return 0;*/
   if(debug){
     fprintf(stderr,"Nrealize: %d\n",w->nrealize);

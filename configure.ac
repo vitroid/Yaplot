@@ -83,7 +83,6 @@ dnl if test "$with_glut" != "no" ; then
 dnl   AC_MSG_WARN([Yaplot will be compiled with glut.])
 dnl  YAPLOT="$YAPLOT yaplot_glut"
 dnl  X_LIBS="$X_LIBS -lglut -lGLU -lGL"
-PKG_CONFIG_PATH="$PKG_CONFIG_PATH":teststring
 dnl  dnl for OpenGL/glut
 dnl  AC_CHECK_LIB(GL, main)
 dnl  AC_CHECK_LIB(GLU, main)

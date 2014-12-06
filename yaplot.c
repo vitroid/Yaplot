@@ -1126,11 +1126,9 @@ RotateAllPrims(Ginfo *g,Winfo *w)
   while(j<=last)
     {
       float zsum;
-      int zmin;
       Pinfo *qq;
       qq =((Pinfo **)o->prims->a)[j];
       zsum = 0;
-      zmin=0;
       if(qq->layermask & w->layermask){
 	for(i=0;i<qq->nvertex;i++)
 	  {
