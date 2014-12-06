@@ -2,8 +2,8 @@ require 'formula'
 
 class Yaplot < Formula
   homepage ''
-  url 'https://github.com/vitroid/Yaplot/zipball/v3.4.001'
-  md5 '5350acb8dfddfead0c95e0a6ff57ed64'
+  url 'https://github.com/vitroid/Yaplot/archive/v3.5.002.zip'
+  md5 'be416b39bbb2d791430fb69a73d9fb34'
 
   depends_on "gtk+"
 
