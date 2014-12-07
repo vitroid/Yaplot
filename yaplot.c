@@ -37,7 +37,7 @@
   *** empty log message ***
 
   Revision 1.8  2002/01/22 06:48:03  matto
-  automake¤ËÂĞ±ş¡£
+  automakeã«å¯¾å¿œã€‚
 
   Revision 1.7  2001/07/23 09:35:51  matto
   Autoconf-compatible.
@@ -258,11 +258,13 @@ int eWiden(Ginfo *g,Winfo w[],int i,int jumpto)
         w[i].fov*=ratio;
         EyeMotion(&w[i],1.0-ratio);
         w[i].status|=REDRAW;
+		if (debug) fprintf(stderr,"REDRAW because the perspective is changed (1)[Window %d]",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].fov*=ratio;
             EyeMotion(&w[i],1.0-ratio);
             w[i].status|=REDRAW;
+    		if (debug) fprintf(stderr,"REDRAW because the perspective is changed (2)[Window %d]",i);
         }
     }
     return TRUE;
@@ -311,10 +313,12 @@ int eBanking(Ginfo *g,Winfo w[],int i,int jumpto)
     if(w[i].async){
         w[i].wb +=jumpto;
         w[i].status|=REDRAW;
+		if (debug) fprintf(stderr,"REDRAW because of banking (1)[Window %d]",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].wb +=jumpto;
             w[i].status|=REDRAW;
+    		if (debug) fprintf(stderr,"REDRAW because of banking (2)[Window %d]",i);
         }
     }
     return TRUE;
@@ -340,10 +344,12 @@ int eHeading(Ginfo *g,Winfo w[],int i,int jumpto)
     if(w[i].async){
         w[i].wh +=jumpto;
         w[i].status|=REDRAW;
+		if (debug) fprintf(stderr,"REDRAW because of heading (1)[Window %d]",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].wh +=jumpto;
             w[i].status|=REDRAW;
+    		if (debug) fprintf(stderr,"REDRAW because of heading (2)[Window %d]",i);
         }
     }
     return TRUE;
@@ -364,6 +370,7 @@ int eToggleSync(Ginfo *g,Winfo w[],int i)
         }
     }
     w[i].status|=REDRAW;
+    if (debug) fprintf(stderr,"REDRAW because sync mode is changed[Window %d]",i);
     return TRUE;
 }
 
@@ -374,12 +381,14 @@ int eRelativeThickness(Ginfo *g,Winfo w[],int i,int jumpto)
         if(w[i].thick<0)
             w[i].thick=0;
         w[i].status|=REDRAW;
+		if (debug) fprintf(stderr,"REDRAW because line thickness is changed (1)[Window %d]",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].thick+=jumpto;
             if(w[i].thick<0)
                 w[i].thick=0;
             w[i].status|=REDRAW;
+    		if (debug) fprintf(stderr,"REDRAW because line thickness is changed (2)[Window %d]",i);
         }
     }
     return TRUE;
@@ -390,6 +399,7 @@ int eZoom(Ginfo *g,Winfo w[],int i,int jumpto)
     float ratio=powif(1.05,jumpto);
     w[i].depthratio*=ratio;
     w[i].status|=REDRAW;
+    if (debug) fprintf(stderr,"REDRAW because zoom is changed [Window %d]",i);
     return TRUE;
 }
 
@@ -398,10 +408,12 @@ int eStopRotation(Ginfo *g,Winfo w[],int i)
     if(w[i].async){
         w[i].wh=w[i].wp=w[i].wb=0;
         w[i].status|=REDRAW;
+        if (debug) fprintf(stderr,"REDRAW because rotation is stopped (1)[Window %d]",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].wh=w[i].wp=w[i].wb=0;
             w[i].status|=REDRAW;
+            if (debug) fprintf(stderr,"REDRAW because rotation is stopped (2)[Window %d]",i);
         }
     }
     return TRUE;
@@ -412,10 +424,12 @@ int eStopMotion(Ginfo *g,Winfo w[],int i)
     if(w[i].async){
         w[i].df=w[i].wh=w[i].wp=w[i].wb=0;
         w[i].status|=REDRAW;
+        if (debug) fprintf(stderr,"REDRAW because frame motion is stopped (1)[Window %d]",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].df=w[i].wh=w[i].wp=w[i].wb=0;
             w[i].status|=REDRAW;
+            if (debug) fprintf(stderr,"REDRAW because frame motion is stopped (2)[Window %d]",i);
         }
     }
     return TRUE;
@@ -429,20 +443,22 @@ int eQuit(Ginfo *g,Winfo w[],int i)
 #ifdef RECORD
 int eStartRecording(Ginfo *g,Winfo w[],int i)
 {
-    /*Á´ÉôÆ±»ş¤ËÏ¿²è¤¹¤ë¡£*/
+    /*å…¨éƒ¨åŒæ™‚ã«éŒ²ç”»ã™ã‚‹ã€‚*/
     for(i=0;i<g->nwindow;i++){
         W_StartRecording(&w[i]);
         w[i].status|=REDRAW;
+        if (debug) fprintf(stderr,"REDRAW because recording is started [Window %d]",i);
     }
     return TRUE;
 }
 
 int eStopRecording(Ginfo *g,Winfo w[],int i)
 {
-    /*Á´ÉôÆ±»ş¤ËÏ¿²è¤¹¤ë¡£*/
+    /*å…¨éƒ¨åŒæ™‚ã«éŒ²ç”»ã™ã‚‹ã€‚*/
     for(i=0;i<g->nwindow;i++){
         W_StopRecording(&w[i]);
         w[i].status|=REDRAW;
+        if (debug) fprintf(stderr,"REDRAW because recording is stopped [Window %d]",i);
     }
     return TRUE;
 }
@@ -457,8 +473,10 @@ int eToggleVerbosity(Ginfo *g,Winfo w[],int i)
     g->verbose--;
     if(g->verbose<0)
         g->verbose=MAXVERBOSE;
-    for(i=0;i<g->nwindow;i++)
+    for(i=0;i<g->nwindow;i++){
         w[i].status|=REDRAW;
+        if (debug) fprintf(stderr,"REDRAW because verbosity is changed [Window %d]",i);
+    }
     return TRUE;
 }
 
@@ -489,6 +507,7 @@ int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto)
             fprintf(stderr,"Reality(%d) : %d\n",
                     i,w[i].reality);
         w[i].status|=REDRAW;
+        if (debug) fprintf(stderr,"REDRAW because reality is changed (1)[Window %d]",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].reality+=jumpto;
@@ -500,6 +519,7 @@ int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto)
                 fprintf(stderr,"Reality(%d) : %d\n",
                         i,w[i].reality);
             w[i].status|=REDRAW;
+            if (debug) fprintf(stderr,"REDRAW because reality is changed (2)[Window %d]",i);
         }
     }
     return TRUE;
@@ -531,6 +551,7 @@ int eResetViewOne( Winfo* w )
     W_setvectors( w );
 
     w->status |= REDRAW;
+    if (debug) fprintf(stderr,"REDRAW because the view is reset");
 
     return TRUE;
 }
@@ -555,6 +576,7 @@ int eToggleLayerOne( Winfo* w, int layermask )
 {
     w->layermask ^= layermask;
     w->status    |= REDRAW;
+    if (debug) fprintf(stderr,"REDRAW because a layer is toggled");
     return TRUE;
 }
 
@@ -621,6 +643,7 @@ void WindowMotion(Winfo *w,float head,float bank)
   float deltah,deltab;
   w->wp=w->wh=w->wb=0;
   w->status|=REDRAW;
+  if (debug) fprintf(stderr,"REDRAW because window is modified");
   /*rotate eyep around lookp.*/
   dx = w->lookp[0]-w->eyep[0];
   dy = w->lookp[1]-w->eyep[1];
@@ -651,19 +674,19 @@ W_setvectors(Winfo *w)
   eyez = w->lookp[2]-w->eyep[2];
   eyed = 1.0L/sqrt(eyex*eyex+eyey*eyey+eyez*eyez);
     
-  w->e[0]=eyex*eyed;/*»ëÀşÃ±°Ì¥Ù¥¯¥È¥ë*/
+  w->e[0]=eyex*eyed;/*è¦–ç·šå˜ä½ãƒ™ã‚¯ãƒˆãƒ«*/
   w->e[1]=eyey*eyed;
   w->e[2]=eyez*eyed;
   w->h[0]=(w->e[1]*w->up[2]-w->up[1]*w->e[2]);
   w->h[1]=(w->e[2]*w->up[0]-w->up[2]*w->e[0]);
   w->h[2]=(w->e[0]*w->up[1]-w->up[0]*w->e[1]);
   dd = 1.0/sqrt(w->h[0]*w->h[0]+w->h[1]*w->h[1]+w->h[2]*w->h[2]);
-  w->h[0]*=dd;/*¿åÊ¿Ã±°Ì¥Ù¥¯¥È¥ë*/
+  w->h[0]*=dd;/*æ°´å¹³å˜ä½ãƒ™ã‚¯ãƒˆãƒ«*/
   w->h[1]*=dd;
   w->h[2]*=dd;
   w->u[0]=-(w->e[1]*w->h[2]-w->h[1]*w->e[2]);
   w->u[1]=-(w->e[2]*w->h[0]-w->h[2]*w->e[0]);
-  w->u[2]=-(w->e[0]*w->h[1]-w->h[0]*w->e[1]);/*¾åÊıÃ±°Ì¥Ù¥¯¥È¥ë*/
+  w->u[2]=-(w->e[0]*w->h[1]-w->h[0]*w->e[1]);/*ä¸Šæ–¹å˜ä½ãƒ™ã‚¯ãƒˆãƒ«*/
   /*added*/
   w->up[0]=w->u[0];
   w->up[1]=w->u[1];
@@ -698,7 +721,7 @@ void W_Seek(Winfo *w)
   pos = varray_ptr(w->framepos,w->currentframe);
   if(*pos>=0)
     {
-      /*¤¹¤Ç¤Ë°ìÅÙÉ½¼¨¤·¤¿¥Õ¥ì¡¼¥à¤Ï¾ì½ê¤¬¤ï¤«¤Ã¤Æ¤¤¤ë*/
+      /*ã™ã§ã«ä¸€åº¦è¡¨ç¤ºã—ãŸãƒ•ãƒ¬ãƒ¼ãƒ ã¯å ´æ‰€ãŒã‚ã‹ã£ã¦ã„ã‚‹*/
       fseek(w->inputfile,*pos,SEEK_SET);
       if(debug)
 	fprintf(stderr,"SEEK 1\n");
@@ -707,11 +730,11 @@ void W_Seek(Winfo *w)
     {
       int i;
       /*new frame*/
-      /*¥Õ¥ì¡¼¥à¸¡º÷*/
-      /*¥Õ¥¡¥¤¥ë¤ÎËöÃ¼¤Ï¡©*/
-      /*¤¹¤Ç¤ËÆÉ¤ß¤³¤Ş¤ì¤¿ºÇ¸å¤Î¥Õ¥ì¡¼¥à¤Î°ÌÃÖ¤ò¤µ¤¬¤·i¤ËÆş¤ì¤ë*/
+      /*ãƒ•ãƒ¬ãƒ¼ãƒ æ¤œç´¢*/
+      /*ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ«ç«¯ã¯ï¼Ÿ*/
+      /*ã™ã§ã«èª­ã¿ã“ã¾ã‚ŒãŸæœ€å¾Œã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®ä½ç½®ã‚’ã•ãŒã—iã«å…¥ã‚Œã‚‹*/
       for(i=w->currentframe;pos=(long int *)varray_ptr(w->framepos,i),*pos<0;i--);
-      /*seek¤¹¤ë*/
+      /*seekã™ã‚‹*/
       pos = varray_ptr(w->framepos,i);
       fseek(w->inputfile,*pos,SEEK_SET);
       if(debug)
@@ -720,10 +743,10 @@ void W_Seek(Winfo *w)
 	{
 	  do
 	    {
-	      /*¤â¤·¥Õ¥¡¥¤¥ë¤ÎËöÈø¤Ş¤Ç¤­¤¿¤é*/
+	      /*ã‚‚ã—ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ«å°¾ã¾ã§ããŸã‚‰*/
 	      if(fgets(readstr,4096,w->inputfile)==NULL)
 		{
-		  /*¤¢¤­¤é¤á¤Æ¡¢iÈÖÌÜ¤Î¥Õ¥ì¡¼¥à¤òÉ½¼¨*/
+		  /*ã‚ãã‚‰ã‚ã¦ã€iç•ªç›®ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’è¡¨ç¤º*/
 		  w->currentframe=i;
 		  w->realcurrent=i;
 		  w->df=0;
@@ -736,18 +759,18 @@ void W_Seek(Winfo *w)
 		  fseek(w->inputfile,*pos,SEEK_SET);
 		  if(debug)
 		    fprintf(stderr,"SEEK 3\n");
-		  /*¥Õ¥¡¥¤¥ë¤ÎËöÈø*/
+		  /*ãƒ•ã‚¡ã‚¤ãƒ«ã®æœ«å°¾*/
 		  return;
 		}
 	      string=skipspaces(readstr);
 	    }
-	  while (*string!='\n'); /*¶õ¹Ô¤Ë¤Ê¤ë¤Ş¤¯¤ê¤«¤¨¤¹¡£*/
+	  while (*string!='\n'); /*ç©ºè¡Œã«ãªã‚‹ã¾ãã‚Šã‹ãˆã™ã€‚*/
 	  i++;
 	  pos = varray_ptr(w->framepos,i);
 	  *pos=ftell(w->inputfile);
 	}
     }
-  /*ÌÜÅªÉÔÌÀ¤Ê¤Î¤Ç¾Ã¤·¤¿¡£Ê¿À®£¹Ç¯£±£²·î£²£´Æü(¿å)
+  /*ç›®çš„ä¸æ˜ãªã®ã§æ¶ˆã—ãŸã€‚å¹³æˆï¼™å¹´ï¼‘ï¼’æœˆï¼’ï¼”æ—¥(æ°´)
     if(o->frame[o->nextframe]<0)
     return;
     */
@@ -783,9 +806,9 @@ void O_Done(void *oo)
   free(o);
 }
 
-/*Hash¤ò»È¤¦¤è¤ê¡¢voxelÊ¬³ä¤·¤¿Êı¤¬¸úÎ¨¤¬¤¤¤¤¡©Èİ¡£voxelÆâ¤Ç·ë¶É¸¡º÷¤¬
-  É¬Í×¤Ë¤Ê¤ë¡£¤½¤Î¾å¡¢voxel¤Ï¤»¤¤¤¼¤¤64*64*64Ê¬³ä¤°¤é¤¤¤·¤«²ÄÇ½¤Ç¤Ê¤¤¡£
-  (¤½¤ì¤Ç½½Ê¬¤«¤â)*/
+/*Hashã‚’ä½¿ã†ã‚ˆã‚Šã€voxelåˆ†å‰²ã—ãŸæ–¹ãŒåŠ¹ç‡ãŒã„ã„ï¼Ÿå¦ã€‚voxelå†…ã§çµå±€æ¤œç´¢ãŒ
+  å¿…è¦ã«ãªã‚‹ã€‚ãã®ä¸Šã€voxelã¯ã›ã„ãœã„64*64*64åˆ†å‰²ãã‚‰ã„ã—ã‹å¯èƒ½ã§ãªã„ã€‚
+  (ãã‚Œã§ååˆ†ã‹ã‚‚)*/
 Vertex *Vertex_Insert(sHash *h,NewOinfo *o,float x,float y,float z,int mask)
 {
   int ix,iy,iz;
@@ -801,7 +824,7 @@ Vertex *Vertex_Insert(sHash *h,NewOinfo *o,float x,float y,float z,int mask)
     key<<=7;
     key ^= *iz;
     */
-  /*¤â¤Ã¤È¤è¤¤encoding¤¬¤¢¤ë¤Ï¤º*/
+  /*ã‚‚ã£ã¨ã‚ˆã„encodingãŒã‚ã‚‹ã¯ãš*/
   newv=(Vertex *)malloc(sizeof(Vertex));
   x=rint(x*ACCURACY);
   y=rint(y*ACCURACY);
@@ -984,7 +1007,7 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
 	  sscanf(string,"r %f\n",&currentradius);
 	  break;
 	case '@':
-	  /*Ê¿À®13Ç¯7·î18Æü(¿å)³ÈÄ¥¡§°ú¿ô¤¬¤¢¤È3¤Ä¤¢¤ë¾ì¹ç¤Ï¤½¤ì¤é¤òrgb¶¯ÅÙ(0-255)¤È¤ß¤Ê¤·¡¢¥Ñ¥ì¥Ã¥È¤ò¤½¤Î¾ì¤ÇÊÑ¹¹¤¹¤ë¡£*/
+	  /*å¹³æˆ13å¹´7æœˆ18æ—¥(æ°´)æ‹¡å¼µï¼šå¼•æ•°ãŒã‚ã¨3ã¤ã‚ã‚‹å ´åˆã¯ãã‚Œã‚‰ã‚’rgbå¼·åº¦(0-255)ã¨ã¿ãªã—ã€ãƒ‘ãƒ¬ãƒƒãƒˆã‚’ãã®å ´ã§å¤‰æ›´ã™ã‚‹ã€‚*/
 	  {
 	    int red,green,blue,narg;
 	    narg=sscanf(string,"@ %d %d %d %d\n",&linecolor,&red,&green,&blue);
@@ -1016,17 +1039,17 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
     }
   q = varray_ptr(o->prims,nel);
   *q=NULL;
-  /*Í×ÁÇ¤Î¸Ä¿ô¤¬³ÎÄê¤·¤¿¡£*/
+  /*è¦ç´ ã®å€‹æ•°ãŒç¢ºå®šã—ãŸã€‚*/
   o->prims->n=nel;
   Hash_Done(h);
   return o;
 }    
 
 
-/*¤³¤Î»»Äø¤¬ºÇ¤âÃÙ¤¤¡£Á´ÂÎ¤ÎÈ¾Ê¬°Ê¾å¤òÀê¤á¤ë¡£Í×¤¹¤ë¤Ë¡¢ÅÀ¤Î¿ô¤ò¸º¤é¤»
-  ¤ĞÃ±½ã¤ËÂ®ÅÙ¤¬¸ş¾å¤¹¤ë¡£Îã¤¨¤Ğ¡¢ball and stick¤Ç¿å¤òÉÁ¤¯¾ì¹ç¤Ë¡¢¸½ºß
-  ¤Ï7²óºÂÉ¸¤ò»ØÄê¤·¤Æ¤¤¤ë¤¬¡¢¤³¤ì¤ò3²ó¤Ë¤Ç¤­¤ì¤Ğ¡¢¤½¤ÎÊ¬Â®ÅÙ¤¬¸ş¾å¤¹¤ë¡£
-  ¤·¤«¤·¡¢¤³¤¦¤¤¤Ã¤¿½èÍı¤Ï¤Ç¤­¤ì¤Ğ³°Éô¤Ç¹Ô¤Ã¤Æ¤Û¤·¤¤¤Ê(x3d¤Î¤è¤¦¤Ë)*/
+/*ã“ã®ç®—ç¨‹ãŒæœ€ã‚‚é…ã„ã€‚å…¨ä½“ã®åŠåˆ†ä»¥ä¸Šã‚’å ã‚ã‚‹ã€‚è¦ã™ã‚‹ã«ã€ç‚¹ã®æ•°ã‚’æ¸›ã‚‰ã›
+  ã°å˜ç´”ã«é€Ÿåº¦ãŒå‘ä¸Šã™ã‚‹ã€‚ä¾‹ãˆã°ã€ball and stickã§æ°´ã‚’æãå ´åˆã«ã€ç¾åœ¨
+  ã¯7å›åº§æ¨™ã‚’æŒ‡å®šã—ã¦ã„ã‚‹ãŒã€ã“ã‚Œã‚’3å›ã«ã§ãã‚Œã°ã€ãã®åˆ†é€Ÿåº¦ãŒå‘ä¸Šã™ã‚‹ã€‚
+  ã—ã‹ã—ã€ã“ã†ã„ã£ãŸå‡¦ç†ã¯ã§ãã‚Œã°å¤–éƒ¨ã§è¡Œã£ã¦ã»ã—ã„ãª(x3dã®ã‚ˆã†ã«)*/
 void
 RotateAllPrims0(Ginfo *g,Winfo *w)
 {
@@ -1039,9 +1062,9 @@ RotateAllPrims0(Ginfo *g,Winfo *w)
   NewOinfo *o;
   o=*w->oo;
   w->screendepth = w->depthratio*(w->screenwidth*0.5)*w->fov;
-  /*ÊÑ´¹¹ÔÎó¤Î¹½À®¡§
+  /*å¤‰æ›è¡Œåˆ—ã®æ§‹æˆï¼š
     newcoord = PerspectiveMat*(absolutecoord - eyecoord)
-    ÊªÂÎ¤Î²óÅ¾¤òµöÍÆ¤¹¤ë¤Ê¤é
+    ç‰©ä½“ã®å›è»¢ã‚’è¨±å®¹ã™ã‚‹ãªã‚‰
     newcoord = PerspectiveMat*(Rotator*absolutecoord - eyecoord)
     = (PerspectiveMat*Rotator)*absolutecoord - (PersMat*Eyecoord)
     */
@@ -1072,7 +1095,7 @@ RotateAllPrims0(Ginfo *g,Winfo *w)
   ex = w->h[0]*w->eyep[0] + w->h[1]*w->eyep[1] + w->h[2]*w->eyep[2];
   ey = w->u[0]*w->eyep[0] + w->u[1]*w->eyep[1] + w->u[2]*w->eyep[2];
   ez = w->e[0]*w->eyep[0] + w->e[1]*w->eyep[1] + w->e[2]*w->eyep[2];
-  /*¤Ş¤º¤¹¤Ù¤Æ¤ÎÅÀ¤ò²óÅ¾¤¹¤ë¡£*/
+  /*ã¾ãšã™ã¹ã¦ã®ç‚¹ã‚’å›è»¢ã™ã‚‹ã€‚*/
     
   v=o->vertex;
   while(v!=NULL){
@@ -1097,9 +1120,9 @@ RotateAllPrims(Ginfo *g,Winfo *w)
   int i,j,last;
   Vertex *v;
   NewOinfo *o;
-  /*ÊÑ´¹¹ÔÎó¤Î¹½À®¡§
+  /*å¤‰æ›è¡Œåˆ—ã®æ§‹æˆï¼š
     newcoord = PerspectiveMat*(absolutecoord - eyecoord)
-    ÊªÂÎ¤Î²óÅ¾¤òµöÍÆ¤¹¤ë¤Ê¤é
+    ç‰©ä½“ã®å›è»¢ã‚’è¨±å®¹ã™ã‚‹ãªã‚‰
     newcoord = PerspectiveMat*(Rotator*absolutecoord - eyecoord)
     = (PerspectiveMat*Rotator)*absolutecoord - (PersMat*Eyecoord)
     */
@@ -1120,7 +1143,7 @@ RotateAllPrims(Ginfo *g,Winfo *w)
   RotateAllPrims0(g,w);
   o=*w->oo;
   w->nrealize=0;
-  /*É¬Í×¤ÎÌµ¤¤Í×ÁÇ¤Ï¤³¤Î»şÅÀ¤Ç½ü¤¤¤Æ¤ª¤¯¡£*/
+  /*å¿…è¦ã®ç„¡ã„è¦ç´ ã¯ã“ã®æ™‚ç‚¹ã§é™¤ã„ã¦ãŠãã€‚*/
   last=o->prims->n - 1;
   j=0;
   while(j<=last)
@@ -1181,12 +1204,12 @@ compar(const Pinfo **i,const Pinfo **j)
   return ((*i)->sortkey > (*j)->sortkey)?-1:1;
 }
 
-/*¤³¤Î¥¢¥ë¥´¥ê¥º¥à¤Ç¤Ï¡¢Æ±°ì¤ÎÃÍ¤¬ÊÂ¤ó¤Ç¤¤¤ë¾ì¹ç¤Ç¤âÉÔÉ¬Í×¤Êswap¤ò·«¤ê
-  ÊÖ¤·¤Æ¤·¤Ş¤¦¡£¸½ºß¤Î¥Ğ¡¼¥¸¥ç¥ó¤Ç¤Ï¡¢É½¼¨¤¹¤ëÉ¬Í×¤Î¤Ê¤¤Í×ÁÇ¤Ï¥½¡¼¥È¤Î
-  ÂĞ¾İ¤Ë¤Ê¤é¤Ê¤¤¤Î¤Ç¡¢¤¢¤Ş¤êÌäÂê¤Ç¤Ï¤Ê¤¤¡£
+/*ã“ã®ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã§ã¯ã€åŒä¸€ã®å€¤ãŒä¸¦ã‚“ã§ã„ã‚‹å ´åˆã§ã‚‚ä¸å¿…è¦ãªswapã‚’ç¹°ã‚Š
+  è¿”ã—ã¦ã—ã¾ã†ã€‚ç¾åœ¨ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã§ã¯ã€è¡¨ç¤ºã™ã‚‹å¿…è¦ã®ãªã„è¦ç´ ã¯ã‚½ãƒ¼ãƒˆã®
+  å¯¾è±¡ã«ãªã‚‰ãªã„ã®ã§ã€ã‚ã¾ã‚Šå•é¡Œã§ã¯ãªã„ã€‚
 
-  ¿õ¼´Í×ÁÇ¤Ë¶è´Ö¤ÎÃæ±ûÃÍ¤ò»ÈÍÑ¤·¤Æ¤¤¤ë¤Î¤Ç¡¢¤¢¤é¤«¤¸¤á¥½¡¼¥È¤µ¤ì¤Æ¤¤¤ë
-  ¥Ç¡¼¥¿¤ËÂĞ¤·¤ÆºÇ¹â¤ÎÀ­Ç½¤¬¤Ç¤ë¤è¤¦¤Ë»×¤¦¤Î¤À¤¬¤É¤¦¤À¤í¤¦¤«¡£
+  æ¢è»¸è¦ç´ ã«åŒºé–“ã®ä¸­å¤®å€¤ã‚’ä½¿ç”¨ã—ã¦ã„ã‚‹ã®ã§ã€ã‚ã‚‰ã‹ã˜ã‚ã‚½ãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹
+  ãƒ‡ãƒ¼ã‚¿ã«å¯¾ã—ã¦æœ€é«˜ã®æ€§èƒ½ãŒã§ã‚‹ã‚ˆã†ã«æ€ã†ã®ã ãŒã©ã†ã ã‚ã†ã‹ã€‚
 */
 //int numswap;
 
@@ -1380,12 +1403,6 @@ A_Init()
 
 
 
-
-void Debug(char *s)
-{
-  fprintf(stderr,"DEBUG: %s\n",s);
-}
-
 void W_Cache(Winfo *w){
   /*Objects*/
   NewOinfo *o;
@@ -1450,8 +1467,8 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 	fprintf(stderr,"Refreshed in %f sec.\n",delta);
       }
       stopped=1;
-      /*¥¤¥Ù¥ó¥È¤¬Ìµ¤¤¤È¤­¤Ï¼«Æ°½èÍı*/
-      /*¤â¤·Æ°²èÉ½¼¨Ãæ¤Ê¤é¡¢Àè¤Ø¤¹¤¹¤á¤ë¡£*/
+      /*ã‚¤ãƒ™ãƒ³ãƒˆãŒç„¡ã„ã¨ãã¯è‡ªå‹•å‡¦ç†*/
+      /*ã‚‚ã—å‹•ç”»è¡¨ç¤ºä¸­ãªã‚‰ã€å…ˆã¸ã™ã™ã‚ã‚‹ã€‚*/
       for(i=0;i<g->nwindow;i++){
 #ifdef RECORD
 	if(w[i].RecordMode){
@@ -1464,8 +1481,8 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 	    /*o->nextframe += o->df;*/
 	    w[i].realcurrent += w[i].df*delta;
 	  }
-	/*¤â¤·AbsoluteRotationMode¤Ç¤Ê¤±¤ì¤Ğ¡¢¼«Æ°²óÅ¾¤â¤¢¤ê¤¦ */
-	/*¤ë¡£*/
+	/*ã‚‚ã—AbsoluteRotationModeã§ãªã‘ã‚Œã°ã€è‡ªå‹•å›è»¢ã‚‚ã‚ã‚Šã† */
+	/*ã‚‹ã€‚*/
 	  if(w[i].AbsoluteRotationMode==0){
 	    if((w[i].wp!=0)||(w[i].wh!=0)||(w[i].wb!=0))
 	      {
@@ -1473,6 +1490,8 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 		w[i].accumh += w[i].wh * delta*0.2;
 		w[i].accumb += w[i].wb * delta*0.2;
 		w[i].status|=REDRAW;
+		if (debug) fprintf(stderr,"REDRAW because angular velocity is nonzero: %d %d %d [window %d]\n", w[i].wp, w[i].wh, w[i].wb,i);
+		  
 		stopped=0;
 	      }
 	    if(w[i].df!=0){
@@ -1495,13 +1514,15 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 	    w[i].currentframe=nextframe;
 	    W_Cache(&w[i]);
 	    w[i].status|=REDRAW;
+		if (debug) fprintf(stderr,"REDRAW for progress in time [window %d]",i);
+
 	  }
 	if(!w[i].AbsoluteRotationMode)
 	  {
 	    float deltah,deltab;
 	    float eyex,eyey,eyez,eyed;
 	    float dx,dy,dz;
-	    /*lookp¤òÃæ¿´¤Ëeyep¤ò²óÅ¾¤µ¤»¤ë¾ì¹ç¤Ï*/
+	    /*lookpã‚’ä¸­å¿ƒã«eyepã‚’å›è»¢ã•ã›ã‚‹å ´åˆã¯*/
 	    /*horizontal rotation*/
 	    dx = w[i].lookp[0]-w[i].eyep[0];
 	    dy = w[i].lookp[1]-w[i].eyep[1];
@@ -1531,8 +1552,8 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 	      fprintf(stderr,"interrupted\n");
 	    break;/*interrupted*/
 	  }
-	  /*¥Ğ¥Ã¥Õ¥¡¤ÎÃæ¿È¤¬¤Ê¤¯¤Ê¤ë¤Ş¤ÇÂÔ¤Ä*/
-	  /*sync¤Ï¤¤¤Ä¤â0.04ÉÃ¤°¤é¤¤¤·¤«¤«¤«¤Ã¤Æ¤¤¤Ê¤¤¡£*/
+	  /*ãƒãƒƒãƒ•ã‚¡ã®ä¸­èº«ãŒãªããªã‚‹ã¾ã§å¾…ã¤*/
+	  /*syncã¯ã„ã¤ã‚‚0.04ç§’ãã‚‰ã„ã—ã‹ã‹ã‹ã£ã¦ã„ãªã„ã€‚*/
 #ifdef RECORD
 	  if(w[i].RecordMode){
 	    W_SaveSnapShot(&w[i],i);
@@ -1540,6 +1561,7 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 #endif
 	  waituntilflush(g);
 	  w[i].status &= ~REDRAW;
+	  if (debug) fprintf(stderr,"REDRAW is unset [window %d]",i);
 	}
       }
     }
