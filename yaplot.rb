@@ -1,21 +1,20 @@
-require 'formula'
+require "formula"
 
 class Yaplot < Formula
-  homepage ''
-  url 'https://github.com/vitroid/Yaplot/archive/v3.5.002.zip'
-  md5 'be416b39bbb2d791430fb69a73d9fb34'
+  homepage "https://github.com/vitroid/Yaplot"
+  url "https://github.com/vitroid/Yaplot/archive/v3.5.002.tar.gz"
+  sha1 "a759c411891701b3b18d89cc297077b73c12bfa4"
 
   depends_on "gtk+"
+  depends_on :x11
 
   def install
-    ENV.x11 # if your formula requires any X11 headers
-
-    system "export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig ./configure", ""
-    system "make"
-    system "make install"
+    ENV["PKG_CONFIG_PATH"]='/opt/X11/lib/pkgconfig'
+    system "./configure"
+    system "make", "install"
   end
 
-  def test
+  test do
     system "false"
   end
 end
