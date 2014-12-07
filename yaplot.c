@@ -258,13 +258,13 @@ int eWiden(Ginfo *g,Winfo w[],int i,int jumpto)
         w[i].fov*=ratio;
         EyeMotion(&w[i],1.0-ratio);
         w[i].status|=REDRAW;
-		if (debug) fprintf(stderr,"REDRAW because the perspective is changed (1)[Window %d]",i);
+		if (debug) fprintf(stderr,"REDRAW because the perspective is changed (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].fov*=ratio;
             EyeMotion(&w[i],1.0-ratio);
             w[i].status|=REDRAW;
-    		if (debug) fprintf(stderr,"REDRAW because the perspective is changed (2)[Window %d]",i);
+    		if (debug) fprintf(stderr,"REDRAW because the perspective is changed (2)[Window %d]\n",i);
         }
     }
     return TRUE;
@@ -313,12 +313,12 @@ int eBanking(Ginfo *g,Winfo w[],int i,int jumpto)
     if(w[i].async){
         w[i].wb +=jumpto;
         w[i].status|=REDRAW;
-		if (debug) fprintf(stderr,"REDRAW because of banking (1)[Window %d]",i);
+		if (debug) fprintf(stderr,"REDRAW because of banking (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].wb +=jumpto;
             w[i].status|=REDRAW;
-    		if (debug) fprintf(stderr,"REDRAW because of banking (2)[Window %d]",i);
+    		if (debug) fprintf(stderr,"REDRAW because of banking (2)[Window %d]\n",i);
         }
     }
     return TRUE;
@@ -344,12 +344,12 @@ int eHeading(Ginfo *g,Winfo w[],int i,int jumpto)
     if(w[i].async){
         w[i].wh +=jumpto;
         w[i].status|=REDRAW;
-		if (debug) fprintf(stderr,"REDRAW because of heading (1)[Window %d]",i);
+		if (debug) fprintf(stderr,"REDRAW because of heading (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].wh +=jumpto;
             w[i].status|=REDRAW;
-    		if (debug) fprintf(stderr,"REDRAW because of heading (2)[Window %d]",i);
+    		if (debug) fprintf(stderr,"REDRAW because of heading (2)[Window %d]\n",i);
         }
     }
     return TRUE;
@@ -370,7 +370,7 @@ int eToggleSync(Ginfo *g,Winfo w[],int i)
         }
     }
     w[i].status|=REDRAW;
-    if (debug) fprintf(stderr,"REDRAW because sync mode is changed[Window %d]",i);
+    if (debug) fprintf(stderr,"REDRAW because sync mode is changed[Window %d]\n",i);
     return TRUE;
 }
 
@@ -381,14 +381,14 @@ int eRelativeThickness(Ginfo *g,Winfo w[],int i,int jumpto)
         if(w[i].thick<0)
             w[i].thick=0;
         w[i].status|=REDRAW;
-		if (debug) fprintf(stderr,"REDRAW because line thickness is changed (1)[Window %d]",i);
+		if (debug) fprintf(stderr,"REDRAW because line thickness is changed (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].thick+=jumpto;
             if(w[i].thick<0)
                 w[i].thick=0;
             w[i].status|=REDRAW;
-    		if (debug) fprintf(stderr,"REDRAW because line thickness is changed (2)[Window %d]",i);
+    		if (debug) fprintf(stderr,"REDRAW because line thickness is changed (2)[Window %d]\n",i);
         }
     }
     return TRUE;
@@ -399,7 +399,7 @@ int eZoom(Ginfo *g,Winfo w[],int i,int jumpto)
     float ratio=powif(1.05,jumpto);
     w[i].depthratio*=ratio;
     w[i].status|=REDRAW;
-    if (debug) fprintf(stderr,"REDRAW because zoom is changed [Window %d]",i);
+    if (debug) fprintf(stderr,"REDRAW because zoom is changed [Window %d]\n",i);
     return TRUE;
 }
 
@@ -408,12 +408,12 @@ int eStopRotation(Ginfo *g,Winfo w[],int i)
     if(w[i].async){
         w[i].wh=w[i].wp=w[i].wb=0;
         w[i].status|=REDRAW;
-        if (debug) fprintf(stderr,"REDRAW because rotation is stopped (1)[Window %d]",i);
+        if (debug) fprintf(stderr,"REDRAW because rotation is stopped (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].wh=w[i].wp=w[i].wb=0;
             w[i].status|=REDRAW;
-            if (debug) fprintf(stderr,"REDRAW because rotation is stopped (2)[Window %d]",i);
+            if (debug) fprintf(stderr,"REDRAW because rotation is stopped (2)[Window %d]\n",i);
         }
     }
     return TRUE;
@@ -424,12 +424,12 @@ int eStopMotion(Ginfo *g,Winfo w[],int i)
     if(w[i].async){
         w[i].df=w[i].wh=w[i].wp=w[i].wb=0;
         w[i].status|=REDRAW;
-        if (debug) fprintf(stderr,"REDRAW because frame motion is stopped (1)[Window %d]",i);
+        if (debug) fprintf(stderr,"REDRAW because frame motion is stopped (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].df=w[i].wh=w[i].wp=w[i].wb=0;
             w[i].status|=REDRAW;
-            if (debug) fprintf(stderr,"REDRAW because frame motion is stopped (2)[Window %d]",i);
+            if (debug) fprintf(stderr,"REDRAW because frame motion is stopped (2)[Window %d]\n",i);
         }
     }
     return TRUE;
@@ -447,7 +447,7 @@ int eStartRecording(Ginfo *g,Winfo w[],int i)
     for(i=0;i<g->nwindow;i++){
         W_StartRecording(&w[i]);
         w[i].status|=REDRAW;
-        if (debug) fprintf(stderr,"REDRAW because recording is started [Window %d]",i);
+        if (debug) fprintf(stderr,"REDRAW because recording is started [Window %d]\n",i);
     }
     return TRUE;
 }
@@ -458,7 +458,7 @@ int eStopRecording(Ginfo *g,Winfo w[],int i)
     for(i=0;i<g->nwindow;i++){
         W_StopRecording(&w[i]);
         w[i].status|=REDRAW;
-        if (debug) fprintf(stderr,"REDRAW because recording is stopped [Window %d]",i);
+        if (debug) fprintf(stderr,"REDRAW because recording is stopped [Window %d]\n",i);
     }
     return TRUE;
 }
@@ -475,7 +475,7 @@ int eToggleVerbosity(Ginfo *g,Winfo w[],int i)
         g->verbose=MAXVERBOSE;
     for(i=0;i<g->nwindow;i++){
         w[i].status|=REDRAW;
-        if (debug) fprintf(stderr,"REDRAW because verbosity is changed [Window %d]",i);
+        if (debug) fprintf(stderr,"REDRAW because verbosity is changed [Window %d]\n",i);
     }
     return TRUE;
 }
@@ -507,7 +507,7 @@ int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto)
             fprintf(stderr,"Reality(%d) : %d\n",
                     i,w[i].reality);
         w[i].status|=REDRAW;
-        if (debug) fprintf(stderr,"REDRAW because reality is changed (1)[Window %d]",i);
+        if (debug) fprintf(stderr,"REDRAW because reality is changed (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
             w[i].reality+=jumpto;
@@ -519,7 +519,7 @@ int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto)
                 fprintf(stderr,"Reality(%d) : %d\n",
                         i,w[i].reality);
             w[i].status|=REDRAW;
-            if (debug) fprintf(stderr,"REDRAW because reality is changed (2)[Window %d]",i);
+            if (debug) fprintf(stderr,"REDRAW because reality is changed (2)[Window %d]\n",i);
         }
     }
     return TRUE;
@@ -1514,7 +1514,7 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 	    w[i].currentframe=nextframe;
 	    W_Cache(&w[i]);
 	    w[i].status|=REDRAW;
-		if (debug) fprintf(stderr,"REDRAW for progress in time [window %d]",i);
+		if (debug) fprintf(stderr,"REDRAW for progress in time [Window %d]\n",i);
 
 	  }
 	if(!w[i].AbsoluteRotationMode)
@@ -1561,7 +1561,7 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 #endif
 	  waituntilflush(g);
 	  w[i].status &= ~REDRAW;
-	  if (debug) fprintf(stderr,"REDRAW is unset [window %d]",i);
+	  if (debug) fprintf(stderr,"REDRAW is unset [Window %d]\n",i);
 	}
       }
     }
