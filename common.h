@@ -17,7 +17,7 @@
 #include <config.h>
 #endif
 #ifdef YAPLOT_GTK
-#include <gtk-2.0/gtk/gtk.h>
+#include <gtk/gtk.h>
 #else
 #include <X11/Xlib.h>
 #endif
@@ -49,7 +49,7 @@ Vertex;
 
 typedef struct
 {
-  short x,y;
+  int x,y;
 }
 ivector2;
 
@@ -87,7 +87,7 @@ vector3;
 #define BUFFER0 240
 #define BUFFER1 15
 #define MAXREALITY 4
-#define MAXLAYER 12
+#define MAXLAYER 30
 #define MAXVERBOSE 3
 #define HASHSIZE 240007
 #define LASTFRAME 999999
