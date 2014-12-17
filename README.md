@@ -101,6 +101,7 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 * "v":Change verbosity.
 * "s":Toggle synchronous/asynchronous modes.
 * "q" or Break:Quit yaplot.
+
 ##Command file format
 
 One line of the command files corresponds to one command. A command consists of a single command character followed by parameters separated by at least one space character, Any parameters are not omittable.
@@ -124,12 +125,15 @@ One line of the command files corresponds to one command. A command consists of 
     Empty line:End of a frame.
 
 ##Palette file format
+
 Each line of the palette file specifies the Red, Green and Blue  intensity of the pallete. First line describes the color for  palette 0. As the palettes 0 to 2 are reserved for system color  (Black, Gray, and White), you should not modify them.
 
 
 #Yaplot -- yet another plot in 3-D
 * 2013-1現在、GitHub https://github.com/vitroid/Yaplot で最新のソース(3.4)を公開しています。
+
 ##yaplotとは？
+
 ###yaplotの特徴
 * シンプルな画面表示、直感的なキー操作とマウス操作
 * シンプルで汎用のデータ形式
@@ -139,6 +143,7 @@ yaplotは、計算機シミュレーションの結果を容易に可視化す�
 yaplotの画像は、本格的なプレゼンテーションに使用できるほど美し  いものではありませんが、日常的なデータ解析にはきっと役に立つこと  でしょう。
 
 ##インストール
+
 現在、yaplotはgtkを使って書かれています。インストールする前にあらかじめ  GTKをインストールしておいて下さい。  まずソースコードを展開して下さい。  unix系のOSでは、
 
             prompt% ./configure
@@ -192,6 +197,7 @@ MakefileでRECORDオプションを追加してあると、録画機能が使え
 パッケージには、いくつかサンプルが添付されていますから、試してみ  て下さい。
 
 ##ユーザインターフェース
+
 マウスとキーで制御することができます。!が付いているコマンドにつ いては、各キーボードコマンドの前に数字を入力すると、そのキーを繰り返し 押したのと同じ効果があります。例えば"2" "0" "N"と入力すると、毎秒20フ レームの速度で自動アニメーションを行います。なお、"g"(指定フレームへジャ ンプ)と"f"(レイヤの表示非表示切替)以外はすべて相対指定です。つまり、 "10N5P"は"5N"と同じく、順方向へ毎秒5フレームでアニメーションします。 数字を打ちそこねた場合は、ESCを押して下さい。
 
 ウィンドウマネージャーによってはファンクションキーがのっとられて使えな い場合などもありますが、そのような場合はshiftを押しながらファンクショ ンを押すなどの方法でウィンドウマネージャーの機能を回避して下さい。
@@ -242,13 +248,17 @@ MakefileでRECORDオプションを追加してあると、録画機能が使え
     空行:1フレームの終わりをあらわします。
 
 ##パレットファイルフォーマット
+
 パレットファイルの各行には、各パレット番号の色彩を、赤、緑、青の  強度(0から255)で記述します。最初の行がパレット番号0に対応します。  0番から2番まのパレットは、yaplot自体も使用するので、それぞれ、黒、  灰色、白にしておいたほうがいいでしょう。
 
 ##内部動作について
+
 yaplotは、ファイル読み込み時に、ハッシュ表を用いてコマンドファイ  ルで指定された座標が縮退しているかどうかを調べ、同一の座標の座標  変換計算を減らしています。このため、読みこみに少々余分な時間がか  かりますが、ユーザは座標が縮退しているかどうかを心配する必要はあ  りません。
 
 キャッシュ戦略にはLRUを使用していますが、先読みは行っていません。  このため、単に順方向/逆方向にアニメーション表示する場合にはあま  りキャッシュは有効に働きません。すべてのフレームを読みこめるぐら  い大きくキャッシュをとる場合、あるいは特定部分のみ繰り返し再生す  るようなケースではキャッシュが有効に機能します。
+
 ##MacOSXでのコンパイル
+
 MacPorts, HomeBrew, OSXWSなどのパッケージマネージャを使って関連ライブラリをインストールし、Linuxの場合と同様にコマンドラインからコンパイルすることをお薦めします。
 
 
