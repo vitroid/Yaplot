@@ -102,6 +102,7 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 * "s":Toggle synchronous/asynchronous modes.
 * "q" or Break:Quit yaplot.
 ##Command file format
+
 One line of the command files corresponds to one command. A command consists of a single command character followed by parameters separated by at least one space character, Any parameters are not omittable.
 
     r {radius}:Specify the radius of circles, rings, and sticks.
@@ -121,6 +122,7 @@ One line of the command files corresponds to one command. A command consists of 
     y {layer}:Change current layer(default layer=1)
     a {arrowtype}:Change current arrow type(default type = 0)
     Empty line:End of a frame.
+
 ##Palette file format
 Each line of the palette file specifies the Red, Green and Blue  intensity of the pallete. First line describes the color for  palette 0. As the palettes 0 to 2 are reserved for system color  (Black, Gray, and White), you should not modify them.
 
@@ -196,11 +198,11 @@ MakefileでRECORDオプションを追加してあると、録画機能が使え
 
 * 上下矢印キー、"j"、"k":ピッチ回転(縦回転)。何度も押すとだんだん回転が速くなります。
 * 左右矢印キー、"h"、"l":ヘッド回転(横回転)
-:マウスの左ボタンを押しながらドラッグ:即時回転
+* マウスの左ボタンを押しながらドラッグ:即時回転
 * Pauseまたは"!":回転を停止
 * Tab:回転する前の状態にもどす。
-* !"*"と"/":ズームインとアウト(望遠と広角)
-* !"["と"]":視野角を広げる/狭める
+* "*"と"/":ズームインとアウト(望遠と広角)
+* "["と"]":視野角を広げる/狭める
 * "r":録画開始/終了
 * "u":pUsh; 現在の視野情報をカレントディレクトリの".yapviewstack"ファイルの末尾に追加します。
 * "o":pOp; カレントディレクトリの".yapviewstack"ファイルの末尾行を読み込み、現在の視野情報とします。
@@ -211,7 +213,7 @@ MakefileでRECORDオプションを追加してあると、録画機能が使え
 * (数字のあとに)"g"またはEnter:指定のフレームにジャンプ。"g"を単独で押すと最初のフレーム に、"G"を単独で押すと最後のフレームにジャンプします。
 * SPACE:すべての動作(回転とアニメーション)を停止
 * "+" and "-":!表示品位の変更
-* !InsertとDelete、または"("と")":線幅の変化の度合を変える。
+* InsertとDelete、または"("と")":線幅の変化の度合を変える。
 :ファンクションキー、あるいは数字のあとに"F":各レイヤの表示/非表示をトグル
 * "v":詳細情報の画面表示を制御
 * "s":同期モード/非同期モードの切りかえ
