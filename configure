@@ -2741,7 +2741,7 @@ fi
 # Define the identity of the package.
 
  PACKAGE=yaplot
- VERSION=3.5
+ VERSION=3.6
 
 
 cat >>confdefs.h <<_ACEOF
