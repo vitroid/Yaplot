@@ -37,6 +37,7 @@
 #define TRUE 0
 #endif
 
+
 typedef struct _Vertex
 {
   struct _Vertex *next;
@@ -53,6 +54,9 @@ typedef struct
 }
 ivector2;
 
+
+
+//Primitive info
 typedef struct
 {
   char id;
@@ -64,8 +68,10 @@ typedef struct
   float r;
   float sortkey;
   char *label;
+  //effective to the sticks only.
+  int arrowtype;
 }
-Pinfo;
+  Pinfo; 
 
 typedef struct
 {

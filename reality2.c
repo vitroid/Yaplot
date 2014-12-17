@@ -96,8 +96,21 @@ Reality2(NewOinfo *o,Winfo *w)
 	  case 's':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
 	    setfgcolor(w,qq->color);
-	    drawstick2fb(w,qq->points[0].x,qq->points[0].y,
-			 qq->points[1].x,qq->points[1].y,r);
+	    if ( qq->arrowtype <= 1 ){
+	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
+			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
+	    }
+	    else{
+	      setstipple(w, i%16);
+	      setstippledfill(w);
+	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
+			   qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
+	      setsolidfill(w);
+	      setthickness(w,1);
+	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
+			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
+	      setthickness(w,ithickness);
+	    }
 	    break;
 	  case 'p':
 	    setfgcolor(w,qq->color);

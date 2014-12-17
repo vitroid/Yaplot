@@ -91,7 +91,15 @@ Reality4(NewOinfo *o,Winfo *w)
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
 	    setfgcolor(w,qq->color);
 	    drawstick2fb(w,qq->points[0].x,qq->points[0].y,
-			 qq->points[1].x,qq->points[1].y,r);
+			 qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
+	    if ( qq->arrowtype == 2 ){
+	      //dart
+	      setfgcolor(w,0);
+	      setthickness(w,1);
+	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
+			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
+	      setthickness(w,ithickness);
+	    }
 	    break;
 	  case 'p':
 	    setfgcolor(w,qq->color);
