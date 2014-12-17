@@ -80,7 +80,7 @@ Reality1(NewOinfo *o,Winfo *w)
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
 	    setfgcolor(w,qq->color);
 	    drawstick2fb(w,qq->points[0].x,qq->points[0].y,
-			 qq->points[1].x,qq->points[1].y,r);
+			 qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
 	    break;
 	  case 'p':
 	    setfgcolor(w,qq->color);

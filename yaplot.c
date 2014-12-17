@@ -886,7 +886,7 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
   int ch;
   float x1,y1,z1,x2,y2,z2;
   float currentradius;
-  int currentlayer,currentlayermask;
+  int currentlayer,currentlayermask,currentarrowtype;
   int fillcolor,linecolor;
   int n;
   NewOinfo *o;
@@ -899,6 +899,7 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
   o->vertex=NULL;
   currentradius = 1;
   currentlayer=1;
+  currentarrowtype = 0;
   currentlayermask=1;/*==2**(currentlayer-1)*/
   /*
     fillcolor = 2*(16+1);
@@ -916,6 +917,9 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
 	break;
       switch(ch=*string)
 	{
+	case 'a':
+	  sscanf(string,"%c %d\n",&ch2,&currentarrowtype);
+	  break;
 	case 'l':
 	case 's':
 	  q = varray_ptr(o->prims,nel++);
@@ -931,6 +935,7 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
 	  qq->r  = currentradius;
 	  qq->id = ch;
 	  qq->label = NULL;
+	  qq->arrowtype = currentarrowtype;
 		
 	  if(ch=='l')
 	    qq->color = linecolor;
@@ -1033,7 +1038,7 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
 	  currentlayermask=1<<(currentlayer-1);
 	  break;
 	default:
-	  fgets(string,4096,file);
+	  //fgets(string,4096,file);
 	  break;
 	}
     }

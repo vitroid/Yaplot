@@ -31,11 +31,39 @@ void drawcircle2fb(Winfo *w,int x,int y,int r,int fill)
   gdk_draw_arc(w->pixmap,w->gc,fill,x - r,y - r,r+r,r+r,0,360*64);
 }
 
-void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r)
+void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int arrowtype)
 {
-  gdk_gc_set_line_attributes(w->gc,r*2,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_ROUND);
-  gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
-  setthickness(w, lastthick);
+  if ( arrowtype == 0){
+    gdk_gc_set_line_attributes(w->gc,r*2,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_ROUND);
+    gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
+    setthickness(w, lastthick);
+  }
+  else{
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    int dd = (int)sqrt(dx*dx + dy*dy);
+    if ( dd != 0 ){
+      int rx = r * dx / dd;
+      int ry = r * dy / dd;
+      if ( arrowtype == 1 ){
+	//normal arrow with a head.
+	gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
+	gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx+ry,y1-2*ry-rx);
+	gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx-ry,y1-2*ry+rx);
+      }
+      else if ( arrowtype == 2 ){
+	//dart
+	ivector2 p[3];
+	p[0].x = x1;
+	p[0].y = y1;
+	p[1].x = x0 + ry;
+	p[1].y = y0 - rx;
+	p[2].x = x0 - ry;
+	p[2].y = y0 + rx;
+	drawpoly2fb(w,p,3,fill);
+      }
+    }
+  }
 }
 
 
