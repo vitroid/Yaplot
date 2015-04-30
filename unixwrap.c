@@ -25,7 +25,7 @@ void resettimer()
 }
 
 /*msec timer*/
-int deltatime()
+int deltatime_obsolete()
 {
   int delta;
   struct itimerval now2;
@@ -37,6 +37,22 @@ int deltatime()
   now=now2;
   return delta;
 }
+
+
+/*usec timer*/
+int deltatime2()
+{
+  int delta;
+  struct itimerval now2;
+  getitimer(ITIMER_REAL,&now2);
+  delta = now.it_value.tv_usec - now2.it_value.tv_usec;
+  delta += (now.it_value.tv_sec - now2.it_value.tv_sec)*1000000;
+  /*itimer is a decremental timer*/
+  /*reset interval*/
+  now=now2;
+  return delta;
+}
+
 
 FILE *FindPalette(char *filename)
 {

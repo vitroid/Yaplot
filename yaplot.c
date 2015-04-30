@@ -1464,7 +1464,7 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
   stopped=1;
   while(1)
     {
-      float delta=0.001*deltatime();
+      float delta=0.000001*deltatime2();
       if(stopped){
 	delta=0;
       }
@@ -1485,6 +1485,9 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 	  if(w[i].df!=0){
 	    /*o->nextframe += o->df;*/
 	    w[i].realcurrent += w[i].df*delta;
+            if(debug){
+              fprintf(stderr,"Animate Realcurrnt:%f.\n",w[i].realcurrent);
+            }
 	  }
 	/*もしAbsoluteRotationModeでなければ、自動回転もありう */
 	/*る。*/
