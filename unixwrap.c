@@ -24,6 +24,19 @@ void resettimer()
   setitimer(ITIMER_REAL,&now,NULL);
 }
 
+/*msec timer*/
+int deltatime_obsolete()
+{
+  int delta;
+  struct itimerval now2;
+  getitimer(ITIMER_REAL,&now2);
+  delta = now.it_value.tv_usec - now2.it_value.tv_usec;
+  delta = delta/1000 + (now.it_value.tv_sec - now2.it_value.tv_sec)*1000;
+  /*itimer is a decremental timer*/
+  /*reset interval*/
+  now=now2;
+  return delta;
+}
 
 
 /*usec timer*/
@@ -182,8 +195,7 @@ Winfo *GetOptions(int argc,char *argv[],Ainfo *a,Ginfo *g)
 int ePushView(Ginfo *g,Winfo w[],int i)
 {
   FILE *file=fopen(VIEWFILE,"a+");
-  char buf[1000];
-  sprintf(buf,"%f %f %f %f %f %f %f %f %f %f %f\n",
+  fprintf(file,"%f %f %f %f %f %f %f %f %f %f %f\n",
 	  w[i].fov,
 	  w[i].depthratio,
 	  w[i].eyep[0],
@@ -195,9 +207,6 @@ int ePushView(Ginfo *g,Winfo w[],int i)
 	  w[i].up[0],
 	  w[i].up[1],
 	  w[i].up[2]);
-  fputs(buf,file);
-  printf("# view info\n%d %d ", w[i].currentframe,w[i].layermask);
-  fputs(buf,stdout);
   fclose(file);
   return TRUE;
 }

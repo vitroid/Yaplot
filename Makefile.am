@@ -1,6 +1,6 @@
 #SUBDIRS		= utils samples
 bin_PROGRAMS	= @YAPLOT@
-EXTRA_DIST	= common.h.in help.yap yaplot.col README.md yaplot.spec.in
+EXTRA_DIST	= common.h.in help.yap yaplot.col README.html WelcomeJ.html Makefile.dos README README.j yaplot.spec.in
 pkgdata_DATA	= help.yap yaplot.col
 EXTRA_PROGRAMS	= yaplot #yaplot_gtk #yaplot_glut yaplot gnome_yaplot gaplot_example
 AM_CPPFLAGS = ${GTK_CFLAGS}
@@ -33,6 +33,10 @@ version = @VERSION@
 	sed -e 's!@pkgdatadir@!$(pkgdatadir)!g' -e 's!@version@!$(version)!g' -e 's!@package@!$(package)!g' $< > $@
 yaplot_gtk.spec.in: yaplot.spec.in
 	sed -e 's!--without-gtk!!g' -e 's!Name: @package@!Name: @package@-gtk!g' $< > $@
+README: README.html
+	lynx -dump $< > $@
+README.j: WelcomeJ.html
+	lynx -dump $< > $@
 
 #@PACKAGE@-dos.zip: $(wildcard *.dll) yaplot.exe yaplot.col help.yap
 #	zip $@ $^
