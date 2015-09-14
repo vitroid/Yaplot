@@ -63,7 +63,6 @@ Reality2(NewOinfo *o,Winfo *w)
 			      XFillPolygon(g->display,w->pixmap,w->gc,poly,n,Nonconvex,CoordModeOrigin);
 			      XSetFillStyle(g->display,w->gc,FillSolid);*/
 	  /* it might be time-consuming. */
-	  setstipple(w, i%16);
 	  drawpoly2fb(w,poly,n,FALSE);
 	}
       else
@@ -79,11 +78,8 @@ Reality2(NewOinfo *o,Winfo *w)
 	    break;
 	  case 'c':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
-	    setfgcolor(w,qq->color);
-	    setstipple(w, i%16);
-	    setstippledfill(w);
+	    settpcolor(w,qq->color);
 	    drawcircle2fb(w,qq->points[0].x,qq->points[0].y,r,TRUE);
-	    setsolidfill(w);
 	    setthickness(w,1);
 	    drawcircle2fb(w,qq->points[0].x,qq->points[0].y,r,FALSE);
 	    setthickness(w,ithickness);
@@ -95,17 +91,15 @@ Reality2(NewOinfo *o,Winfo *w)
 	    break;
 	  case 's':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
-	    setfgcolor(w,qq->color);
 	    if ( qq->arrowtype <= 1 ){
+              setfgcolor(w,qq->color);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
 	    }
 	    else{
-	      setstipple(w, i%16);
-	      setstippledfill(w);
+              settpcolor(w,qq->color);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
-	      setsolidfill(w);
 	      setthickness(w,1);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
@@ -113,11 +107,8 @@ Reality2(NewOinfo *o,Winfo *w)
 	    }
 	    break;
 	  case 'p':
-	    setfgcolor(w,qq->color);
-	    setstipple(w, i%16);
-	    setstippledfill(w);
+	    settpcolor(w,qq->color);
 	    drawpoly2fb(w,qq->points,qq->nvertex-1,TRUE);
-	    setsolidfill(w);
 	    setthickness(w,1);
 	    drawpoly2fb(w,qq->points,qq->nvertex-1,FALSE);
 	    setthickness(w,ithickness);

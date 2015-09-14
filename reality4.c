@@ -28,7 +28,6 @@ Reality4(NewOinfo *o,Winfo *w)
   ithickness=thickness;
   oldthickness=ithickness;
   setthickness(w,ithickness);
-  setsolidfill(w);
   for(i=0;i<w->nrealize;i++)
     {
       Pinfo *qq;
@@ -89,10 +88,10 @@ Reality4(NewOinfo *o,Winfo *w)
 	    break;
 	  case 's':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
-	    setfgcolor(w,qq->color);
-	    drawstick2fb(w,qq->points[0].x,qq->points[0].y,
-			 qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
-	    if ( qq->arrowtype == 2 ){
+            setfgcolor(w,qq->color);
+            drawstick2fb(w,qq->points[0].x,qq->points[0].y,
+                         qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
+            if ( qq->arrowtype == 2 ){
 	      //dart
 	      setfgcolor(w,0);
 	      setthickness(w,1);

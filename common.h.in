@@ -198,8 +198,9 @@ typedef struct WINFO
   GtkWidget *window,*drawarea;
   GdkPixmap *pixmap;
   //for stipples
-  GdkPixmap *bitmap[16];
-  GdkGC *gc;
+  //GdkPixmap *bitmap[16];
+  //GdkGC *gc;
+  cairo_t *cr;
   GdkFont *font;
   GdkColor colortable[256];
   GdkColormap *colormap;
