@@ -8,8 +8,10 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
 void setthickness(Winfo *w,int thick);
 void waituntilflush();
 void setfgcolor(Winfo *w,int palette);
-void settpcolor(Winfo *w,int palette);
 void drawstring2fb(Winfo *w,int x,int y,char *str,int length);
+void setsolidfill(Winfo *w);
+void setstippledfill(Winfo *w); 
+void setstipple(Winfo* w, gint i);
 void clearfb(Winfo *w);
 void exposefb(Winfo *w);
 void createfb(Winfo *w);

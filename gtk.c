@@ -8,7 +8,7 @@
 #include "gtk.h"
 #include "yaplot.h"
 #include "os.h"
-//#include "stipples.h"
+#include "stipples.h"
 
 extern int debug;
 extern float Eyex,Eyey,Eyez;
@@ -18,78 +18,24 @@ int lastthick;
 
 void drawline2fb(Winfo *w,int x0,int y0,int x1,int y1)
 {
-  //gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
-  cairo_move_to (w->cr, x0, y0);
-  cairo_line_to (w->cr, x1, y1);
-  cairo_stroke (w->cr);
-}
-
-void drawpoly2fb0(Winfo *w,ivector2 *poly,int n)
-{
-  int i;
-  //gdk_draw_polygon(w->pixmap,w->gc,fill,(GdkPoint *)poly,n);
-  cairo_move_to (w->cr, poly[n-1].x, poly[n-1].y);
-  for(i=0;i<n;i++){
-    cairo_line_to (w->cr, poly[i].x, poly[i].y);
-  }
-  cairo_close_path (w->cr);
-  cairo_stroke_preserve (w->cr);
-}
-
-
-void drawpoly2fb1(Winfo *w,ivector2 *poly,int n)
-{
-  int i;
-  //gdk_draw_polygon(w->pixmap,w->gc,fill,(GdkPoint *)poly,n);
-  cairo_move_to (w->cr, poly[n-1].x, poly[n-1].y);
-  for(i=0;i<n;i++){
-    cairo_line_to (w->cr, poly[i].x, poly[i].y);
-  }
-  cairo_close_path (w->cr);
-  cairo_stroke (w->cr);
+  gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
 }
 
 void drawpoly2fb(Winfo *w,ivector2 *poly,int n,int fill)
 {
-  if ( fill ){
-    cairo_set_line_width(w->cr, 0);  
-    drawpoly2fb0(w, poly, n);
-    cairo_fill(w->cr);
-    setthickness(w, lastthick);
-  }
-  else{
-    drawpoly2fb1(w, poly, n);
-  }
+  gdk_draw_polygon(w->pixmap,w->gc,fill,(GdkPoint *)poly,n);
 }
-
 
 void drawcircle2fb(Winfo *w,int x,int y,int r,int fill)
 {
-  //gdk_draw_arc(w->pixmap,w->gc,fill,x - r,y - r,r+r,r+r,0,360*64);
-  cairo_move_to(w->cr, x+r,y);
-  if ( fill ){
-    cairo_set_line_width(w->cr, 0);  
-    cairo_arc(w->cr, x, y, r, 0, 2*M_PI);
-    cairo_fill(w->cr);
-    //cairo_stroke(w->cr);
-    setthickness(w, lastthick);
-  }
-  else{
-    cairo_arc(w->cr, x, y, r, 0, 2*M_PI);
-    cairo_stroke(w->cr);
-  }
+  gdk_draw_arc(w->pixmap,w->gc,fill,x - r,y - r,r+r,r+r,0,360*64);
 }
 
 void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int arrowtype)
 {
   if ( arrowtype == 0){
-    //gdk_gc_set_line_attributes(w->gc,r*2,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_ROUND);
-    int thick = r*2;
-    if (thick == 0){
-      thick = 1;
-    }
-    cairo_set_line_width(w->cr, thick);  
-    drawline2fb(w,x0,y0,x1,y1);
+    gdk_gc_set_line_attributes(w->gc,r*2,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_ROUND);
+    gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
     setthickness(w, lastthick);
   }
   else{
@@ -101,17 +47,9 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
       int ry = r * dy / dd;
       if ( arrowtype == 1 ){
 	//normal arrow with a head.
-	//gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
-	//gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx+ry,y1-2*ry-rx);
-	//gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx-ry,y1-2*ry+rx);
-        setthickness(w, 1);
-        cairo_move_to (w->cr, x0, y0);
-        cairo_line_to (w->cr, x1, y1);
-	cairo_move_to (w->cr, x1-2*rx+ry,y1-2*ry-rx);
-        cairo_line_to (w->cr, x1, y1);
-        cairo_line_to (w->cr, x1-2*rx-ry,y1-2*ry+rx);
-        cairo_stroke (w->cr);
-        setthickness(w, lastthick);
+	gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
+	gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx+ry,y1-2*ry-rx);
+	gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx-ry,y1-2*ry+rx);
       }
       else if ( arrowtype == 2 ){
 	//dart
@@ -132,10 +70,7 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
 void setthickness(Winfo *w,int thick)
 {
   lastthick = thick;
-  if(thick == 0){
-    thick =1;
-  }
-  cairo_set_line_width(w->cr, thick);  
+  gdk_gc_set_line_attributes(w->gc,thick,GDK_LINE_SOLID,GDK_CAP_ROUND,GDK_JOIN_ROUND);
 }
 
 void waituntilflush()
@@ -145,26 +80,18 @@ void waituntilflush()
 
 void setfgcolor(Winfo *w,int palette)
 {
-  //gdk_gc_set_foreground(w->gc,&w->colortable[palette]);
-  cairo_set_source_rgb(w->cr, (float)w->colortable[palette].red/65536.0, (float)w->colortable[palette].green/65536.0, (float)w->colortable[palette].blue/65536.0);
+  gdk_gc_set_foreground(w->gc,&w->colortable[palette]);
 }
-
-void settpcolor(Winfo *w,int palette)
-{
-  //gdk_gc_set_foreground(w->gc,&w->colortable[palette]);
-  cairo_set_source_rgba(w->cr, (float)w->colortable[palette].red/65536.0, (float)w->colortable[palette].green/65536.0, (float)w->colortable[palette].blue/65536.0, 0.5);
-}
-
 
 void overridepalette(Winfo *w,int palette,int red,int green,int blue)
 {
-  //if(w->colortable[palette].pixel){
-  //  gdk_colormap_free_colors(w->colormap,&w->colortable[palette],1);
-  //}
+  if(w->colortable[palette].pixel){
+    gdk_colormap_free_colors(w->colormap,&w->colortable[palette],1);
+  }
   w->colortable[palette].red=red<<8;
   w->colortable[palette].green=green<<8;
   w->colortable[palette].blue=blue<<8;
-  //gdk_colormap_alloc_color(w->colormap,&w->colortable[palette],FALSE,FALSE);
+  gdk_colormap_alloc_color(w->colormap,&w->colortable[palette],FALSE,FALSE);
   if(palette>w->lastColor){
     w->lastColor=palette;
   }
@@ -172,27 +99,37 @@ void overridepalette(Winfo *w,int palette,int red,int green,int blue)
 
 void drawstring2fb(Winfo *w,int x,int y,char *str,int length)
 {
-  //gdk_draw_text(w->pixmap,
-  //		w->font,
-  //		w->gc,
-  //		x,y,str,length);
-  cairo_move_to (w->cr, x,y);
-  cairo_show_text(w->cr, str);
+  gdk_draw_text(w->pixmap,
+		w->font,
+		w->gc,
+		x,y,str,length);
+}
+
+void setsolidfill(Winfo *w)
+{
+  gdk_gc_set_fill(w->gc,GDK_SOLID);
+}
+
+void setstippledfill(Winfo *w)
+{
+  gdk_gc_set_fill(w->gc,GDK_STIPPLED);
+}
+
+
+void setstipple(Winfo* w, gint i)
+{
+  gdk_gc_set_stipple(w->gc,w->bitmap[i]);
 }
 
 
 void clearfb(Winfo *w)
 {
+  setsolidfill(w);
   setfgcolor(w,1);
-  //gdk_draw_rectangle(w->pixmap,w->gc,
-  //		     TRUE,0,0,
-  //		     w->drawarea->allocation.width,
-  //		     w->drawarea->allocation.height);
-  //cairo_rectangle(w->cr, 0,0,
-  //                w->drawarea->allocation.width,
-  //                w->drawarea->allocation.height);
-  //cairo_fill(w->cr);
-  cairo_paint(w->cr);
+  gdk_draw_rectangle(w->pixmap,w->gc,
+		     TRUE,0,0,
+		     w->drawarea->allocation.width,
+		     w->drawarea->allocation.height);
 }
 
 void exposefb(Winfo *w)
@@ -660,16 +597,12 @@ void W_Init2(Winfo *w,Ginfo *g)
     
     for(i=0;i<g->nwindow;i++){
         w[i].pixmap=gdk_pixmap_new(w[i].window->window,w[i].screenwidth,w[i].screenheight,-1);
-        //w[i].gc=gdk_gc_new(w[i].pixmap);
-        w[i].cr = gdk_cairo_create(w[i].pixmap);
-        cairo_set_line_join (w[i].cr, CAIRO_LINE_JOIN_ROUND);
-        cairo_set_line_cap  (w[i].cr, CAIRO_LINE_CAP_ROUND);
-        cairo_set_font_size (w[i].cr, 12);
-        cairo_select_font_face (w[i].cr, "Helvetica",
-                                CAIRO_FONT_SLANT_ITALIC ,
-                                CAIRO_FONT_WEIGHT_NORMAL);
-        //w[i].font=gdk_font_load(FONT);
+        w[i].gc=gdk_gc_new(w[i].pixmap);
+        w[i].font=gdk_font_load(FONT);
 	//gdk_gc_set_stipple(w[i].gc,gdk_bitmap_create_from_data(w[i].window->window,stipple_bits,stipple_width,stipple_height));
+        for(j=0;j<16;j++){
+	  w[i].bitmap[j] = gdk_bitmap_create_from_data(w[i].window->window,stipple_bits[j],stipple_width,stipple_height);
+	}
     }
 }
 

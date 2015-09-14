@@ -29,6 +29,7 @@ Reality3(NewOinfo *o,Winfo *w)
   oldthickness=ithickness;
   setthickness(w,ithickness);
     
+  setsolidfill(w);
   for(i=0;i<w->nrealize;i++)
     {
       Pinfo *qq;
@@ -85,10 +86,10 @@ Reality3(NewOinfo *o,Winfo *w)
 	    break;
 	  case 's':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
-            setfgcolor(w,qq->color);
-            drawstick2fb(w,qq->points[0].x,qq->points[0].y,
-                         qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
-            break;
+	    setfgcolor(w,qq->color);
+	    drawstick2fb(w,qq->points[0].x,qq->points[0].y,
+			 qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
+	    break;
 	  case 'p':
 	    setfgcolor(w,qq->color);
 	    drawpoly2fb(w,qq->points,qq->nvertex-1,TRUE);
