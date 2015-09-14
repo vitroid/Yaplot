@@ -668,6 +668,14 @@ void W_Init2(Winfo *w,Ginfo *g)
     
     for(i=0;i<g->nwindow;i++){
         w[i].pixmap=gdk_pixmap_new(w[i].window->window,w[i].screenwidth,w[i].screenheight,-1);
+        cairo_t* cr  = gdk_cairo_create(w[i].pixmap);
+        w[i].cr = cr;
+        cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
+        cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
+        cairo_set_font_size (cr, 12);
+        cairo_select_font_face (cr, "Helvetica",
+                                CAIRO_FONT_SLANT_ITALIC ,
+                                CAIRO_FONT_WEIGHT_NORMAL);
         //w[i].gc=gdk_gc_new(w[i].pixmap);
         //w[i].font=gdk_font_load(FONT);
 	//gdk_gc_set_stipple(w[i].gc,gdk_bitmap_create_from_data(w[i].window->window,stipple_bits,stipple_width,stipple_height));
