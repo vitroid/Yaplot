@@ -14,7 +14,7 @@ extern int debug;
 extern float Eyex,Eyey,Eyez;
 extern float Lookx,Looky,Lookz;
 extern float Upx,Upy,Upz;
-int lastthick;
+float lastthick;
 
 void drawline2fb(Winfo *w,int x0,int y0,int x1,int y1)
 {
@@ -55,7 +55,7 @@ void drawpoly2fb(Winfo *w,ivector2 *poly,int n,int fill)
     cairo_set_line_width(w->cr, 0);  
     drawpoly2fb0(w, poly, n);
     cairo_fill(w->cr);
-    setthickness(w, lastthick);
+    setlinewidth(w, lastthick);
   }
   else{
     drawpoly2fb1(w, poly, n);
@@ -72,7 +72,7 @@ void drawcircle2fb(Winfo *w,int x,int y,int r,int fill)
     cairo_arc(w->cr, x, y, r, 0, 2*M_PI);
     cairo_fill(w->cr);
     //cairo_stroke(w->cr);
-    setthickness(w, lastthick);
+    setlinewidth(w, lastthick);
   }
   else{
     cairo_arc(w->cr, x, y, r, 0, 2*M_PI);
@@ -90,7 +90,7 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
     }
     cairo_set_line_width(w->cr, thick);  
     drawline2fb(w,x0,y0,x1,y1);
-    setthickness(w, lastthick);
+    setlinewidth(w, lastthick);
   }
   else{
     int dx = x1 - x0;
@@ -104,14 +104,14 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
 	//gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
 	//gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx+ry,y1-2*ry-rx);
 	//gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx-ry,y1-2*ry+rx);
-        setthickness(w, 1);
+        setlinewidth(w, 1);
         cairo_move_to (w->cr, x0, y0);
         cairo_line_to (w->cr, x1, y1);
 	cairo_move_to (w->cr, x1-2*rx+ry,y1-2*ry-rx);
         cairo_line_to (w->cr, x1, y1);
         cairo_line_to (w->cr, x1-2*rx-ry,y1-2*ry+rx);
         cairo_stroke (w->cr);
-        setthickness(w, lastthick);
+        setlinewidth(w, lastthick);
       }
       else if ( arrowtype == 2 ){
 	//dart
@@ -129,7 +129,7 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
 }
 
 
-void setthickness(Winfo *w,int thick)
+void setlinewidth(Winfo *w,float thick)
 {
   lastthick = thick;
   if(thick == 0){

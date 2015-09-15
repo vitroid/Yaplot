@@ -166,6 +166,8 @@ typedef struct WINFO
   int status;
   /*実際に表示する要素の個数*/
   int nrealize;
+  /*number of non-text primitives to be displayed*/
+  int nscalable;
   int screenwidth,screenheight;
   float screendepth;
   int currentframe;

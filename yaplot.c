@@ -1148,38 +1148,40 @@ RotateAllPrims(Ginfo *g,Winfo *w)
   RotateAllPrims0(g,w);
   o=*w->oo;
   w->nrealize=0;
+  w->nscalable=0;//number of scalable elements, i.e. non-text objects
   /*必要の無い要素はこの時点で除いておく。*/
   last=o->prims->n - 1;
   j=0;
-  while(j<=last)
-    {
-      float zsum;
-      Pinfo *qq;
-      qq =((Pinfo **)o->prims->a)[j];
-      zsum = 0;
-      if(qq->layermask & w->layermask){
-	for(i=0;i<qq->nvertex;i++)
-	  {
-	    v = qq->vertex[i];
-	    zsum += v->zz;
-	    if(v->zz<g->clip){
-	      goto skip;
-	    }
-	    qq->points[i].x = v->ix;
-	    qq->points[i].y = v->iy;
-	  }
-	qq->sortkey = zsum/qq->nvertex;
-	j++;
-      }else{
-	Pinfo **head,**tail;
-      skip:
-	head=&(((Pinfo **)o->prims->a)[j]);
-	tail=&(((Pinfo **)o->prims->a)[last]);
-	*head=*tail;
-	*tail=qq;
-	last--;
+  while(j<=last){
+    float zsum;
+    Pinfo *qq;
+    qq =((Pinfo **)o->prims->a)[j];
+    zsum = 0;
+    if(qq->layermask & w->layermask){
+      for(i=0;i<qq->nvertex;i++){
+        v = qq->vertex[i];
+        zsum += v->zz;
+        if(v->zz<g->clip){
+          goto skip;
+        }
+        qq->points[i].x = v->ix;
+        qq->points[i].y = v->iy;
       }
+      qq->sortkey = zsum/qq->nvertex;
+      j++;
+      if ( qq->id != 't' ){
+        w->nscalable ++;
+      }
+    }else{
+      Pinfo **head,**tail;
+    skip:
+      head=&(((Pinfo **)o->prims->a)[j]);
+      tail=&(((Pinfo **)o->prims->a)[last]);
+      *head=*tail;
+      *tail=qq;
+      last--;
     }
+  }
   w->nrealize=last+1;
 }
 

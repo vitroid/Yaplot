@@ -5,7 +5,7 @@ void drawline2fb(Winfo *w,int x0,int y0,int x1,int y1);
 void drawcircle2fb(Winfo *w,int x,int y,int r,int fill);
 void drawpoly2fb(Winfo *w,ivector2 *poly,int n,int fill);
 void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int arrowtype);
-void setthickness(Winfo *w,int thick);
+void setlinewidth(Winfo *w,float thick);
 void waituntilflush();
 void setfgcolor(Winfo *w,int palette);
 void settpcolor(Winfo *w,int palette);
