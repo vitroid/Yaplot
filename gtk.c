@@ -8,7 +8,6 @@
 #include "gtk.h"
 #include "yaplot.h"
 #include "os.h"
-//#include "stipples.h"
 
 extern int debug;
 extern float Eyex,Eyey,Eyez;
@@ -18,7 +17,6 @@ float lastthick;
 
 void drawline2fb(Winfo *w,int x0,int y0,int x1,int y1)
 {
-  //gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
   cairo_move_to (w->cr, x0, y0);
   cairo_line_to (w->cr, x1, y1);
   cairo_stroke (w->cr);
@@ -27,7 +25,6 @@ void drawline2fb(Winfo *w,int x0,int y0,int x1,int y1)
 void drawpoly2fb0(Winfo *w,ivector2 *poly,int n)
 {
   int i;
-  //gdk_draw_polygon(w->pixmap,w->gc,fill,(GdkPoint *)poly,n);
   cairo_move_to (w->cr, poly[n-1].x, poly[n-1].y);
   for(i=0;i<n;i++){
     cairo_line_to (w->cr, poly[i].x, poly[i].y);
@@ -40,7 +37,6 @@ void drawpoly2fb0(Winfo *w,ivector2 *poly,int n)
 void drawpoly2fb1(Winfo *w,ivector2 *poly,int n)
 {
   int i;
-  //gdk_draw_polygon(w->pixmap,w->gc,fill,(GdkPoint *)poly,n);
   cairo_move_to (w->cr, poly[n-1].x, poly[n-1].y);
   for(i=0;i<n;i++){
     cairo_line_to (w->cr, poly[i].x, poly[i].y);
@@ -65,13 +61,11 @@ void drawpoly2fb(Winfo *w,ivector2 *poly,int n,int fill)
 
 void drawcircle2fb(Winfo *w,int x,int y,int r,int fill)
 {
-  //gdk_draw_arc(w->pixmap,w->gc,fill,x - r,y - r,r+r,r+r,0,360*64);
   cairo_move_to(w->cr, x+r,y);
   if ( fill ){
     cairo_set_line_width(w->cr, 0);  
     cairo_arc(w->cr, x, y, r, 0, 2*M_PI);
     cairo_fill(w->cr);
-    //cairo_stroke(w->cr);
     setlinewidth(w, lastthick);
   }
   else{
@@ -83,7 +77,6 @@ void drawcircle2fb(Winfo *w,int x,int y,int r,int fill)
 void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int arrowtype)
 {
   if ( arrowtype == 0){
-    //gdk_gc_set_line_attributes(w->gc,r*2,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_ROUND);
     int thick = r*2;
     if (thick == 0){
       thick = 1;
@@ -101,9 +94,6 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
       int ry = r * dy / dd;
       if ( arrowtype == 1 ){
 	//normal arrow with a head.
-	//gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
-	//gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx+ry,y1-2*ry-rx);
-	//gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx-ry,y1-2*ry+rx);
         setlinewidth(w, 1);
         cairo_move_to (w->cr, x0, y0);
         cairo_line_to (w->cr, x1, y1);
@@ -145,26 +135,20 @@ void waituntilflush()
 
 void setfgcolor(Winfo *w,int palette)
 {
-  //gdk_gc_set_foreground(w->gc,&w->colortable[palette]);
   cairo_set_source_rgb(w->cr, (float)w->colortable[palette].red/65536.0, (float)w->colortable[palette].green/65536.0, (float)w->colortable[palette].blue/65536.0);
 }
 
 void settpcolor(Winfo *w,int palette)
 {
-  //gdk_gc_set_foreground(w->gc,&w->colortable[palette]);
   cairo_set_source_rgba(w->cr, (float)w->colortable[palette].red/65536.0, (float)w->colortable[palette].green/65536.0, (float)w->colortable[palette].blue/65536.0, 0.5);
 }
 
 
 void overridepalette(Winfo *w,int palette,int red,int green,int blue)
 {
-  //if(w->colortable[palette].pixel){
-  //  gdk_colormap_free_colors(w->colormap,&w->colortable[palette],1);
-  //}
   w->colortable[palette].red=red<<8;
   w->colortable[palette].green=green<<8;
   w->colortable[palette].blue=blue<<8;
-  //gdk_colormap_alloc_color(w->colormap,&w->colortable[palette],FALSE,FALSE);
   if(palette>w->lastColor){
     w->lastColor=palette;
   }
@@ -172,10 +156,6 @@ void overridepalette(Winfo *w,int palette,int red,int green,int blue)
 
 void drawstring2fb(Winfo *w,int x,int y,char *str,int length)
 {
-  //gdk_draw_text(w->pixmap,
-  //		w->font,
-  //		w->gc,
-  //		x,y,str,length);
   cairo_move_to (w->cr, x,y);
   cairo_show_text(w->cr, str);
 }
@@ -184,14 +164,6 @@ void drawstring2fb(Winfo *w,int x,int y,char *str,int length)
 void clearfb(Winfo *w)
 {
   setfgcolor(w,1);
-  //gdk_draw_rectangle(w->pixmap,w->gc,
-  //		     TRUE,0,0,
-  //		     w->drawarea->allocation.width,
-  //		     w->drawarea->allocation.height);
-  //cairo_rectangle(w->cr, 0,0,
-  //                w->drawarea->allocation.width,
-  //                w->drawarea->allocation.height);
-  //cairo_fill(w->cr);
   cairo_paint(w->cr);
 }
 
@@ -642,11 +614,6 @@ void W_Init2(Winfo *w,Ginfo *g)
         gtk_signal_connect(GTK_OBJECT(w[i].window),"button_press_event",(GtkSignalFunc)button_press_event,NULL);
         gtk_signal_connect(GTK_OBJECT(w[i].window),"button_release_event",(GtkSignalFunc)button_release_event,NULL);
         gtk_signal_connect(GTK_OBJECT(w[i].window),"key_press_event",(GtkSignalFunc)key_press_cb,NULL);
-        /*
-          gtk_signal_connect(GTK_OBJECT(w[i].window),"configure_event",(GtkSignalFunc)configure_event,NULL);
-          gtk_signal_connect(GTK_OBJECT(w[i].window),"expose_event",(GtkSignalFunc)expose_event,NULL);
-          gtk_signal_connect(GTK_OBJECT(w[i].window),"button_press_event",(GtkSignalFunc)button_press_event,NULL);
-        */
         gtk_widget_set_events(w[i].window,
                               GDK_STRUCTURE_MASK
                               | GDK_EXPOSURE_MASK
@@ -657,15 +624,6 @@ void W_Init2(Winfo *w,Ginfo *g)
         gtk_widget_show(w[i].window);
         gtk_window_set_title((GtkWindow *)w[i].window,w[i].inputfilename);
     }
-    /*
-      while(1)
-      {
-      XEvent ev;
-      XNextEvent(g->display,&ev);
-      if(ev.type==MapNotify)break;
-      }*/
-    
-    
     for(i=0;i<g->nwindow;i++){
         w[i].pixmap=gdk_pixmap_new(w[i].window->window,w[i].screenwidth,w[i].screenheight,-1);
         cairo_t* cr  = gdk_cairo_create(w[i].pixmap);
@@ -676,9 +634,6 @@ void W_Init2(Winfo *w,Ginfo *g)
         cairo_select_font_face (cr, "Helvetica",
                                 CAIRO_FONT_SLANT_ITALIC ,
                                 CAIRO_FONT_WEIGHT_NORMAL);
-        //w[i].gc=gdk_gc_new(w[i].pixmap);
-        //w[i].font=gdk_font_load(FONT);
-	//gdk_gc_set_stipple(w[i].gc,gdk_bitmap_create_from_data(w[i].window->window,stipple_bits,stipple_width,stipple_height));
     }
 }
 
@@ -696,14 +651,10 @@ G_loadpalettes(Ginfo *g)
         while((string[cpos]==' ')||(string[cpos]=='\t')){
             cpos++;
         }
-        /*named color is not available now.*/
-        /*if((string[cpos]>='0')&&(string[cpos]<='9')){*/
         sscanf(string,"%d %d %d",&rr,&gg,&bb);
         g->mastercolortable[g->numColors].red=rr<<8;
         g->mastercolortable[g->numColors].green=gg<<8;
         g->mastercolortable[g->numColors].blue=bb<<8;
-        /*gdk_colormap_alloc_color(g->colormap,&g->mastercolortable[g->numColors],FALSE,TRUE);*/
-        /*XAllocNamedColor(g->display,g->colormap,string,&g->mastercolortable[g->numColors],&dummy);*/
         g->numColors++;
     }
     fclose(g->palettefile);
@@ -796,17 +747,10 @@ void W_SaveSnapShot(Winfo *w,int windowid)
   int j;
   sRGBImage* image = rgbimage_new(w->window->allocation.width,
 				  w->window->allocation.height);
-  //sprintf(filename,"ppmquant 256 | pnmtopng > yaplot%02d_%05d.png",i,w->currentframe);
-  //file=popen(filename,"w");
-  //sprintf(filename,"yaplot%02d_%05d.ppm",i,w->currentframe);
-  //file=fopen(filename,"w");
   gp=gdk_pixbuf_get_from_drawable(NULL,w->pixmap,w->colormap,
 				  0,0,0,0,
 				  w->window->allocation.width,
 				  w->window->allocation.height);
-  //fprintf(file,"P3\n%d %d\n255\n",
-  //	  w->window->allocation.width,
-  //	  w->window->allocation.height);
   int rowstride = gdk_pixbuf_get_rowstride( gp );
   buf = gdk_pixbuf_get_pixels(gp);
   for(j=0; j<w->window->allocation.height;j++){
