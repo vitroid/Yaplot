@@ -958,6 +958,7 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
 	      x1=atof(strtok(NULL," \t"));
 	      y1=atof(strtok(NULL," \t"));
 	      z1=atof(strtok(NULL," \t"));
+	      fprintf(stderr,"%f %f %f\n", x1,y1,z1);
 	      qq->vertex[i]=Vertex_Insert(h,o,x1,y1,z1,currentlayermask);
 	    }
 	  qq->vertex[n] = qq->vertex[0];
