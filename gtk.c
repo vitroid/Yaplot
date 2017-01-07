@@ -558,6 +558,7 @@ void W_Init2(Winfo *w,Ginfo *g)
     for(i=0;i<g->nwindow;i++){
         /*Ginfoの内容をコピーする。*/
         w[i].colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
+	//Color map is now unavailable in some Macs (I do not know why).
         w[i].lastColor=g->numColors-1;
         for(j=0;j<g->numColors;j++){
             w[i].colortable[j].red=g->mastercolortable[j].red;
