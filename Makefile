@@ -1,6 +1,8 @@
 #requires pkg-config
-
-OBJS=varray.o yaplot.o reality0.o reality1.o reality2.o reality3.o reality4.o unixwrap.o cache.o Hash.o gtk.o
+PROG=yaplot
+SRC=Hash.c reality0.c reality2.c reality4.c varray.c cache.c  gtk.c  reality1.c reality3.c unixwrap.c yaplot.c
+OBJS=$(patsubst %.c,%.o,$(SRC))
+DEPENDS=$(patsubst %.c,%.d,$(SRC))
 GTK_CFLAGS=$(shell pkg-config gtk+-2.0 --cflags)
 GTK_LDFLAGS=$(shell pkg-config gtk+-2.0 --libs)
 PNG_LDFLAGS=$(shell pkg-config libpng --libs)
@@ -10,14 +12,17 @@ PKGDATADIR=/usr/local/share/yaplot
 
 %.h: %.h.in
 	sed -e sX@pkgdatadir@X$(PKGDATADIR)X $< > $@
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-yaplot: $(OBJS)
+%.o: common.h
+$(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)
-install:
-	
+.PHONY: clean depend distclean
 clean:
-	-rm *.o
+	-$(RM) $(PROG) $(OBJS) $(DEPENDS)
+distclean: clean
 	-rm *~
 	-rm common.h
-	-rm yaplot
+%.d: %.c common.h
+	@set -e; $(CC) -MM $(CFLAGS) $< \
+		| sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@; \
+		[ -s $@ ] || rm -f $@
+-include $(DEPENDS)
