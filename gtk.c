@@ -309,7 +309,7 @@ static gint key_press_cb(GtkWidget *widget,
   if(debug){
     fprintf(stderr,"Key: %d/Status: %d\n",key,modstatus);
   }
-  /*$B$3$N$"$?$j$N=hM}$O$9$Y$F$N%3%^%s%I$K3HD%$9$Y$-!#(B*/
+  /*このあたりの処理はすべてのコマンドに拡張すべき。*/
   if((event->length==1)&&(event->string[0]>='0')&&(event->string[0]<='9')){
     jumpto = jumpto*10+event->string[0]-'0';
 #ifdef RECORD
@@ -329,7 +329,7 @@ static gint key_press_cb(GtkWidget *widget,
     int processed;
     switch(key)
       {
-	/*$B;EMM$rBgI}$KJQ99$7$h$&(B*/
+	/*仕様を大幅に変更しよう*/
       case GDK_q:
       case GDK_Break:
 	processed=eQuit(g,w,i);
@@ -550,7 +550,7 @@ void W_Init2(Winfo *w,Ginfo *g)
     if(debug)fprintf(stderr,"%d\n",gdk_colormap_get_system_size());
     
     for(i=0;i<g->nwindow;i++){
-        /*Ginfo$B$NFbMF$r%3%T!<$9$k!#(B*/
+        /*Ginfoの内容をコピーする。*/
         w[i].colormap=gdk_colormap_new(gdk_visual_get_system(),TRUE);
         w[i].lastColor=g->numColors-1;
         for(j=0;j<g->numColors;j++){
@@ -659,12 +659,12 @@ void handleevent(Ginfo *g,Winfo w[])
 
 #ifdef RECORD
 #include <png.h>
-#include <jpeglib.h>
+//#include <jpeglib.h>
 
 typedef struct{
   int    width, height;
-  JSAMPARRAY rgb;
-  //char*  rgb;
+  //JSAMPARRAY rgb;
+  unsigned char**  rgb;
 } sRGBImage;
 
 

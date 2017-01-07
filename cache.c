@@ -1,12 +1,12 @@
-/*cache$B7?G[Ns$r:n$k!#A4MWAG$O$D$M$K(Bmax$B8D$G8GDj!#(Bcache$B$K4^$^$l$J$$MWAG(B */
-/*$B$r%"%/%;%9$7$?$i!":G$b5l$$MWAG$r:o=|$7$F>l=j$rDs6!$9$k!#@hFI$_$O$H$j(B */
-/*$B$"$($:$7$J$$$3$H$H$9$k!#(B($B@hFI$_$5$;$k$J$i!"(Bdestructor$B$@$1$G$J$/!"%G!<(B */
-/*$B%?$rDI2C$9$k$?$a$N4X?t$bI,MW$@$7!"$I$N$h$&$J@oN,$GFI$a$P$$$$$+$o$+$i(B */
-/*$B$J$$!#(B)*/
+/*cache型配列を作る。全要素はつねにmax個で固定。cacheに含まれない要素 */
+/*をアクセスしたら、最も旧い要素を削除して場所を提供する。先読みはとり */
+/*あえずしないこととする。(先読みさせるなら、destructorだけでなく、デー */
+/*タを追加するための関数も必要だし、どのような戦略で読めばいいかわから */
+/*ない。)*/
 
-/*$BHs>o$KBg$-$J%-%c%C%7%e$r:n$k>l9g$K$O!"$3$N%W%m%0%i%`$N$h$&$KA0J}$+$i(B */
-/*$B=gHV$KC5:w$9$kJ}K!$G$O;~4V$,$+$+$j$9$.$k!#(Bhash$B$HAH$_$"$o$;$k$h$&$J$3(B */
-/*$B$H$bI,MW$+$b!#(B*/
+/*非常に大きなキャッシュを作る場合には、このプログラムのように前方から */
+/*順番に探索する方法では時間がかかりすぎる。hashと組みあわせるようなこ */
+/*とも必要かも。*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

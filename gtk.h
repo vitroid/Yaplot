@@ -11,7 +11,7 @@ void setfgcolor(Winfo *w,int palette);
 void drawstring2fb(Winfo *w,int x,int y,char *str,int length);
 void setsolidfill(Winfo *w);
 void setstippledfill(Winfo *w); 
-void setstipple(Winfo* w, gint i);
+void setstipple(Winfo* w, int i);
 void clearfb(Winfo *w);
 void exposefb(Winfo *w);
 void createfb(Winfo *w);

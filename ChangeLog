@@ -1,14 +1,14 @@
-$BJ?@.(B13$BG/(B7$B7n(B23$BF|(B($B7n(B)
-	$B$d$C$H(Bgtk$B$H(Bautoconf$B$KBP1~(B
-	dos$B$G%3%s%Q%$%k2DG=$K(B($B$?$@$7(Bcommand line$B$N$_(B)
-	$BO?2h2DG=$K(B(gdk-pixbuf$B$,I,MW(B)
-	$BF0E*%Q%l%C%H:F@_Dj$,2DG=$K$J$C$?(B
-	$B%I%-%e%a%s%H$N99?7(B
-$BJ?@.(B13$BG/(B6$B7n(B18$BF|(B($B7n(B)
-	help$B2hLL$N2~D{(B(layer$B$NDI2C(B)
-	$B%M%C%H%o!<%/1[$7$KI=<($9$k>l9g$N2sE>$r%9%`!<%:$K$7$?!#(B
-	$B?t;z(B+$B%3%^%s%I$G(Bquick action$B$G$-$k$h$&$K$7$?(B
-	$B3d$j9~$_=hM}$r$J$/$7!"%(%l%a%s%H?t$,B?$/$F$b$=$l$J$j$KA`:n$7$d$9$/$7$?!#(B
-	$B%3%^%s%I%i%$%s%*%W%7%g%s$G;kE@$N=i4|CM$r$A$c$s$H;XDj$G$-$k$h$&$K$9$k!#(B
-	$B%Q%l%C%H$N5-=RJ}K!$r0lHL2=(B
-	TAB$B$G2sE>$r%j%;%C%H$G$-$J$+$C$?$N$r=$@5(B
+平成13年7月23日(月)
+	やっとgtkとautoconfに対応
+	dosでコンパイル可能に(ただしcommand lineのみ)
+	録画可能に(gdk-pixbufが必要)
+	動的パレット再設定が可能になった
+	ドキュメントの更新
+平成13年6月18日(月)
+	help画面の改訂(layerの追加)
+	ネットワーク越しに表示する場合の回転をスムーズにした。
+	数字+コマンドでquick actionできるようにした
+	割り込み処理をなくし、エレメント数が多くてもそれなりに操作しやすくした。
+	コマンドラインオプションで視点の初期値をちゃんと指定できるようにする。
+	パレットの記述方法を一般化
+	TABで回転をリセットできなかったのを修正

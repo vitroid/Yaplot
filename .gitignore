@@ -1,17 +1,4 @@
-common.h
 
-.deps
-yaplot
-*.o
-autom4te.cache/*
 .yapviewstack
-gmon.out
-config.h
-*.bz2
-*~
-.DS_Store
-*.gz
-stamp-h1
-config.status
-config.log
-Makefile
+
+yaplot
