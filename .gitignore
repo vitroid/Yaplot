@@ -16,3 +16,7 @@ config.status
 config.log
 Makefile
 test_*
+
+@
+
+*.d

@@ -16,11 +16,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifdef YAPLOT_GTK
 #include <gtk/gtk.h>
-#else
-#include <X11/Xlib.h>
-#endif
 #ifdef win32
 #define FONT "-unknown-*-*-r-normal-*-12-100-*-*-p-*-windows-shiftjis"
 #else
@@ -114,13 +110,7 @@ typedef struct GINFO
   float clip;
   /*X11に依存する変数*/
   /*colormapはGinfoで一旦初期化し、各ウィンドウ用にコピーして使用する。*/
-#ifdef YAPLOT_GTK
   GdkColor mastercolortable[256];
-#else
-  XColor mastercolortable[256];
-  Window root;
-  int screen;
-#endif
   /*GdkColormap *colormap;*/
   /*UNIXに依存する変数*/
   FILE *palettefile;
@@ -196,7 +186,6 @@ typedef struct WINFO
 #endif
   int lastColor;
   /*X11に依存する部分*/
-#ifdef YAPLOT_GTK
   GtkWidget *window,*drawarea;
   GdkPixmap *pixmap;
   //for stipples
@@ -206,13 +195,6 @@ typedef struct WINFO
   GdkFont *font;
   GdkColor colortable[256];
   GdkColormap *colormap;
-#else
-  XColor colortable[256];
-  Pixmap pixmap;
-  Window window;
-  GC gc;
-  Colormap colormap;
-#endif
   /*ここまで*/
 }
 Winfo;

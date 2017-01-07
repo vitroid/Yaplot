@@ -215,7 +215,7 @@ vector2 polygon[6][4];
 float ddelta;
 /*struct itimerval deb0,deb1;*/
 /*global (initial camera position*/
-int debug=0;
+int debug=1;
 float Eyex=0,Eyey=-40,Eyez=0;
 float Lookx=0,Looky=0,Lookz=0;
 float Upx=0,Upy=0,Upz=1;
@@ -958,6 +958,7 @@ O_Load(int defaultsize,FILE *file,Winfo *w)
 	      x1=atof(strtok(NULL," \t"));
 	      y1=atof(strtok(NULL," \t"));
 	      z1=atof(strtok(NULL," \t"));
+	      fprintf(stderr,"%f %f %f\n", x1,y1,z1);
 	      qq->vertex[i]=Vertex_Insert(h,o,x1,y1,z1,currentlayermask);
 	    }
 	  qq->vertex[n] = qq->vertex[0];

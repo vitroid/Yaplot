@@ -1,11 +1,11 @@
-/*$BI8=`E*$J%*!<%W%s%"%I%l%9%O%C%7%e!#M?$($i$l$?MWAG$H%O%C%7%eFb$K$"$kMW(B
-  $BAG$NHf3S$r87=E$K9T$($k$h$&$K!"30It4X?t$r8F$S$@$9$h$&$K@_7W$9$k!#(B*/
+/*標準的なオープンアドレスハッシュ。与えられた要素とハッシュ内にある要
+  素の比較を厳重に行えるように、外部関数を呼びだすように設計する。*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "Hash.h"
 
-/*hash$BMWAG$NHV9f$rJV$9!#$b$7B8:_$7$J$$MWAG$J$i!"6u$-MWAG$rJV$9$,!"%G!<(B
-  $B%?$NA^F~$O$7$J$$!#(B*/
+/*hash要素の番号を返す。もし存在しない要素なら、空き要素を返すが、デー
+  タの挿入はしない。*/
 int Hash_QueryElement(sHash *h,unsigned int key,void *element)
 {
   int dup=0;
@@ -29,7 +29,7 @@ int Hash_QueryElement(sHash *h,unsigned int key,void *element)
   }
 }
 
-/*$BCM$rDI2CEPO?$9$k!#$9$G$K%9%m%C%H$,@jM-$5$l$F$$$l$P(B1$B$rJV$9!#(B*/
+/*値を追加登録する。すでにスロットが占有されていれば1を返す。*/
 int Hash_RegisterValue(sHash *h,unsigned int key,void *element)
 {
   if(h->value[key]==NULL){

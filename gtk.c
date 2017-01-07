@@ -686,12 +686,11 @@ void handleevent(Ginfo *g,Winfo w[])
 
 #ifdef RECORD
 #include <png.h>
-#include <jpeglib.h>
 
 typedef struct{
   int    width, height;
-  JSAMPARRAY rgb;
-  //char*  rgb;
+  //JSAMPARRAY rgb;
+  unsigned char**  rgb;
 } sRGBImage;
 
 
