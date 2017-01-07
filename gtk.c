@@ -81,6 +81,13 @@ void waituntilflush()
 void setfgcolor(Winfo *w,int palette)
 {
   gdk_gc_set_foreground(w->gc,&w->colortable[palette]);
+  if(debug){
+    fprintf(stderr,"set fg color to palette %d: %x %x %x\n",
+	    palette, 
+	    w->colortable[palette].red,
+	    w->colortable[palette].green,
+	    w->colortable[palette].blue);
+  }
 }
 
 void overridepalette(Winfo *w,int palette,int red,int green,int blue)
@@ -547,11 +554,11 @@ void W_Init2(Winfo *w,Ginfo *g)
     int i,j;
     g_internal=g;
     w_internal=w;
-    if(debug)fprintf(stderr,"%d\n",gdk_colormap_get_system_size());
     
     for(i=0;i<g->nwindow;i++){
         /*Ginfoの内容をコピーする。*/
-        w[i].colormap=gdk_colormap_new(gdk_visual_get_system(),TRUE);
+        w[i].colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
+	//Color map is now unavailable in some Macs (I do not know why).
         w[i].lastColor=g->numColors-1;
         for(j=0;j<g->numColors;j++){
             w[i].colortable[j].red=g->mastercolortable[j].red;
@@ -621,13 +628,10 @@ G_loadpalettes(Ginfo *g)
             cpos++;
         }
         /*named color is not available now.*/
-        /*if((string[cpos]>='0')&&(string[cpos]<='9')){*/
         sscanf(string,"%d %d %d",&rr,&gg,&bb);
         g->mastercolortable[g->numColors].red=rr<<8;
         g->mastercolortable[g->numColors].green=gg<<8;
         g->mastercolortable[g->numColors].blue=bb<<8;
-        /*gdk_colormap_alloc_color(g->colormap,&g->mastercolortable[g->numColors],FALSE,TRUE);*/
-        /*XAllocNamedColor(g->display,g->colormap,string,&g->mastercolortable[g->numColors],&dummy);*/
         g->numColors++;
     }
     fclose(g->palettefile);
@@ -724,7 +728,7 @@ void W_SaveSnapShot(Winfo *w,int windowid)
   //file=popen(filename,"w");
   //sprintf(filename,"yaplot%02d_%05d.ppm",i,w->currentframe);
   //file=fopen(filename,"w");
-  gp=gdk_pixbuf_get_from_drawable(NULL,w->pixmap,w->colormap,
+  gp=gdk_pixbuf_get_from_drawable(NULL,w->pixmap,gdk_drawable_get_colormap(w->pixmap),
 				  0,0,0,0,
 				  w->window->allocation.width,
 				  w->window->allocation.height);
