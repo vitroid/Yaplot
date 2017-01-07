@@ -1,4 +1,4 @@
-#requires pkg-config
+#requires pkg-config and gtk+ via github
 PROG=yaplot
 SRC=Hash.c reality0.c reality2.c reality4.c varray.c cache.c  gtk.c  reality1.c reality3.c unixwrap.c yaplot.c
 OBJS=$(patsubst %.c,%.o,$(SRC))
@@ -18,6 +18,7 @@ $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)
 install:
 	install yaplot $(BINDIR)
+	install -d $(PKGDATADIR)
 	install yaplot.col help.yap $(PKGDATADIR)
 .PHONY: clean depend distclean
 clean:
