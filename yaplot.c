@@ -215,7 +215,7 @@ vector2 polygon[6][4];
 float ddelta;
 /*struct itimerval deb0,deb1;*/
 /*global (initial camera position*/
-int debug=0;
+int debug=1;
 float Eyex=0,Eyey=-40,Eyez=0;
 float Lookx=0,Looky=0,Lookz=0;
 float Upx=0,Upy=0,Upz=1;
