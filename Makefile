@@ -9,12 +9,16 @@ PNG_LDFLAGS=$(shell pkg-config libpng --libs)
 CFLAGS=-g -Wall -Werror -DRECORD -I/opt/X11/include $(GTK_CFLAGS)
 LDFLAGS=$(GTK_LDFLAGS) $(PNG_LDFLAGS)
 PKGDATADIR=/usr/local/share/yaplot
+BINDIR=/usr/local/bin
 
 %.h: %.h.in
 	sed -e sX@pkgdatadir@X$(PKGDATADIR)X $< > $@
 %.o: common.h
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)
+install:
+	install yaplot $(BINDIR)
+	install yaplot.col help.yap $(PKGDATADIR)
 .PHONY: clean depend distclean
 clean:
 	-$(RM) $(PROG) $(OBJS) $(DEPENDS)
