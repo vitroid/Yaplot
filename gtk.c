@@ -181,11 +181,11 @@ void exposefb(Winfo *w)
   */
   cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(w->drawarea));
   if(debug){fprintf(stderr,"exposefb: %d %d\n", (int)cr,(int)w->drawarea);}
-  cairo_move_to (cr, 30, 30);
-  cairo_show_text (cr, "Text");
+  //cairo_move_to (cr, 30, 30);
+  //cairo_show_text (cr, "Text");
 
-  cairo_destroy (cr);
-  //!!!cairo_set_source_surface(cr, w->surface, 0, 0);
+  //cairo_destroy (cr);
+  cairo_set_source_surface(cr, w->surface, 0, 0);
   if(debug)
     fprintf(stderr,"REQ::Expose::%d %d\n",
 	  w->drawarea->allocation.width,
@@ -198,7 +198,8 @@ void exposefb(Winfo *w)
   rect.height=w->drawarea->allocation.height;
   gtk_widget_draw(w->window,&rect);
   */
-  //!!!cairo_paint(cr);
+  cairo_paint(cr);
+  cairo_destroy (cr);
   
 }
 
@@ -232,11 +233,13 @@ static gint expose_event(GtkWidget *widget,
 		  event->area.width,event->area.height);*/
   cairo_t* cr = gdk_cairo_create(gtk_widget_get_window (widget));
   if(debug) fprintf(stderr,"expose_event %d\n",(int)cr);
-  cairo_move_to (cr, 30, 30);
-  cairo_show_text (cr, "Text");
+  //cairo_move_to (cr, 30, 30);
+  //cairo_show_text (cr, "Text");
 
+  //cairo_destroy (cr);
+  cairo_set_source_surface(cr, w_internal[i].surface, 0, 0);
+  //cairo_paint(cr);
   cairo_destroy (cr);
-  //cairo_set_source_surface(cr, w_internal[i].surface, 0, 0);
 
   w_internal[i].status|=REDRAW;
   return FALSE;
