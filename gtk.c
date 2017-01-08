@@ -169,6 +169,7 @@ void clearfb(Winfo *w)
 
 void exposefb(Winfo *w)
 {
+  /*
   GdkRectangle rect;
   gdk_draw_pixmap(w->drawarea->window,
 		  w->drawarea->style->fg_gc[GTK_WIDGET_STATE(w->drawarea)],
@@ -177,16 +178,27 @@ void exposefb(Winfo *w)
 		  0,0,
 		  w->drawarea->allocation.width,
 		  w->drawarea->allocation.height);
+  */
+  cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(w->drawarea));
+  if(debug){fprintf(stderr,"exposefb: %d %d\n", (int)cr,(int)w->drawarea);}
+  cairo_move_to (cr, 30, 30);
+  cairo_show_text (cr, "Text");
+
+  cairo_destroy (cr);
+  //!!!cairo_set_source_surface(cr, w->surface, 0, 0);
   if(debug)
     fprintf(stderr,"REQ::Expose::%d %d\n",
 	  w->drawarea->allocation.width,
 	  w->drawarea->allocation.height);
   /*make expose event*/
+  /*
   rect.x=0;
   rect.y=0;
   rect.width=w->drawarea->allocation.width;
   rect.height=w->drawarea->allocation.height;
   gtk_widget_draw(w->window,&rect);
+  */
+  //!!!cairo_paint(cr);
   
 }
 
@@ -211,12 +223,21 @@ static gint expose_event(GtkWidget *widget,
   if(debug)
     fprintf(stderr,"Expose[%d]::%d %d\n",
 	  i,		  event->area.width,event->area.height);
+  /*
   gdk_draw_pixmap(widget->window,
 		  widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
 		  w_internal[i].pixmap,
 		  event->area.x,event->area.y,
 		  event->area.x,event->area.y,
-		  event->area.width,event->area.height);
+		  event->area.width,event->area.height);*/
+  cairo_t* cr = gdk_cairo_create(gtk_widget_get_window (widget));
+  if(debug) fprintf(stderr,"expose_event %d\n",(int)cr);
+  cairo_move_to (cr, 30, 30);
+  cairo_show_text (cr, "Text");
+
+  cairo_destroy (cr);
+  //cairo_set_source_surface(cr, w_internal[i].surface, 0, 0);
+
   w_internal[i].status|=REDRAW;
   return FALSE;
 }
@@ -225,14 +246,22 @@ static gint configure_event(GtkWidget *widget,
 			 GdkEventConfigure *event)
 {
   int i=WhichWidget(widget);
+  /*
   if(w_internal[i].pixmap){
     gdk_pixmap_unref(w_internal[i].pixmap);
   }
+  */
+  if (w_internal[i].surface){
+    cairo_surface_finish(w_internal[i].surface);
+  }
+  /*
   w_internal[i].pixmap=gdk_pixmap_new(widget->window,
 				      widget->allocation.width,
 				      widget->allocation.height,
 				      -1);
-  cairo_t* cr  = gdk_cairo_create(w_internal[i].pixmap);
+  */
+  w_internal[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, widget->allocation.width, widget->allocation.height);
+  cairo_t* cr  = cairo_create(w_internal[i].surface);
   w_internal[i].cr = cr;
   cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
   cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
@@ -590,23 +619,27 @@ void W_Init2(Winfo *w,Ginfo *g)
     int i,j;
     g_internal=g;
     w_internal=w;
-    if(debug)fprintf(stderr,"%d\n",gdk_colormap_get_system_size());
+    //if(debug)fprintf(stderr,"%d\n",gdk_colormap_get_system_size());
     
     for(i=0;i<g->nwindow;i++){
         /*Ginfoの内容をコピーする。*/
-        w[i].colormap=gdk_colormap_new(gdk_visual_get_system(),TRUE);
+        //w[i].colormap=gdk_colormap_new(gdk_visual_get_system(),TRUE);
         w[i].lastColor=g->numColors-1;
         for(j=0;j<g->numColors;j++){
             w[i].colortable[j].red=g->mastercolortable[j].red;
             w[i].colortable[j].green=g->mastercolortable[j].green;
             w[i].colortable[j].blue=g->mastercolortable[j].blue;
-            gdk_colormap_alloc_color(w[i].colormap,&w[i].colortable[j],FALSE,FALSE);
+            //gdk_colormap_alloc_color(w[i].colormap,&w[i].colortable[j],FALSE,FALSE);
         }
         w[i].window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	if(debug)fprintf(stderr,"Setup window X %d.\n",i);
+        gtk_widget_show(w[i].window);
+	if(debug)fprintf(stderr,"Setup window Y %d.\n",i);
         w[i].drawarea=gtk_drawing_area_new();
         gtk_container_add(GTK_CONTAINER(w[i].window),w[i].drawarea);
         gtk_drawing_area_size(GTK_DRAWING_AREA(w[i].drawarea),w[i].screenwidth,w[i].screenheight);
         /*fprintf(stderr,"%d %d\n",w[i].screenwidth,w[i].screenheight);*/
+	if(debug)fprintf(stderr,"Setup window %d %d.\n",i,(int)w[i].drawarea);
         gtk_widget_show(w[i].drawarea);
         gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"expose_event",(GtkSignalFunc)expose_event,NULL);
         gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"configure_event",(GtkSignalFunc)configure_event,NULL);
@@ -614,6 +647,7 @@ void W_Init2(Winfo *w,Ginfo *g)
         gtk_signal_connect(GTK_OBJECT(w[i].window),"button_press_event",(GtkSignalFunc)button_press_event,NULL);
         gtk_signal_connect(GTK_OBJECT(w[i].window),"button_release_event",(GtkSignalFunc)button_release_event,NULL);
         gtk_signal_connect(GTK_OBJECT(w[i].window),"key_press_event",(GtkSignalFunc)key_press_cb,NULL);
+	if(debug)fprintf(stderr,"Setup window B %d.\n",i);
         gtk_widget_set_events(w[i].window,
                               GDK_STRUCTURE_MASK
                               | GDK_EXPOSURE_MASK
@@ -621,20 +655,32 @@ void W_Init2(Winfo *w,Ginfo *g)
                               | GDK_BUTTON_RELEASE_MASK
                               | GDK_KEY_PRESS_MASK
                               | GDK_BUTTON1_MOTION_MASK);
-        gtk_widget_show(w[i].window);
+	if(debug)fprintf(stderr,"Setup window C %d.\n",i);
+        //gtk_widget_show(w[i].window);
+	if(debug)fprintf(stderr,"Setup window D %d.\n",i);
         gtk_window_set_title((GtkWindow *)w[i].window,w[i].inputfilename);
     }
     for(i=0;i<g->nwindow;i++){
-        w[i].pixmap=gdk_pixmap_new(w[i].window->window,w[i].screenwidth,w[i].screenheight,-1);
-        cairo_t* cr  = gdk_cairo_create(w[i].pixmap);
+	if(debug)fprintf(stderr,"Setup window E %d.\n",i);
+        //w[i].pixmap=gdk_pixmap_new(w[i].window->window,w[i].screenwidth,w[i].screenheight,-1);
+	w[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w[i].screenwidth,w[i].screenheight);
+	if(debug)fprintf(stderr,"Setup window F %d %d.\n",i,(int)w[i].surface);
+        //cairo_t* cr  = gdk_cairo_create(w[i].pixmap);
+        cairo_t* cr  = cairo_create(w[i].surface);
+	if(debug)fprintf(stderr,"Setup window G %d %d.\n",i, (int)cr);
         w[i].cr = cr;
-        cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
-        cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
+	if(debug)fprintf(stderr,"Setup window H %d.\n",i);
+        //cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);//THIS FAILS
+	if(debug)fprintf(stderr,"Setup window I %d.\n",i);
+        //cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
+	if(debug)fprintf(stderr,"Setup window J %d.\n",i);
         cairo_set_font_size (cr, 12);
         cairo_select_font_face (cr, "Helvetica",
                                 CAIRO_FONT_SLANT_ITALIC ,
                                 CAIRO_FONT_WEIGHT_NORMAL);
+	if(debug)fprintf(stderr,"Setup window L %d.\n",i);
     }
+    if(debug)fprintf(stderr,"Done settingup windows.\n");
 }
 
 void

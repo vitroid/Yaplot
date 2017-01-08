@@ -187,7 +187,8 @@ typedef struct WINFO
   int lastColor;
   /*X11に依存する部分*/
   GtkWidget *window,*drawarea;
-  GdkPixmap *pixmap;
+  //GdkPixmap *pixmap;
+  cairo_surface_t *surface;
   //for stipples
   //GdkPixmap *bitmap[16];
   //GdkGC *gc;
