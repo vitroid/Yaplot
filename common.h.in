@@ -181,9 +181,7 @@ typedef struct WINFO
   /*rotation speed*/
   int wp,wh,wb;
   /*animating mode*/
-#ifdef RECORD
   int RecordMode;
-#endif
   int lastColor;
   /*X11に依存する部分*/
   GtkWidget *window,*drawarea;

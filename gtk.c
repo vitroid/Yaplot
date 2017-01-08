@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <gdk/gdkkeysyms.h>
-#ifdef RECORD
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#endif
 #include "gtk.h"
 #include "yaplot.h"
 #include "os.h"
@@ -272,6 +269,7 @@ static gint configure_event(GtkWidget *widget,
   cairo_select_font_face (cr, "Helvetica",
                           CAIRO_FONT_SLANT_ITALIC ,
                           CAIRO_FONT_WEIGHT_NORMAL);
+  cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);//for speed
   w_internal[i].screenwidth = widget->allocation.width;
   w_internal[i].screenheight = widget->allocation.height;
   w_internal[i].status|=REDRAW;
@@ -357,7 +355,6 @@ static gint button_release_event(GtkWidget *widget,
   return FALSE;
 }
 
-#ifdef RECORD
 void W_StopRecording(Winfo *w)
 {
   /*automatic recording mode; will save each frame to file*/
@@ -371,7 +368,6 @@ void W_StartRecording(Winfo *w)
   w->df=w->wh=w->wp=w->wb=0;
   gtk_window_set_title((GtkWindow *)w->window,"Recording");
 }
-#endif
 
 static gint key_press_cb(GtkWidget *widget,
 				GdkEventKey *event)
@@ -387,7 +383,6 @@ static gint key_press_cb(GtkWidget *widget,
   /*このあたりの処理はすべてのコマンドに拡張すべき。*/
   if((event->length==1)&&(event->string[0]>='0')&&(event->string[0]<='9')){
     jumpto = jumpto*10+event->string[0]-'0';
-#ifdef RECORD
   }else if(w[i].RecordMode){
     switch(key){
     case GDK_r:
@@ -399,7 +394,6 @@ static gint key_press_cb(GtkWidget *widget,
       exit(0);
       /*go absolute*/
     }
-#endif
   }else{
     int processed;
     switch(key)
@@ -428,12 +422,10 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_C:*/
 	/*crawl=!crawl;*/
 	break;
-#ifdef RECORD
       case GDK_R:
       case GDK_r:
 	processed=eStartRecording(g,w,i);
 	break;
-#endif
 #ifndef win32
       case GDK_u:
       case GDK_U:
@@ -673,14 +665,15 @@ void W_Init2(Winfo *w,Ginfo *g)
 	if(debug)fprintf(stderr,"Setup window G %d %d.\n",i, (int)cr);
         w[i].cr = cr;
 	if(debug)fprintf(stderr,"Setup window H %d.\n",i);
-        //cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);//THIS FAILS
+        cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);//THIS FAILS
 	if(debug)fprintf(stderr,"Setup window I %d.\n",i);
-        //cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
+        cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
 	if(debug)fprintf(stderr,"Setup window J %d.\n",i);
         cairo_set_font_size (cr, 12);
         cairo_select_font_face (cr, "Helvetica",
                                 CAIRO_FONT_SLANT_ITALIC ,
                                 CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);//for speed
 	if(debug)fprintf(stderr,"Setup window L %d.\n",i);
     }
     if(debug)fprintf(stderr,"Done settingup windows.\n");
@@ -733,87 +726,12 @@ void handleevent(Ginfo *g,Winfo w[])
   gtk_main_iteration();
 }
 
-#ifdef RECORD
-#include <png.h>
-
-typedef struct{
-  int    width, height;
-  //JSAMPARRAY rgb;
-  unsigned char**  rgb;
-} sRGBImage;
-
-
-void rgbimage_done( sRGBImage* img )
-{
-  int y;
-  for(y=0;y<img->height;y++){
-    free( img->rgb[y] );
-  }
-  free( img->rgb );
-  free( img );
-}
-
-
-
-sRGBImage* rgbimage_new( int width, int height )
-{
-  sRGBImage* rgbimage = (sRGBImage*) malloc( sizeof(sRGBImage) );
-  int y;
-  rgbimage->width  = width;
-  rgbimage->height = height;
-  rgbimage->rgb = (unsigned char**) malloc( sizeof(char*)*height );
-  for( y=0; y<height; y++ ){
-    rgbimage->rgb[y] = (unsigned char*) calloc( width*3, sizeof(char) );
-  }
-  return rgbimage;
-}
-
-
-
-void png_save( sRGBImage* img, FILE* fp )
-{
-  
-  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL,NULL,NULL);
-  png_infop info_ptr = png_create_info_struct(png_ptr);
-  png_set_IHDR(png_ptr, info_ptr, img->width, img->height,
-               8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE,
-               PNG_FILTER_TYPE_BASE);
-  png_init_io(png_ptr, fp);
-  png_write_info(png_ptr, info_ptr);
-  png_write_image(png_ptr, img->rgb);
-  png_write_end(png_ptr, info_ptr);
-  png_destroy_write_struct(&png_ptr, &info_ptr);
-}
-
 
 
 void W_SaveSnapShot(Winfo *w,int windowid)
 {
-  GdkPixbuf *gp;
-  unsigned char *buf;
   char filename[1024];
-  int j;
-  sRGBImage* image = rgbimage_new(w->window->allocation.width,
-				  w->window->allocation.height);
-  gp=gdk_pixbuf_get_from_drawable(NULL,w->pixmap,w->colormap,
-				  0,0,0,0,
-				  w->window->allocation.width,
-				  w->window->allocation.height);
-  int rowstride = gdk_pixbuf_get_rowstride( gp );
-  buf = gdk_pixbuf_get_pixels(gp);
-  for(j=0; j<w->window->allocation.height;j++){
-    int i;
-    for(i=0;i<w->window->allocation.width*3; i++){
-      image->rgb[j][i] = buf[i+j*rowstride];
-    }
-  }
-  //gdk_pixbuf_unref(gp);
-  g_object_unref(gp);
-  //pclose(file);
   sprintf(filename,"yaplot%02d_%05d.png",windowid,w->currentframe);
-  FILE* file=fopen(filename,"w");
-  png_save( image, file );
-  fclose(file);
-  rgbimage_done( image );
+  cairo_surface_write_to_png (w->surface, filename);
 }
-#endif
+

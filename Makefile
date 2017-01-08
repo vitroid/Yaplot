@@ -6,7 +6,6 @@ DEPENDS=$(patsubst %.c,%.d,$(SRC))
 GTK_CFLAGS=$(shell pkg-config gtk+-2.0 --cflags)
 GTK_LDFLAGS=$(shell pkg-config gtk+-2.0 --libs)
 PNG_LDFLAGS=$(shell pkg-config libpng --libs)
-#CFLAGS=-g -Wall -Werror -DRECORD -I/opt/X11/include $(GTK_CFLAGS)
 CFLAGS=-g -Wall -Werror          -I/opt/X11/include $(GTK_CFLAGS)
 LDFLAGS=$(GTK_LDFLAGS) $(PNG_LDFLAGS)
 PKGDATADIR=/usr/local/share/yaplot

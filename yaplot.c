@@ -440,7 +440,6 @@ int eQuit(Ginfo *g,Winfo w[],int i)
     exit(0);
 }
 
-#ifdef RECORD
 int eStartRecording(Ginfo *g,Winfo w[],int i)
 {
     /*全部同時に録画する。*/
@@ -462,7 +461,6 @@ int eStopRecording(Ginfo *g,Winfo w[],int i)
     }
     return TRUE;
 }
-#endif
 
 
 #ifndef win32
@@ -750,11 +748,9 @@ void W_Seek(Winfo *w)
 		  w->currentframe=i;
 		  w->realcurrent=i;
 		  w->df=0;
-#ifdef RECORD
 		  if(w->RecordMode){
 		    W_StopRecording(w);
 		  }
-#endif
 		  pos = varray_ptr(w->framepos,i);
 		  fseek(w->inputfile,*pos,SEEK_SET);
 		  if(debug)
@@ -1393,9 +1389,7 @@ W_Init(int n)
     w[i].screenwidth =  DEFAULTX;
     w[i].screenheight = DEFAULTY;
     w[i].async=0;
-#ifdef RECORD
     w[i].RecordMode=0;
-#endif
   }
   return w;
 }    
@@ -1478,13 +1472,11 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
       /*イベントが無いときは自動処理*/
       /*もし動画表示中なら、先へすすめる。*/
       for(i=0;i<g->nwindow;i++){
-#ifdef RECORD
 	if(w[i].RecordMode){
 	  w[i].realcurrent++;
 	  stopped=0;
-	}else
-#endif
-{
+	}
+	else{
 	  if(w[i].df!=0){
 	    /*o->nextframe += o->df;*/
 	    w[i].realcurrent += w[i].df*delta;
@@ -1565,11 +1557,9 @@ void EventLoop(Ainfo *a,Ginfo *g,Winfo *w)
 	  }
 	  /*バッファの中身がなくなるまで待つ*/
 	  /*syncはいつも0.04秒ぐらいしかかかっていない。*/
-#ifdef RECORD
 	  if(w[i].RecordMode){
 	    W_SaveSnapShot(&w[i],i);
 	  }
-#endif
 	  waituntilflush(g);
 	  w[i].status &= ~REDRAW;
 	  if (debug) fprintf(stderr,"REDRAW is unset [Window %d]\n",i);

@@ -24,10 +24,8 @@ int existevent(Ginfo *g);
 void handleevent(Ginfo *g,Winfo w[]);
 void G_Init0(int *argc,char **argv[]);
 void overridepalette(Winfo *w,int palette,int red,int green,int blue);
-#ifdef RECORD
 void W_SaveSnapShot(Winfo *w,int i);
 void W_StartRecording(Winfo *w);
 void W_StopRecording(Winfo *w);
-#endif
 
 #endif
