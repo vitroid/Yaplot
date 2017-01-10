@@ -463,8 +463,17 @@ int eStopRecording(Ginfo *g,Winfo w[],int i)
 }
 
 
-#ifndef win32
-#endif
+int eToggleCentering(Ginfo* g, Winfo w[], int i)
+{
+  if ( (w[i].centerx == 0) && (w[i].centery == 0) && (w[i].centerz == 0) ){
+    W_setcenter(&w[i]);
+  }
+  else {
+    W_resetcenter(&w[i]);
+  }
+  return TRUE;
+}
+
 
 int eToggleVerbosity(Ginfo *g,Winfo w[],int i)
 {
@@ -1084,7 +1093,6 @@ RotateAllPrims0(Ginfo *g,Winfo *w)
     ey = g->u[0]*g->eyep[0] + g->u[1]*g->eyep[1] + g->u[2]*g->eyep[2];
     ez = g->e[0]*g->eyep[0] + g->e[1]*g->eyep[1] + g->e[2]*g->eyep[2];
     */
-  /*Forbit rotation of the object*/
   pr00 = w->h[0];
   pr10 = w->u[0];
   pr20 = w->e[0];
@@ -1102,10 +1110,14 @@ RotateAllPrims0(Ginfo *g,Winfo *w)
   v=o->vertex;
   while(v!=NULL){
     if(v->layermask & w->layermask){
+      float rx,ry,rz;
+      rx = v->x - w->centerx;
+      ry = v->y - w->centery;
+      rz = v->z - w->centerz;
       float xx,yy,zz;
-      xx =pr00*v->x+pr01*v->y+pr02*v->z-ex;
-      yy =pr10*v->x+pr11*v->y+pr12*v->z-ey;
-      zz =pr20*v->x+pr21*v->y+pr22*v->z-ez;
+      xx = pr00*rx + pr01*ry + pr02*rz - ex;
+      yy = pr10*rx + pr11*ry + pr12*rz - ey;
+      zz = pr20*rx + pr21*ry + pr22*rz - ez;
       zoomfactor      = w->screendepth / zz;
       v->zoom = zoomfactor;
       v->ix = (int)( zoomfactor * xx) + w->screenwidth/2;
@@ -1272,7 +1284,7 @@ void InsertFrameInfo(Winfo *w,float framerate,int verbose)
     sprintf(num,"%d",w->currentframe);
     drawstring2fb(w,5,base,num,strlen(num));
   }
-  if(verbose>=2){
+  if(verbose>=2){//initial verbosity
     if(debug){
 #ifdef win32    
       sprintf(num,"Test %d",clock());
@@ -1292,6 +1304,9 @@ void InsertFrameInfo(Winfo *w,float framerate,int verbose)
     drawstring2fb(w,5,base,num,strlen(num));
     base+=14;
     sprintf(num,"Screen Depth Ratio %5.2f (* /)",w->depthratio);
+    drawstring2fb(w,5,base,num,strlen(num));
+    base+=14;
+    sprintf(num,"Center %5.2f %5.2f %5.2f (c)",w->centerx,w->centery,w->centerz);
     drawstring2fb(w,5,base,num,strlen(num));
     base+=14;
     if(w->async)
@@ -1419,6 +1434,37 @@ void W_Cache(Winfo *w){
 }
 
 
+void W_resetcenter(Winfo* w)
+{
+  w->centerx = w->centery = w->centerz = 0;
+}
+
+
+
+void W_setcenter(Winfo* w)
+{
+  float xmin=1e99,xmax=-1e99;
+  float ymin=1e99,ymax=-1e99;
+  float zmin=1e99,zmax=-1e99;
+  NewOinfo* o=*w->oo;
+  Vertex* v=o->vertex;
+  while(v!=NULL){
+    if(v->layermask & w->layermask){
+      if ( v->x < xmin ) xmin = v->x;
+      if ( xmax < v->x ) xmax = v->x;
+      if ( v->y < ymin ) ymin = v->y;
+      if ( ymax < v->y ) ymax = v->y;
+      if ( v->z < zmin ) zmin = v->z;
+      if ( zmax < v->z ) zmax = v->z;
+    }
+    v=v->next;
+  }
+  w->centerx = (xmax + xmin)/2;
+  w->centery = (ymax + ymin)/2;
+  w->centerz = (zmax + zmin)/2;
+}
+
+
 
 void W_InitActionVarsOne(Winfo *w,int cachesize)
 {
@@ -1436,6 +1482,7 @@ void W_InitActionVarsOne(Winfo *w,int cachesize)
     w->thick=2;
     w->layermask=0xfff;/*12layers*/
     W_setvectors(w);
+    W_resetcenter(w);
 }
 
 

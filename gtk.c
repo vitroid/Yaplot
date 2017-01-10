@@ -360,25 +360,26 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_Break:
 	processed=eQuit(g,w,i);
 	break;
-	/*go absolute*/
       case GDK_g:
       case GDK_G:
       case GDK_Return:
       case GDK_KP_Enter:
+	/*go absolute*/
 	processed=eGotoFrame(g,w,i,(((modstatus&GDK_SHIFT_MASK)&&(jumpto==0))?LASTFRAME:jumpto));
 	break;
-	/*go forward*/
       case GDK_Page_Down:
       case GDK_n:
       case GDK_N:
       case GDK_KP_Page_Down:
+	/*go forward*/
 	processed=eGoRelativeFrame(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
-	/*go backward*/
-	/*case GDK_c:
-      case GDK_C:*/
-	/*crawl=!crawl;*/
+      case GDK_c:
+      case GDK_C:
+	//centering
+	processed = eToggleCentering(g,w,i);
 	break;
+	/*go backward*/
       case GDK_R:
       case GDK_r:
 	processed=eStartRecording(g,w,i);
