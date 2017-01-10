@@ -16,7 +16,7 @@ BINDIR=/usr/local/bin
 %.o: common.h
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)
-install:
+install: yaplot
 	install yaplot $(BINDIR)
 	install -d $(PKGDATADIR)
 	install yaplot.col help.yap $(PKGDATADIR)
