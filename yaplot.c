@@ -471,6 +471,7 @@ int eToggleCentering(Ginfo* g, Winfo w[], int i)
   else {
     W_resetcenter(&w[i]);
   }
+  w[i].status|=REDRAW;
   return TRUE;
 }
 
