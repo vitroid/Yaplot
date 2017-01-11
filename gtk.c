@@ -167,7 +167,7 @@ void clearfb(Winfo *w)
 void exposefb(Winfo *w)
 {
   cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(w->drawarea));
-  if(debug){fprintf(stderr,"exposefb: %d %d\n", (int)cr,(int)w->drawarea);}
+  //if(debug){fprintf(stderr,"exposefb: %d %d\n", (int)cr,(int)w->drawarea);}
 
   cairo_set_source_surface(cr, w->surface, 0, 0);
   if(debug)
@@ -201,7 +201,7 @@ static gint expose_event(GtkWidget *widget,
     fprintf(stderr,"Expose[%d]::%d %d\n",
 	  i,		  event->area.width,event->area.height);
   cairo_t* cr = gdk_cairo_create(gtk_widget_get_window (widget));
-  if(debug) fprintf(stderr,"expose_event %d\n",(int)cr);
+  //if(debug) fprintf(stderr,"expose_event %d\n",(int)cr);
   cairo_set_source_surface(cr, w_internal[i].surface, 0, 0);
   //cairo_paint(cr);
   cairo_destroy (cr);
@@ -226,7 +226,9 @@ static gint configure_event(GtkWidget *widget,
   cairo_select_font_face (cr, "Helvetica",
                           CAIRO_FONT_SLANT_ITALIC ,
                           CAIRO_FONT_WEIGHT_NORMAL);
+#ifdef CAIRO_ANTIALIAS_FAST
   cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);//for speed
+#endif
   w_internal[i].screenwidth = widget->allocation.width;
   w_internal[i].screenheight = widget->allocation.height;
   w_internal[i].status|=REDRAW;
@@ -584,9 +586,10 @@ void W_Init2(Winfo *w,Ginfo *g)
 	if(debug)fprintf(stderr,"Setup window X %d.\n",i);
 	if(debug)fprintf(stderr,"Setup window Y %d.\n",i);
         w[i].drawarea=gtk_drawing_area_new();
+	//
         gtk_container_add(GTK_CONTAINER(w[i].window),w[i].drawarea);
         gtk_drawing_area_size(GTK_DRAWING_AREA(w[i].drawarea),w[i].screenwidth,w[i].screenheight);
-	if(debug)fprintf(stderr,"Setup window %d %d.\n",i,(int)w[i].drawarea);
+	//if(debug)fprintf(stderr,"Setup window %d %d.\n",i,(int)w[i].drawarea);
         gtk_widget_show(w[i].drawarea);
         gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"expose_event",        (GtkSignalFunc)expose_event,NULL);
         gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"configure_event",     (GtkSignalFunc)configure_event,NULL);
@@ -615,9 +618,9 @@ void W_Init2(Winfo *w,Ginfo *g)
     for(i=0;i<g->nwindow;i++){
 	if(debug)fprintf(stderr,"Setup window E %d.\n",i);
 	w[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w[i].screenwidth,w[i].screenheight);
-	if(debug)fprintf(stderr,"Setup window F %d %d.\n",i,(int)w[i].surface);
+	//if(debug)fprintf(stderr,"Setup window F %d %d.\n",i,(int)w[i].surface);
         cairo_t* cr  = cairo_create(w[i].surface);
-	if(debug)fprintf(stderr,"Setup window G %d %d.\n",i, (int)cr);
+	//if(debug)fprintf(stderr,"Setup window G %d %d.\n",i, (int)cr);
         w[i].cr = cr;
 	if(debug)fprintf(stderr,"Setup window H %d.\n",i);
         cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);//THIS FAILS
@@ -628,7 +631,9 @@ void W_Init2(Winfo *w,Ginfo *g)
         cairo_select_font_face (cr, "Helvetica",
                                 CAIRO_FONT_SLANT_ITALIC ,
                                 CAIRO_FONT_WEIGHT_NORMAL);
+#ifdef CAIRO_ANTIALIAS_FAST
 	cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);//for speed
+#endif
 	if(debug)fprintf(stderr,"Setup window L %d.\n",i);
     }
     if(debug)fprintf(stderr,"Done settingup windows.\n");
