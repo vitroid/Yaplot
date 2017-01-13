@@ -1,0 +1,32 @@
+Summary: Yaplot (yet another plotter in 3D)
+Name: @package@
+Version: @version@
+Release: 1
+Copyright: GPL
+Group: Applications/Math
+Source: http://www.chem.nagoya-u.ac.jp/matto/yaplot/@package@-@version@.tar.gz
+%description
+      Yaplot is an easy 3D modeller and animator
+      for visualizing the results from computer
+      simulation easily.
+      You can browse the motion of the 3 dimentional wire frame model
+      with text labels and
+      some marks on the cheap PC based X terminals.
+      Data format is simple and intuitive.
+      It is the least beautiful and not durable for presentation, but
+      quick and smooth enough for daily use.
+%prep
+%setup -c
+%build
+cd @package@-@version@
+./configure
+make
+%install
+cd @package@-@version@
+make install
+%files
+/usr/local/bin/yaplot
+@pkgdatadir@/yaplot.col
+@pkgdatadir@/help.yap
+%doc @package@-@version@/README.html @package@-@version@/WelcomeJ.html @package@-@version@/COPYING @package@-@version@/ChangeLog
+

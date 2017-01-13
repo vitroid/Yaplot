@@ -156,6 +156,8 @@ typedef struct WINFO
   int status;
   /*実際に表示する要素の個数*/
   int nrealize;
+  /*number of non-text primitives to be displayed*/
+  int nscalable;
   int screenwidth,screenheight;
   float screendepth;
   int currentframe;
@@ -171,6 +173,9 @@ typedef struct WINFO
   float e[3],u[3],h[3];
   float fov;
   int thick;
+  //for global centering
+  //Center of the visual vertices.  It is set when "c" is pressed, and won't be updated
+  float centerx,centery,centerz;
   /*表示するレイヤ*/
   int layermask;
   int AbsoluteRotationMode;
@@ -179,19 +184,19 @@ typedef struct WINFO
   /*rotation speed*/
   int wp,wh,wb;
   /*animating mode*/
-#ifdef RECORD
   int RecordMode;
-#endif
   int lastColor;
   /*X11に依存する部分*/
   GtkWidget *window,*drawarea;
-  GdkPixmap *pixmap;
+  //GdkPixmap *pixmap;
+  cairo_surface_t *surface;
   //for stipples
-  GdkPixmap *bitmap[16];
-  GdkGC *gc;
+  //GdkPixmap *bitmap[16];
+  //GdkGC *gc;
+  cairo_t *cr;
   GdkFont *font;
   GdkColor colortable[256];
-  GdkColormap *colormap;
+  //GdkColormap *colormap;
   /*ここまで*/
 }
 Winfo;

@@ -2,41 +2,85 @@
 #include <stdio.h>
 #include <math.h>
 #include <gdk/gdkkeysyms.h>
-#ifdef RECORD
-#include <gdk-pixbuf/gdk-pixbuf.h>
-#endif
 #include "gtk.h"
 #include "yaplot.h"
 #include "os.h"
-#include "stipples.h"
 
 extern int debug;
 extern float Eyex,Eyey,Eyez;
 extern float Lookx,Looky,Lookz;
 extern float Upx,Upy,Upz;
-int lastthick;
+float lastthick;
 
 void drawline2fb(Winfo *w,int x0,int y0,int x1,int y1)
 {
-  gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
+  cairo_move_to (w->cr, x0, y0);
+  cairo_line_to (w->cr, x1, y1);
+  cairo_stroke (w->cr);
+}
+
+void drawpoly2fb0(Winfo *w,ivector2 *poly,int n)
+{
+  int i;
+  cairo_move_to (w->cr, poly[n-1].x, poly[n-1].y);
+  for(i=0;i<n;i++){
+    cairo_line_to (w->cr, poly[i].x, poly[i].y);
+  }
+  cairo_close_path (w->cr);
+  cairo_stroke_preserve (w->cr);
+}
+
+
+void drawpoly2fb1(Winfo *w,ivector2 *poly,int n)
+{
+  int i;
+  cairo_move_to (w->cr, poly[n-1].x, poly[n-1].y);
+  for(i=0;i<n;i++){
+    cairo_line_to (w->cr, poly[i].x, poly[i].y);
+  }
+  cairo_close_path (w->cr);
+  cairo_stroke (w->cr);
 }
 
 void drawpoly2fb(Winfo *w,ivector2 *poly,int n,int fill)
 {
-  gdk_draw_polygon(w->pixmap,w->gc,fill,(GdkPoint *)poly,n);
+  if ( fill ){
+    cairo_set_line_width(w->cr, 0);  
+    drawpoly2fb0(w, poly, n);
+    cairo_fill(w->cr);
+    setlinewidth(w, lastthick);
+  }
+  else{
+    drawpoly2fb1(w, poly, n);
+  }
 }
+
 
 void drawcircle2fb(Winfo *w,int x,int y,int r,int fill)
 {
-  gdk_draw_arc(w->pixmap,w->gc,fill,x - r,y - r,r+r,r+r,0,360*64);
+  cairo_move_to(w->cr, x+r,y);
+  if ( fill ){
+    cairo_set_line_width(w->cr, 0);  
+    cairo_arc(w->cr, x, y, r, 0, 2*M_PI);
+    cairo_fill(w->cr);
+    setlinewidth(w, lastthick);
+  }
+  else{
+    cairo_arc(w->cr, x, y, r, 0, 2*M_PI);
+    cairo_stroke(w->cr);
+  }
 }
 
 void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int arrowtype)
 {
   if ( arrowtype == 0){
-    gdk_gc_set_line_attributes(w->gc,r*2,GDK_LINE_SOLID,GDK_CAP_BUTT,GDK_JOIN_ROUND);
-    gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
-    setthickness(w, lastthick);
+    int thick = r*2;
+    if (thick == 0){
+      thick = 1;
+    }
+    cairo_set_line_width(w->cr, thick);  
+    drawline2fb(w,x0,y0,x1,y1);
+    setlinewidth(w, lastthick);
   }
   else{
     int dx = x1 - x0;
@@ -47,9 +91,14 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
       int ry = r * dy / dd;
       if ( arrowtype == 1 ){
 	//normal arrow with a head.
-	gdk_draw_line(w->pixmap,w->gc,x0,y0,x1,y1);
-	gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx+ry,y1-2*ry-rx);
-	gdk_draw_line(w->pixmap,w->gc,x1,y1,x1-2*rx-ry,y1-2*ry+rx);
+        setlinewidth(w, 1);
+        cairo_move_to (w->cr, x0, y0);
+        cairo_line_to (w->cr, x1, y1);
+	cairo_move_to (w->cr, x1-2*rx+ry,y1-2*ry-rx);
+        cairo_line_to (w->cr, x1, y1);
+        cairo_line_to (w->cr, x1-2*rx-ry,y1-2*ry+rx);
+        cairo_stroke (w->cr);
+        setlinewidth(w, lastthick);
       }
       else if ( arrowtype == 2 ){
 	//dart
@@ -67,10 +116,13 @@ void drawstick2fb(Winfo* w, int x0, int y0, int x1, int y1, int r, int fill, int
 }
 
 
-void setthickness(Winfo *w,int thick)
+void setlinewidth(Winfo *w,float thick)
 {
   lastthick = thick;
-  gdk_gc_set_line_attributes(w->gc,thick,GDK_LINE_SOLID,GDK_CAP_ROUND,GDK_JOIN_ROUND);
+  if(thick == 0){
+    thick =1;
+  }
+  cairo_set_line_width(w->cr, thick);  
 }
 
 void waituntilflush()
@@ -80,25 +132,20 @@ void waituntilflush()
 
 void setfgcolor(Winfo *w,int palette)
 {
-  gdk_gc_set_foreground(w->gc,&w->colortable[palette]);
-  if(debug){
-    fprintf(stderr,"set fg color to palette %d: %x %x %x\n",
-	    palette, 
-	    w->colortable[palette].red,
-	    w->colortable[palette].green,
-	    w->colortable[palette].blue);
-  }
+  cairo_set_source_rgb(w->cr, (float)w->colortable[palette].red/65536.0, (float)w->colortable[palette].green/65536.0, (float)w->colortable[palette].blue/65536.0);
 }
+
+void settpcolor(Winfo *w,int palette)
+{
+  cairo_set_source_rgba(w->cr, (float)w->colortable[palette].red/65536.0, (float)w->colortable[palette].green/65536.0, (float)w->colortable[palette].blue/65536.0, 0.5);
+}
+
 
 void overridepalette(Winfo *w,int palette,int red,int green,int blue)
 {
-  if(w->colortable[palette].pixel){
-    gdk_colormap_free_colors(w->colormap,&w->colortable[palette],1);
-  }
   w->colortable[palette].red=red<<8;
   w->colortable[palette].green=green<<8;
   w->colortable[palette].blue=blue<<8;
-  gdk_colormap_alloc_color(w->colormap,&w->colortable[palette],FALSE,FALSE);
   if(palette>w->lastColor){
     w->lastColor=palette;
   }
@@ -106,59 +153,29 @@ void overridepalette(Winfo *w,int palette,int red,int green,int blue)
 
 void drawstring2fb(Winfo *w,int x,int y,char *str,int length)
 {
-  gdk_draw_text(w->pixmap,
-		w->font,
-		w->gc,
-		x,y,str,length);
-}
-
-void setsolidfill(Winfo *w)
-{
-  gdk_gc_set_fill(w->gc,GDK_SOLID);
-}
-
-void setstippledfill(Winfo *w)
-{
-  gdk_gc_set_fill(w->gc,GDK_STIPPLED);
-}
-
-
-void setstipple(Winfo* w, gint i)
-{
-  gdk_gc_set_stipple(w->gc,w->bitmap[i]);
+  cairo_move_to (w->cr, x,y);
+  cairo_show_text(w->cr, str);
 }
 
 
 void clearfb(Winfo *w)
 {
-  setsolidfill(w);
   setfgcolor(w,1);
-  gdk_draw_rectangle(w->pixmap,w->gc,
-		     TRUE,0,0,
-		     w->drawarea->allocation.width,
-		     w->drawarea->allocation.height);
+  cairo_paint(w->cr);
 }
 
 void exposefb(Winfo *w)
 {
-  GdkRectangle rect;
-  gdk_draw_pixmap(w->drawarea->window,
-		  w->drawarea->style->fg_gc[GTK_WIDGET_STATE(w->drawarea)],
-		  w->pixmap,
-		  0,0,
-		  0,0,
-		  w->drawarea->allocation.width,
-		  w->drawarea->allocation.height);
+  cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(w->drawarea));
+  //if(debug){fprintf(stderr,"exposefb: %d %d\n", (int)cr,(int)w->drawarea);}
+
+  cairo_set_source_surface(cr, w->surface, 0, 0);
   if(debug)
     fprintf(stderr,"REQ::Expose::%d %d\n",
 	  w->drawarea->allocation.width,
 	  w->drawarea->allocation.height);
-  /*make expose event*/
-  rect.x=0;
-  rect.y=0;
-  rect.width=w->drawarea->allocation.width;
-  rect.height=w->drawarea->allocation.height;
-  gtk_widget_draw(w->window,&rect);
+  cairo_paint(cr);
+  cairo_destroy (cr);
   
 }
 
@@ -183,12 +200,12 @@ static gint expose_event(GtkWidget *widget,
   if(debug)
     fprintf(stderr,"Expose[%d]::%d %d\n",
 	  i,		  event->area.width,event->area.height);
-  gdk_draw_pixmap(widget->window,
-		  widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-		  w_internal[i].pixmap,
-		  event->area.x,event->area.y,
-		  event->area.x,event->area.y,
-		  event->area.width,event->area.height);
+  cairo_t* cr = gdk_cairo_create(gtk_widget_get_window (widget));
+  //if(debug) fprintf(stderr,"expose_event %d\n",(int)cr);
+  cairo_set_source_surface(cr, w_internal[i].surface, 0, 0);
+  //cairo_paint(cr);
+  cairo_destroy (cr);
+
   w_internal[i].status|=REDRAW;
   return FALSE;
 }
@@ -197,13 +214,21 @@ static gint configure_event(GtkWidget *widget,
 			 GdkEventConfigure *event)
 {
   int i=WhichWidget(widget);
-  if(w_internal[i].pixmap){
-    gdk_pixmap_unref(w_internal[i].pixmap);
+  if (w_internal[i].surface){
+    cairo_surface_finish(w_internal[i].surface);
   }
-  w_internal[i].pixmap=gdk_pixmap_new(widget->window,
-				      widget->allocation.width,
-				      widget->allocation.height,
-				      -1);
+  w_internal[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, widget->allocation.width, widget->allocation.height);
+  cairo_t* cr  = cairo_create(w_internal[i].surface);
+  w_internal[i].cr = cr;
+  cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
+  cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_font_size (cr, 12);
+  cairo_select_font_face (cr, "Helvetica",
+                          CAIRO_FONT_SLANT_ITALIC ,
+                          CAIRO_FONT_WEIGHT_NORMAL);
+#ifdef CAIRO_ANTIALIAS_FAST
+  cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);//for speed
+#endif
   w_internal[i].screenwidth = widget->allocation.width;
   w_internal[i].screenheight = widget->allocation.height;
   w_internal[i].status|=REDRAW;
@@ -220,6 +245,7 @@ static gint motion_notify_event(GtkWidget *widget,
 {
   int x,y;
   GdkModifierType state;
+  if(debug) fprintf(stderr,"Motion::\n");
 
   if(event->is_hint){
     gdk_window_get_pointer(event->window,&x,&y,&state);
@@ -232,7 +258,6 @@ static gint motion_notify_event(GtkWidget *widget,
     if( (originx !=x) || (originy != y)){
       int i;
       float head,bank;
-      /*fprintf(stderr,"motion::%d %d\n",originx-x,originy-y);*/
       bank = +(originy - y)*(10.0/400.0);
       head = +(originx - x)*(10.0/400.0);
       originx = x;
@@ -254,6 +279,7 @@ static gint button_press_event(GtkWidget *widget,
 				GdkEventButton *event)
 {
   int i;
+  if(debug) fprintf(stderr,"Pressed::\n");
   
   originx=event->x;
   originy=event->y;
@@ -272,8 +298,7 @@ static gint button_release_event(GtkWidget *widget,
 				GdkEventButton *event)
 {
   int i;
-  if(debug)
-    fprintf(stderr,"Released::\n");
+  if(debug) fprintf(stderr,"Released::\n");
   i=WhichWidget(widget);
   if(w_internal[i].async){
     w_internal[i].wp=w_internal[i].wb=w_internal[i].wh=0;
@@ -289,7 +314,6 @@ static gint button_release_event(GtkWidget *widget,
   return FALSE;
 }
 
-#ifdef RECORD
 void W_StopRecording(Winfo *w)
 {
   /*automatic recording mode; will save each frame to file*/
@@ -303,7 +327,6 @@ void W_StartRecording(Winfo *w)
   w->df=w->wh=w->wp=w->wb=0;
   gtk_window_set_title((GtkWindow *)w->window,"Recording");
 }
-#endif
 
 static gint key_press_cb(GtkWidget *widget,
 				GdkEventKey *event)
@@ -316,10 +339,9 @@ static gint key_press_cb(GtkWidget *widget,
   if(debug){
     fprintf(stderr,"Key: %d/Status: %d\n",key,modstatus);
   }
-  /*このあたりの処理はすべてのコマンドに拡張すべき。*/
+  /*$B$3$N$"$?$j$N=hM}$O$9$Y$F$N%3%^%s%I$K3HD%$9$Y$-!#(B*/
   if((event->length==1)&&(event->string[0]>='0')&&(event->string[0]<='9')){
     jumpto = jumpto*10+event->string[0]-'0';
-#ifdef RECORD
   }else if(w[i].RecordMode){
     switch(key){
     case GDK_r:
@@ -331,41 +353,39 @@ static gint key_press_cb(GtkWidget *widget,
       exit(0);
       /*go absolute*/
     }
-#endif
   }else{
     int processed;
     switch(key)
       {
-	/*仕様を大幅に変更しよう*/
+	/*$B;EMM$rBgI}$KJQ99$7$h$&(B*/
       case GDK_q:
       case GDK_Break:
 	processed=eQuit(g,w,i);
 	break;
-	/*go absolute*/
       case GDK_g:
       case GDK_G:
       case GDK_Return:
       case GDK_KP_Enter:
+	/*go absolute*/
 	processed=eGotoFrame(g,w,i,(((modstatus&GDK_SHIFT_MASK)&&(jumpto==0))?LASTFRAME:jumpto));
 	break;
-	/*go forward*/
       case GDK_Page_Down:
       case GDK_n:
       case GDK_N:
       case GDK_KP_Page_Down:
+	/*go forward*/
 	processed=eGoRelativeFrame(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
-	/*go backward*/
-	/*case GDK_c:
-      case GDK_C:*/
-	/*crawl=!crawl;*/
+      case GDK_c:
+      case GDK_C:
+	//centering
+	processed = eToggleCentering(g,w,i);
 	break;
-#ifdef RECORD
+	/*go backward*/
       case GDK_R:
       case GDK_r:
 	processed=eStartRecording(g,w,i);
 	break;
-#endif
 #ifndef win32
       case GDK_u:
       case GDK_U:
@@ -556,61 +576,67 @@ void W_Init2(Winfo *w,Ginfo *g)
     w_internal=w;
     
     for(i=0;i<g->nwindow;i++){
-        /*Ginfoの内容をコピーする。*/
-        w[i].colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
-	//Color map is now unavailable in some Macs (I do not know why).
         w[i].lastColor=g->numColors-1;
         for(j=0;j<g->numColors;j++){
             w[i].colortable[j].red=g->mastercolortable[j].red;
             w[i].colortable[j].green=g->mastercolortable[j].green;
             w[i].colortable[j].blue=g->mastercolortable[j].blue;
-            gdk_colormap_alloc_color(w[i].colormap,&w[i].colortable[j],FALSE,FALSE);
         }
         w[i].window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	if(debug)fprintf(stderr,"Setup window X %d.\n",i);
+	if(debug)fprintf(stderr,"Setup window Y %d.\n",i);
         w[i].drawarea=gtk_drawing_area_new();
+	//
         gtk_container_add(GTK_CONTAINER(w[i].window),w[i].drawarea);
         gtk_drawing_area_size(GTK_DRAWING_AREA(w[i].drawarea),w[i].screenwidth,w[i].screenheight);
-        /*fprintf(stderr,"%d %d\n",w[i].screenwidth,w[i].screenheight);*/
+	//if(debug)fprintf(stderr,"Setup window %d %d.\n",i,(int)w[i].drawarea);
         gtk_widget_show(w[i].drawarea);
-        gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"expose_event",(GtkSignalFunc)expose_event,NULL);
-        gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"configure_event",(GtkSignalFunc)configure_event,NULL);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),"motion_notify_event",(GtkSignalFunc)motion_notify_event,NULL);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),"button_press_event",(GtkSignalFunc)button_press_event,NULL);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),"button_release_event",(GtkSignalFunc)button_release_event,NULL);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),"key_press_event",(GtkSignalFunc)key_press_cb,NULL);
-        /*
-          gtk_signal_connect(GTK_OBJECT(w[i].window),"configure_event",(GtkSignalFunc)configure_event,NULL);
-          gtk_signal_connect(GTK_OBJECT(w[i].window),"expose_event",(GtkSignalFunc)expose_event,NULL);
-          gtk_signal_connect(GTK_OBJECT(w[i].window),"button_press_event",(GtkSignalFunc)button_press_event,NULL);
-        */
+        gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"expose_event",        (GtkSignalFunc)expose_event,NULL);
+        gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"configure_event",     (GtkSignalFunc)configure_event,NULL);
+	if(debug)fprintf(stderr,"Setup window A0 %d.\n",i);
+        gtk_signal_connect(GTK_OBJECT(w[i].window),  "motion_notify_event", (GtkSignalFunc)motion_notify_event,NULL);
+	if(debug)fprintf(stderr,"Setup window A1 %d.\n",i);
+        gtk_signal_connect(GTK_OBJECT(w[i].window),  "button_press_event",  (GtkSignalFunc)button_press_event,NULL);
+	if(debug)fprintf(stderr,"Setup window A2 %d.\n",i);
+        gtk_signal_connect(GTK_OBJECT(w[i].window),  "button_release_event",(GtkSignalFunc)button_release_event,NULL);
+	if(debug)fprintf(stderr,"Setup window A3 %d.\n",i);
+        gtk_signal_connect(GTK_OBJECT(w[i].window),  "key_press_event",     (GtkSignalFunc)key_press_cb,NULL);
+	if(debug)fprintf(stderr,"Setup window A4 %d.\n",i);
         gtk_widget_set_events(w[i].window,
-                              GDK_STRUCTURE_MASK
+                                GDK_STRUCTURE_MASK
                               | GDK_EXPOSURE_MASK
                               | GDK_BUTTON_PRESS_MASK
                               | GDK_BUTTON_RELEASE_MASK
                               | GDK_KEY_PRESS_MASK
-                              | GDK_BUTTON1_MOTION_MASK);
+			      | GDK_POINTER_MOTION_MASK
+                              | GDK_BUTTON1_MOTION_MASK);// this causes an error.
+	if(debug)fprintf(stderr,"Setup window C %d.\n",i);
         gtk_widget_show(w[i].window);
+	if(debug)fprintf(stderr,"Setup window D %d.\n",i);
         gtk_window_set_title((GtkWindow *)w[i].window,w[i].inputfilename);
     }
-    /*
-      while(1)
-      {
-      XEvent ev;
-      XNextEvent(g->display,&ev);
-      if(ev.type==MapNotify)break;
-      }*/
-    
-    
     for(i=0;i<g->nwindow;i++){
-        w[i].pixmap=gdk_pixmap_new(w[i].window->window,w[i].screenwidth,w[i].screenheight,-1);
-        w[i].gc=gdk_gc_new(w[i].pixmap);
-        w[i].font=gdk_font_load(FONT);
-	//gdk_gc_set_stipple(w[i].gc,gdk_bitmap_create_from_data(w[i].window->window,stipple_bits,stipple_width,stipple_height));
-        for(j=0;j<16;j++){
-	  w[i].bitmap[j] = gdk_bitmap_create_from_data(w[i].window->window,stipple_bits[j],stipple_width,stipple_height);
-	}
+	if(debug)fprintf(stderr,"Setup window E %d.\n",i);
+	w[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w[i].screenwidth,w[i].screenheight);
+	//if(debug)fprintf(stderr,"Setup window F %d %d.\n",i,(int)w[i].surface);
+        cairo_t* cr  = cairo_create(w[i].surface);
+	//if(debug)fprintf(stderr,"Setup window G %d %d.\n",i, (int)cr);
+        w[i].cr = cr;
+	if(debug)fprintf(stderr,"Setup window H %d.\n",i);
+        cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);//THIS FAILS
+	if(debug)fprintf(stderr,"Setup window I %d.\n",i);
+        cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
+	if(debug)fprintf(stderr,"Setup window J %d.\n",i);
+        cairo_set_font_size (cr, 12);
+        cairo_select_font_face (cr, "Helvetica",
+                                CAIRO_FONT_SLANT_ITALIC ,
+                                CAIRO_FONT_WEIGHT_NORMAL);
+#ifdef CAIRO_ANTIALIAS_FAST
+	cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);//for speed
+#endif
+	if(debug)fprintf(stderr,"Setup window L %d.\n",i);
     }
+    if(debug)fprintf(stderr,"Done settingup windows.\n");
 }
 
 void
@@ -627,7 +653,6 @@ G_loadpalettes(Ginfo *g)
         while((string[cpos]==' ')||(string[cpos]=='\t')){
             cpos++;
         }
-        /*named color is not available now.*/
         sscanf(string,"%d %d %d",&rr,&gg,&bb);
         g->mastercolortable[g->numColors].red=rr<<8;
         g->mastercolortable[g->numColors].green=gg<<8;
@@ -661,95 +686,12 @@ void handleevent(Ginfo *g,Winfo w[])
   gtk_main_iteration();
 }
 
-#ifdef RECORD
-#include <png.h>
-//#include <jpeglib.h>
-
-typedef struct{
-  int    width, height;
-  //JSAMPARRAY rgb;
-  unsigned char**  rgb;
-} sRGBImage;
-
-
-void rgbimage_done( sRGBImage* img )
-{
-  int y;
-  for(y=0;y<img->height;y++){
-    free( img->rgb[y] );
-  }
-  free( img->rgb );
-  free( img );
-}
-
-
-
-sRGBImage* rgbimage_new( int width, int height )
-{
-  sRGBImage* rgbimage = (sRGBImage*) malloc( sizeof(sRGBImage) );
-  int y;
-  rgbimage->width  = width;
-  rgbimage->height = height;
-  rgbimage->rgb = (unsigned char**) malloc( sizeof(char*)*height );
-  for( y=0; y<height; y++ ){
-    rgbimage->rgb[y] = (unsigned char*) calloc( width*3, sizeof(char) );
-  }
-  return rgbimage;
-}
-
-
-
-void png_save( sRGBImage* img, FILE* fp )
-{
-  
-  png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL,NULL,NULL);
-  png_infop info_ptr = png_create_info_struct(png_ptr);
-  png_set_IHDR(png_ptr, info_ptr, img->width, img->height,
-               8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE,
-               PNG_FILTER_TYPE_BASE);
-  png_init_io(png_ptr, fp);
-  png_write_info(png_ptr, info_ptr);
-  png_write_image(png_ptr, img->rgb);
-  png_write_end(png_ptr, info_ptr);
-  png_destroy_write_struct(&png_ptr, &info_ptr);
-}
-
 
 
 void W_SaveSnapShot(Winfo *w,int windowid)
 {
-  GdkPixbuf *gp;
-  unsigned char *buf;
   char filename[1024];
-  int j;
-  sRGBImage* image = rgbimage_new(w->window->allocation.width,
-				  w->window->allocation.height);
-  //sprintf(filename,"ppmquant 256 | pnmtopng > yaplot%02d_%05d.png",i,w->currentframe);
-  //file=popen(filename,"w");
-  //sprintf(filename,"yaplot%02d_%05d.ppm",i,w->currentframe);
-  //file=fopen(filename,"w");
-  gp=gdk_pixbuf_get_from_drawable(NULL,w->pixmap,gdk_drawable_get_colormap(w->pixmap),
-				  0,0,0,0,
-				  w->window->allocation.width,
-				  w->window->allocation.height);
-  //fprintf(file,"P3\n%d %d\n255\n",
-  //	  w->window->allocation.width,
-  //	  w->window->allocation.height);
-  int rowstride = gdk_pixbuf_get_rowstride( gp );
-  buf = gdk_pixbuf_get_pixels(gp);
-  for(j=0; j<w->window->allocation.height;j++){
-    int i;
-    for(i=0;i<w->window->allocation.width*3; i++){
-      image->rgb[j][i] = buf[i+j*rowstride];
-    }
-  }
-  //gdk_pixbuf_unref(gp);
-  g_object_unref(gp);
-  //pclose(file);
   sprintf(filename,"yaplot%02d_%05d.png",windowid,w->currentframe);
-  FILE* file=fopen(filename,"w");
-  png_save( image, file );
-  fclose(file);
-  rgbimage_done( image );
+  cairo_surface_write_to_png (w->surface, filename);
 }
-#endif
+

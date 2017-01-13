@@ -12,7 +12,6 @@ Reality2(NewOinfo *o,Winfo *w)
   ivector2 poly[7];
     
   float thickness,thickdelta;
-  int ithickness,oldthickness;
     
   /*本来は、可変長配列の要素数は概数なので、このような指定は正しくない。*/
   /*if(o->n==0)return 0;*/
@@ -23,27 +22,21 @@ Reality2(NewOinfo *o,Winfo *w)
     return 0;
     
   thickness=0.5;
-  /*thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)o->n;    */
-  thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)w->nrealize;
-  ithickness=thickness;
-  oldthickness=ithickness;
-  setthickness(w,ithickness);
+  thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)w->nscalable;
+  setlinewidth(w,thickness);
   for(i=0;i<w->nrealize;i++)
     {
       Pinfo *qq;
       char ch;
 	
-      thickness+=thickdelta;
-      ithickness=thickness;
-      if(oldthickness!=ithickness){
-	oldthickness=ithickness;
-	setthickness(w,ithickness);
-      }
-
       qq = ((Pinfo **)o->prims->a)[i];
       /*if(((i%1000)==0)&&XPending(g->display))return 1;*/
       if(qq->sortkey<0)return 0;
       ch = qq->id;
+      if ( ch != 't' ){
+        thickness+=thickdelta;
+        setlinewidth(w,thickness);
+      }
       if(ch>='3'&&ch<='6')
 	{
 	  int n,j;
@@ -63,7 +56,6 @@ Reality2(NewOinfo *o,Winfo *w)
 			      XFillPolygon(g->display,w->pixmap,w->gc,poly,n,Nonconvex,CoordModeOrigin);
 			      XSetFillStyle(g->display,w->gc,FillSolid);*/
 	  /* it might be time-consuming. */
-	  setstipple(w, i%16);
 	  drawpoly2fb(w,poly,n,FALSE);
 	}
       else
@@ -79,14 +71,11 @@ Reality2(NewOinfo *o,Winfo *w)
 	    break;
 	  case 'c':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
-	    setfgcolor(w,qq->color);
-	    setstipple(w, i%16);
-	    setstippledfill(w);
+	    settpcolor(w,qq->color);
 	    drawcircle2fb(w,qq->points[0].x,qq->points[0].y,r,TRUE);
-	    setsolidfill(w);
-	    setthickness(w,1);
+	    setlinewidth(w,1);
 	    drawcircle2fb(w,qq->points[0].x,qq->points[0].y,r,FALSE);
-	    setthickness(w,ithickness);
+	    setlinewidth(w,thickness);
 	    break;
 	  case 'o':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
@@ -95,32 +84,27 @@ Reality2(NewOinfo *o,Winfo *w)
 	    break;
 	  case 's':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
-	    setfgcolor(w,qq->color);
 	    if ( qq->arrowtype <= 1 ){
+              setfgcolor(w,qq->color);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
 	    }
 	    else{
-	      setstipple(w, i%16);
-	      setstippledfill(w);
+              settpcolor(w,qq->color);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
-	      setsolidfill(w);
-	      setthickness(w,1);
+	      setlinewidth(w,1);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
-	      setthickness(w,ithickness);
+	      setlinewidth(w,thickness);
 	    }
 	    break;
 	  case 'p':
-	    setfgcolor(w,qq->color);
-	    setstipple(w, i%16);
-	    setstippledfill(w);
+	    settpcolor(w,qq->color);
 	    drawpoly2fb(w,qq->points,qq->nvertex-1,TRUE);
-	    setsolidfill(w);
-	    setthickness(w,1);
+	    setlinewidth(w,1);
 	    drawpoly2fb(w,qq->points,qq->nvertex-1,FALSE);
-	    setthickness(w,ithickness);
+	    setlinewidth(w,thickness);
 	    break;
 	  }
     }
