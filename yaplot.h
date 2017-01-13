@@ -32,7 +32,4 @@ int eGotoFrame(Ginfo *g,Winfo w[],int i,int jumpto);
 int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto);
 int eResetView(Ginfo *g,Winfo w[],int i);
 int eToggleLayer(Ginfo *g,Winfo w[],int i,int layer);
-int eToggleCentering(Ginfo* g, Winfo w[], int i);
-void W_setcenter(Winfo* w);
-void W_resetcenter(Winfo* w);
 #endif

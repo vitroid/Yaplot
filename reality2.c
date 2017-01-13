@@ -12,6 +12,7 @@ Reality2(NewOinfo *o,Winfo *w)
   ivector2 poly[7];
     
   float thickness,thickdelta;
+  int ithickness,oldthickness;
     
   /*本来は、可変長配列の要素数は概数なので、このような指定は正しくない。*/
   /*if(o->n==0)return 0;*/
@@ -22,21 +23,27 @@ Reality2(NewOinfo *o,Winfo *w)
     return 0;
     
   thickness=0.5;
-  thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)w->nscalable;
-  setlinewidth(w,thickness);
+  /*thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)o->n;    */
+  thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)w->nrealize;
+  ithickness=thickness;
+  oldthickness=ithickness;
+  setthickness(w,ithickness);
   for(i=0;i<w->nrealize;i++)
     {
       Pinfo *qq;
       char ch;
 	
+      thickness+=thickdelta;
+      ithickness=thickness;
+      if(oldthickness!=ithickness){
+	oldthickness=ithickness;
+	setthickness(w,ithickness);
+      }
+
       qq = ((Pinfo **)o->prims->a)[i];
       /*if(((i%1000)==0)&&XPending(g->display))return 1;*/
       if(qq->sortkey<0)return 0;
       ch = qq->id;
-      if ( ch != 't' ){
-        thickness+=thickdelta;
-        setlinewidth(w,thickness);
-      }
       if(ch>='3'&&ch<='6')
 	{
 	  int n,j;
@@ -76,9 +83,10 @@ Reality2(NewOinfo *o,Winfo *w)
 	    setstipple(w, i%16);
 	    setstippledfill(w);
 	    drawcircle2fb(w,qq->points[0].x,qq->points[0].y,r,TRUE);
-	    setlinewidth(w,1);
+	    setsolidfill(w);
+	    setthickness(w,1);
 	    drawcircle2fb(w,qq->points[0].x,qq->points[0].y,r,FALSE);
-	    setlinewidth(w,thickness);
+	    setthickness(w,ithickness);
 	    break;
 	  case 'o':
 	    r = (int)(qq->vertex[0]->zoom*qq->r);
@@ -97,10 +105,11 @@ Reality2(NewOinfo *o,Winfo *w)
 	      setstippledfill(w);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,TRUE,qq->arrowtype);
-	      setlinewidth(w,1);
+	      setsolidfill(w);
+	      setthickness(w,1);
 	      drawstick2fb(w,qq->points[0].x,qq->points[0].y,
 			   qq->points[1].x,qq->points[1].y,r,FALSE,qq->arrowtype);
-	      setlinewidth(w,thickness);
+	      setthickness(w,ithickness);
 	    }
 	    break;
 	  case 'p':
@@ -108,9 +117,10 @@ Reality2(NewOinfo *o,Winfo *w)
 	    setstipple(w, i%16);
 	    setstippledfill(w);
 	    drawpoly2fb(w,qq->points,qq->nvertex-1,TRUE);
-	    setlinewidth(w,1);
+	    setsolidfill(w);
+	    setthickness(w,1);
 	    drawpoly2fb(w,qq->points,qq->nvertex-1,FALSE);
-	    setlinewidth(w,thickness);
+	    setthickness(w,ithickness);
 	    break;
 	  }
     }

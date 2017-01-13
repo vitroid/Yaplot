@@ -6,7 +6,7 @@ DEPENDS=$(patsubst %.c,%.d,$(SRC))
 GTK_CFLAGS=$(shell pkg-config gtk+-2.0 --cflags)
 GTK_LDFLAGS=$(shell pkg-config gtk+-2.0 --libs)
 PNG_LDFLAGS=$(shell pkg-config libpng --libs)
-CFLAGS=-g -Wall -Werror          -I/opt/X11/include $(GTK_CFLAGS)
+CFLAGS=-g -Wall -Werror -DRECORD -I/opt/X11/include $(GTK_CFLAGS)
 LDFLAGS=$(GTK_LDFLAGS) $(PNG_LDFLAGS)
 PKGDATADIR=/usr/local/share/yaplot
 BINDIR=/usr/local/bin
@@ -16,7 +16,7 @@ BINDIR=/usr/local/bin
 %.o: common.h
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)
-install: yaplot
+install:
 	install yaplot $(BINDIR)
 	install -d $(PKGDATADIR)
 	install yaplot.col help.yap $(PKGDATADIR)
