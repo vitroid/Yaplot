@@ -12,7 +12,6 @@ Reality3(NewOinfo *o,Winfo *w)
   ivector2 poly[7];
     
   float thickness,thickdelta;
-  int ithickness,oldthickness;
     
   /*本来は、可変長配列の要素数は概数なので、このような指定は正しくない。*/
   /*if(o->n==0)return 0;*/
@@ -23,29 +22,21 @@ Reality3(NewOinfo *o,Winfo *w)
     return 0;
     
   thickness=0.5;
-  /*thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)o->n;    */
-  thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)w->nrealize;
-  ithickness=thickness;
-  oldthickness=ithickness;
-  setthickness(w,ithickness);
-    
-  setsolidfill(w);
+  thickdelta=w->thick*0.001*2.0*w->screenwidth/(float)w->nscalable;
+  setlinewidth(w,thickness);
   for(i=0;i<w->nrealize;i++)
     {
       Pinfo *qq;
       char ch;
 	
-      thickness+=thickdelta;
-      ithickness=thickness;
-      if(oldthickness!=ithickness){
-	oldthickness=ithickness;
-	setthickness(w,ithickness);
-      }
-
       qq = ((Pinfo **)o->prims->a)[i];
       /*if(((i%1000)==0)&&XPending(g->display))return 1;*/
       if(qq->sortkey<0)return 0;
       ch = qq->id;
+      if ( ch != 't' ){
+        thickness+=thickdelta;
+        setlinewidth(w,thickness);
+      }
       if(ch>='3'&&ch<='6')
 	{
 	  int n,j;
