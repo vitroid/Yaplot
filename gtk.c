@@ -260,7 +260,7 @@ static gint motion_notify_event(GtkWidget *widget,
       float head,bank;
       float tick;
       if (state&GDK_SHIFT_MASK){
-	tick = 0.1 / 400.0;
+	tick = 1.0 / 400.0;
       }
       else{
 	tick = 10.0 / 400.0;
