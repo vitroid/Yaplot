@@ -258,8 +258,15 @@ static gint motion_notify_event(GtkWidget *widget,
     if( (originx !=x) || (originy != y)){
       int i;
       float head,bank;
-      bank = +(originy - y)*(10.0/400.0);
-      head = +(originx - x)*(10.0/400.0);
+      float tick;
+      if (state&GDK_SHIFT_MASK){
+	tick = 0.1 / 400.0;
+      }
+      else{
+	tick = 10.0 / 400.0;
+      }
+      bank = +(originy - y)*tick;
+      head = +(originx - x)*tick;
       originx = x;
       originy = y;
       i=WhichWidget(widget);
