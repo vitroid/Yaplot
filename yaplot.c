@@ -293,7 +293,7 @@ int eGoRelativeFrame(Ginfo *g,Winfo w[],int i,int jumpto,int keepmoving)
     return TRUE;
 }
 
-int eBanking(Ginfo *g,Winfo w[],int i,int jumpto)
+int eBanking(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
 {
     /*if(crawl){*/
     /*float deltah;
@@ -311,6 +311,9 @@ int eBanking(Ginfo *g,Winfo w[],int i,int jumpto)
       g->lookp[2]=g->eyep[2]+g->e[2]*dd;*/
     /*}else{*/
     if(w[i].async){
+      if (fine)
+        w[i].wb +=jumpto*0.1;
+      else
         w[i].wb +=jumpto;
         w[i].status|=REDRAW;
 		if (debug) fprintf(stderr,"REDRAW because of banking (1)[Window %d]\n",i);
@@ -324,7 +327,7 @@ int eBanking(Ginfo *g,Winfo w[],int i,int jumpto)
     return TRUE;
 }
 
-int eHeading(Ginfo *g,Winfo w[],int i,int jumpto)
+int eHeading(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
 {
     /*if(crawl){*/
     /*float deltab;
@@ -342,6 +345,9 @@ int eHeading(Ginfo *g,Winfo w[],int i,int jumpto)
       g->lookp[2]=g->eyep[2]+g->e[2]*dd;*/
   /*}else{*/
     if(w[i].async){
+      if (fine)
+        w[i].wh +=jumpto*0.1;
+      else
         w[i].wh +=jumpto;
         w[i].status|=REDRAW;
 		if (debug) fprintf(stderr,"REDRAW because of heading (1)[Window %d]\n",i);
@@ -535,7 +541,7 @@ int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto)
 
 
 
-int eResetViewOne( Winfo* w )
+int eResetViewOne( Winfo* w, float eyex, float eyey, float eyez )
 {
     float dx,dy,dz,ox,oy,oz,dd;
     w->wp = w->wh = w->wb = 0;
@@ -543,9 +549,9 @@ int eResetViewOne( Winfo* w )
     dx = w->eyep[0]-w->lookp[0];
     dy = w->eyep[1]-w->lookp[1];
     dz = w->eyep[2]-w->lookp[2];
-    ox = Eyex-Lookx;
-    oy = Eyey-Looky;
-    oz = Eyez-Lookz;
+    ox = eyex-Lookx;
+    oy = eyey-Looky;
+    oz = eyez-Lookz;
     dd = sqrt((dx*dx+dy*dy+dz*dz)/(ox*ox+oy*oy+oz*oz));
     w->lookp[0] = Lookx;
     w->lookp[1] = Looky;
@@ -553,9 +559,16 @@ int eResetViewOne( Winfo* w )
     w->eyep[0] = Lookx+ox*dd;
     w->eyep[1] = Looky+oy*dd;
     w->eyep[2] = Lookz+oz*dd;
-    w->up[0] = Upx;
-    w->up[1] = Upy;
-    w->up[2] = Upz;
+    if  (eyez == 0){
+      w->up[0] = Upx;
+      w->up[1] = Upy;
+      w->up[2] = Upz;
+    }
+    else{
+      w->up[0] = Upx;
+      w->up[1] = Upz;
+      w->up[2] = Upy;
+    }
     W_setvectors( w );
 
     w->status |= REDRAW;
@@ -566,17 +579,20 @@ int eResetViewOne( Winfo* w )
 
 
 
-int eResetView( Ginfo *g, Winfo w[], int i )
+int eResetView( Ginfo *g, Winfo w[], int i, float eyex, float eyey, float eyez )
 {
     if(w[i].async){
-        eResetViewOne( &w[i] );
+      eResetViewOne( &w[i], eyex, eyey, eyez );
     }
     else{
         for(i=0;i<g->nwindow;i++)
-            eResetViewOne( &w[i] );
+	  eResetViewOne( &w[i], eyex, eyey, eyez );
     }
     return TRUE;
 }
+
+
+
 
 
 

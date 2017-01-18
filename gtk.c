@@ -454,28 +454,28 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_h:
       case GDK_Left:
       case GDK_KP_Left:
-	processed=eHeading(g,w,i,(jumpto?+jumpto:+1));
+	processed=eHeading(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*heading rotation*/
       case GDK_L:
       case GDK_l:
       case GDK_Right:
       case GDK_KP_Right:
-	processed=eHeading(g,w,i,(jumpto?-jumpto:-1));
+	processed=eHeading(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*banking rotation*/
       case GDK_K:
       case GDK_k:
       case GDK_Up:
       case GDK_KP_Up:
-	processed=eBanking(g,w,i,(jumpto?+jumpto:+1));
+	processed=eBanking(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*banking rotation*/
       case GDK_J:
       case GDK_j:
       case GDK_Down:
       case GDK_KP_Down:
-	processed=eBanking(g,w,i,(jumpto?-jumpto:-1));
+	processed=eBanking(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*flush jumpto*/
       case GDK_Escape:
@@ -488,6 +488,24 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_f:
       case GDK_F:
 	processed=eToggleLayer(g,w,i,(jumpto?jumpto:1));
+	break;
+      case GDK_x:
+	processed=eResetView(g,w,i,-40, 0, 0);
+	break;
+      case GDK_X:
+	processed=eResetView(g,w,i,+40, 0, 0);
+	break;
+      case GDK_y:
+	processed=eResetView(g,w,i,0,-40,0);
+	break;
+      case GDK_Y:
+	processed=eResetView(g,w,i,0,+40,0);
+	break;
+      case GDK_z:
+	processed=eResetView(g,w,i,0,0,-40);
+	break;
+      case GDK_Z:
+	processed=eResetView(g,w,i,0,0,+40);
 	break;
 	/*if(crawl){*/
 	  /*float dx,dy,dz;
@@ -525,7 +543,7 @@ static gint key_press_cb(GtkWidget *widget,
 	break;
       case GDK_Tab:
       case GDK_KP_Tab:
-	processed=eResetView(g,w,i);
+	processed=eResetView(g,w,i, Eyex,Eyey,Eyez);
 	break;
       case GDK_F1:
 	processed=eToggleLayer(g,w,i,1);
