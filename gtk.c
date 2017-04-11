@@ -222,7 +222,7 @@ static gint configure_event(GtkWidget *widget,
   w_internal[i].cr = cr;
   cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
   cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_font_size (cr, 12);
+  cairo_set_font_size (cr, 14);
   cairo_select_font_face (cr, "Helvetica",
                           CAIRO_FONT_SLANT_ITALIC ,
                           CAIRO_FONT_WEIGHT_NORMAL);
@@ -634,7 +634,8 @@ void W_Init2(Winfo *w,Ginfo *g)
                               | GDK_BUTTON_RELEASE_MASK
                               | GDK_KEY_PRESS_MASK
 			      | GDK_POINTER_MOTION_MASK
-                              | GDK_BUTTON1_MOTION_MASK);// this causes an error.
+                              | GDK_BUTTON1_MOTION_MASK
+			      );// this causes an error.
 	if(debug)fprintf(stderr,"Setup window C %d.\n",i);
         gtk_widget_show(w[i].window);
 	if(debug)fprintf(stderr,"Setup window D %d.\n",i);
@@ -652,7 +653,7 @@ void W_Init2(Winfo *w,Ginfo *g)
 	if(debug)fprintf(stderr,"Setup window I %d.\n",i);
         cairo_set_line_cap  (cr, CAIRO_LINE_CAP_ROUND);
 	if(debug)fprintf(stderr,"Setup window J %d.\n",i);
-        cairo_set_font_size (cr, 12);
+        cairo_set_font_size (cr, 14);
         cairo_select_font_face (cr, "Helvetica",
                                 CAIRO_FONT_SLANT_ITALIC ,
                                 CAIRO_FONT_WEIGHT_NORMAL);
