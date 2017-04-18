@@ -183,6 +183,10 @@ int ePushView(Ginfo *g,Winfo w[],int i)
 {
   FILE *file=fopen(VIEWFILE,"a+");
   char buf[1000];
+  if ( NULL == file ){
+    fprintf(stderr, "Failed to open %s for writing.\n", VIEWFILE);
+    return FALSE;
+  }
   sprintf(buf,"%f %f %f %f %f %f %f %f %f %f %f\n",
 	  w[i].fov,
 	  w[i].depthratio,
