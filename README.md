@@ -141,24 +141,19 @@ yaplotの画像は、本格的なプレゼンテーションに使用できる�
 
 ## インストール
 
-現在、yaplotはgtkを使って書かれています。インストールする前にあらかじめ  GTKをインストールしておいて下さい。  まずソースコードを展開して下さい。  unix系のOSでは、
+現在、yaplotはgtkを使って書かれています。インストールする前にあらかじめ  GTKをインストールしておいて下さい。Mac OSでは、 [HomeBrew](https://brew.sh)をおすすめします。
 
-            prompt% ./configure
-            prompt% make
+            prompt% brew install gtk+ pkg-config
 
-でコンパイルができます。もしgtkがインストールされているはずな のに、configureで失敗する場合は、
+ソースコードを展開して下さい。makeでコンパイルができます。(automakeはあまりに複雑なのでやめます。)
 
-            prompt% aclocal
-            prompt% autoconf
-            prompt% ./configure
             prompt% make
 
 を試してみて下さい。コンパイルができたら、
 
             prompt# make install
 
-でインストールされます。WindowsでCompileする場合は、Makefile.dosを編集 してから、makeをしてみて下さい。なお、Windows版では一部機能が制限され ます。
-
+でインストールされます。
 
 ## 使い方
 
