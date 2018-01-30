@@ -91,7 +91,7 @@ vector3;
 #define MAXREALITY 4
 #define MAXLAYER 30
 #define MAXVERBOSE 3
-#define HASHSIZE 2400007
+#define HASHSIZE 24000007
 #define LASTFRAME 999999
 /*入力データの精度。小数点以下をここで打ち切り、一致する点は同一とみなす。*/
 #define ACCURACY 1024.0
