@@ -311,18 +311,20 @@ int eBanking(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
       g->lookp[2]=g->eyep[2]+g->e[2]*dd;*/
     /*}else{*/
     if(w[i].async){
-      if (fine)
+      if (fine){
         w[i].wb +=jumpto*0.1;
-      else
+      }
+      else{
         w[i].wb +=jumpto;
-        w[i].status|=REDRAW;
-		if (debug) fprintf(stderr,"REDRAW because of banking (1)[Window %d]\n",i);
+      }
+      w[i].status|=REDRAW;
+      if (debug) fprintf(stderr,"REDRAW because of banking (1)[Window %d]\n",i);
     }else{
-        for(i=0;i<g->nwindow;i++){
-            w[i].wb +=jumpto;
-            w[i].status|=REDRAW;
-    		if (debug) fprintf(stderr,"REDRAW because of banking (2)[Window %d]\n",i);
-        }
+      for(i=0;i<g->nwindow;i++){
+	w[i].wb +=jumpto;
+	w[i].status|=REDRAW;
+	if (debug) fprintf(stderr,"REDRAW because of banking (2)[Window %d]\n",i);
+      }
     }
     return TRUE;
 }
@@ -345,18 +347,20 @@ int eHeading(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
       g->lookp[2]=g->eyep[2]+g->e[2]*dd;*/
   /*}else{*/
     if(w[i].async){
-      if (fine)
+      if (fine){
         w[i].wh +=jumpto*0.1;
-      else
+      }
+      else {
         w[i].wh +=jumpto;
-        w[i].status|=REDRAW;
-		if (debug) fprintf(stderr,"REDRAW because of heading (1)[Window %d]\n",i);
+      }
+      w[i].status|=REDRAW;
+      if (debug) fprintf(stderr,"REDRAW because of heading (1)[Window %d]\n",i);
     }else{
-        for(i=0;i<g->nwindow;i++){
-            w[i].wh +=jumpto;
-            w[i].status|=REDRAW;
-    		if (debug) fprintf(stderr,"REDRAW because of heading (2)[Window %d]\n",i);
-        }
+      for(i=0;i<g->nwindow;i++){
+	w[i].wh +=jumpto;
+	w[i].status|=REDRAW;
+	if (debug) fprintf(stderr,"REDRAW because of heading (2)[Window %d]\n",i);
+      }
     }
     return TRUE;
 }
