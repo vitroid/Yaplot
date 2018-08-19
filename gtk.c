@@ -388,6 +388,16 @@ static gint key_press_cb(GtkWidget *widget,
 	//centering
 	processed = eToggleCentering(g,w,i);
 	break;
+      case GDK_percent:
+	//slicing
+	processed = eToggleSlicing(g,w,i);
+	break;
+      case GDK_braceright:
+	processed=eSliceMove(g,w,i,1);
+	break;
+      case GDK_braceleft:
+	processed=eSliceMove(g,w,i,-1);
+	break;
 	/*go backward*/
       case GDK_R:
       case GDK_r:

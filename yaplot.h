@@ -33,6 +33,8 @@ int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto);
 int eResetView(Ginfo *g,Winfo w[],int i, float eyex, float eyey, float eyez);
 int eToggleLayer(Ginfo *g,Winfo w[],int i,int layer);
 int eToggleCentering(Ginfo* g, Winfo w[], int i);
+int eToggleSlicing(Ginfo* g, Winfo w[], int i);
+int eSliceMove(Ginfo *g,Winfo w[],int i,float delta);
 void W_setcenter(Winfo* w);
 void W_resetcenter(Winfo* w);
 #endif

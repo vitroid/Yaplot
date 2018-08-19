@@ -32,10 +32,13 @@
 typedef struct _Vertex
 {
   struct _Vertex *next;
-  float x,y,z,zoom;
+  float x,y,z;   /*original*/
+  float rx,ry,rz;/*relative to center*/
+  float zoom;
   int layermask;
   int ix,iy;/*coordinate on the screen*/
-  float zz;/*depth after rotation*/
+  float xx,yy,zz;/*after rotation*/
+  float eyedist;
 }
 Vertex;
 
@@ -192,6 +195,9 @@ typedef struct WINFO
   GdkFont *font;
   GdkColor colortable[256];
   //GdkColormap *colormap;
+  /*user clipping vector*/
+  int slice;
+  float slicev[4]; // [:3] : orientation unit vector; [3]:depth
   /*ここまで*/
 }
 Winfo;

@@ -486,6 +486,33 @@ int eToggleCentering(Ginfo* g, Winfo w[], int i)
 }
 
 
+int eToggleSlicing(Ginfo* g, Winfo w[], int i)
+{
+  w[i].slice = !w[i].slice;
+  if ( w[i].slice ){
+    // set vector
+    // default: parpendicular to x axis of the viewport.
+    w[i].slicev[0] = w[i].h[0];
+    w[i].slicev[1] = w[i].h[1];
+    w[i].slicev[2] = w[i].h[2];
+    w[i].slicev[3] = 0; // on the origin.
+    //printf("%f %f %f %f\n", w[i].slicev[0],w[i].slicev[1],w[i].slicev[2],w[i].slicev[3]);
+  }
+  w[i].status|=REDRAW;
+  return TRUE;
+}
+
+
+int eSliceMove(Ginfo* g, Winfo w[], int i, float delta)
+{
+  if ( w[i].slice ){
+    w[i].slicev[3] += delta; // on the origin.
+    w[i].status|=REDRAW;
+  }
+  return TRUE;
+}
+
+
 int eToggleVerbosity(Ginfo *g,Winfo w[],int i)
 {
     g->verbose--;
@@ -1123,6 +1150,7 @@ RotateAllPrims0(Ginfo *g,Winfo *w)
   pr02 = w->h[2];
   pr12 = w->u[2];
   pr22 = w->e[2];
+  //内積。ex,ey,ezは、h,u,e座標系におけるeyeの位置。
   ex = w->h[0]*w->eyep[0] + w->h[1]*w->eyep[1] + w->h[2]*w->eyep[2];
   ey = w->u[0]*w->eyep[0] + w->u[1]*w->eyep[1] + w->u[2]*w->eyep[2];
   ez = w->e[0]*w->eyep[0] + w->e[1]*w->eyep[1] + w->e[2]*w->eyep[2];
@@ -1131,19 +1159,18 @@ RotateAllPrims0(Ginfo *g,Winfo *w)
   v=o->vertex;
   while(v!=NULL){
     if(v->layermask & w->layermask){
-      float rx,ry,rz;
-      rx = v->x - w->centerx;
-      ry = v->y - w->centery;
-      rz = v->z - w->centerz;
-      float xx,yy,zz;
-      xx = pr00*rx + pr01*ry + pr02*rz - ex;
-      yy = pr10*rx + pr11*ry + pr12*rz - ey;
-      zz = pr20*rx + pr21*ry + pr22*rz - ez;
-      zoomfactor      = w->screendepth / zz;
+      v->rx = v->x - w->centerx;
+      v->ry = v->y - w->centery;
+      v->rz = v->z - w->centerz;
+      //xx,yy,zzはhue座標系における点の位置。
+      v->xx = pr00*v->rx + pr01*v->ry + pr02*v->rz;
+      v->yy = pr10*v->rx + pr11*v->ry + pr12*v->rz;
+      v->zz = pr20*v->rx + pr21*v->ry + pr22*v->rz;
+      v->eyedist = v->zz - ez;
+      zoomfactor      = w->screendepth / v->eyedist;
       v->zoom = zoomfactor;
-      v->ix = (int)( zoomfactor * xx) + w->screenwidth/2;
-      v->iy =-(int)( zoomfactor * yy) + w->screenheight/2;
-      v->zz=zz;
+      v->ix = (int)( zoomfactor * (v->xx-ex)) + w->screenwidth/2;
+      v->iy =-(int)( zoomfactor * (v->yy-ey)) + w->screenheight/2;
     }
     v=v->next;
   }
@@ -1190,10 +1217,18 @@ RotateAllPrims(Ginfo *g,Winfo *w)
     if(qq->layermask & w->layermask){
       for(i=0;i<qq->nvertex;i++){
         v = qq->vertex[i];
-        zsum += v->zz;
-        if(v->zz<g->clip){
+        zsum += v->eyedist;
+	// if the object is too close to the eyes,
+        if(v->eyedist < g->clip){ 
           goto skip;
         }
+	if (w->slice){
+	  if ( v->rx * w->slicev[0] +
+	       v->ry * w->slicev[1] +
+	       v->rz * w->slicev[2] > w->slicev[3] ){
+	    goto skip;
+	  }
+	}
         qq->points[i].x = v->ix;
         qq->points[i].y = v->iy;
       }
@@ -1426,6 +1461,7 @@ W_Init(int n)
     w[i].screenheight = DEFAULTY;
     w[i].async=0;
     w[i].RecordMode=0;
+    w[i].slice=FALSE;
   }
   return w;
 }    
