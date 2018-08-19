@@ -1371,6 +1371,12 @@ void InsertFrameInfo(Winfo *w,float framerate,int verbose)
       setfgcolor(w,0);
     drawstring2fb(w,5,base,"async (s)",9);
     base+=14;
+    if(w->slice)
+      setfgcolor(w,2);
+    else
+      setfgcolor(w,0);
+    drawstring2fb(w,5,base,"slice (%)",9);
+    base+=14;
     for(i=1;i<=MAXLAYER;i++){
       if(w->layermask & (1<<(i-1)))
 	setfgcolor(w,2);

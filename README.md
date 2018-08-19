@@ -97,6 +97,7 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 * Function keys, or numeric keys followed by "F":Toggle show/hide of the layer.
 * "v":Change verbosity.
 * "s":Toggle synchronous/asynchronous modes.
+* "%":Toggle sliced view. Move the slice position by "{" and "}".
 * "q" or Break:Quit yaplot.
 
 ## Command file format
