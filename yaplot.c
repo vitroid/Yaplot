@@ -590,15 +590,20 @@ int eResetViewOne( Winfo* w, float eyex, float eyey, float eyez )
     w->eyep[0] = Lookx+ox*dd;
     w->eyep[1] = Looky+oy*dd;
     w->eyep[2] = Lookz+oz*dd;
-    if  (eyez == 0){
-      w->up[0] = Upx;
-      w->up[1] = Upy;
-      w->up[2] = Upz;
+    if  (eyex != 0){
+      w->up[0] = 0;
+      w->up[1] = 0;
+      w->up[2] = 1;
+    }
+    else if (eyey != 0){
+      w->up[0] = 1;
+      w->up[1] = 0;
+      w->up[2] = 0;
     }
     else{
-      w->up[0] = Upx;
-      w->up[1] = Upz;
-      w->up[2] = Upy;
+      w->up[0] = 0;
+      w->up[1] = 1;
+      w->up[2] = 0;
     }
     W_setvectors( w );
 
