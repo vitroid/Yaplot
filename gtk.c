@@ -167,13 +167,17 @@ void clearfb(Winfo *w)
 void exposefb(Winfo *w)
 {
   cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(w->drawarea));
+  //cairo_t* cr = gdk_drawing_context_get_cairo_context(gtk_widget_get_window(w->drawarea));
   //if(debug){fprintf(stderr,"exposefb: %d %d\n", (int)cr,(int)w->drawarea);}
 
   cairo_set_source_surface(cr, w->surface, 0, 0);
-  if(debug)
+  if(debug){
+    GtkAllocation g_alloc;
+    gtk_widget_get_allocation(w->drawarea, &g_alloc);
     fprintf(stderr,"REQ::Expose::%d %d\n",
-	  w->drawarea->allocation.width,
-	  w->drawarea->allocation.height);
+            g_alloc.width,
+            g_alloc.height);
+  }
   cairo_paint(cr);
   cairo_destroy (cr);
   
@@ -217,7 +221,9 @@ static gint configure_event(GtkWidget *widget,
   if (w_internal[i].surface){
     cairo_surface_finish(w_internal[i].surface);
   }
-  w_internal[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, widget->allocation.width, widget->allocation.height);
+  GtkAllocation g_alloc;
+  gtk_widget_get_allocation(widget, &g_alloc);
+  w_internal[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, g_alloc.width, g_alloc.height);
   cairo_t* cr  = cairo_create(w_internal[i].surface);
   w_internal[i].cr = cr;
   cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
@@ -229,8 +235,8 @@ static gint configure_event(GtkWidget *widget,
 #ifdef CAIRO_ANTIALIAS_FAST
   cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);//for speed
 #endif
-  w_internal[i].screenwidth = widget->allocation.width;
-  w_internal[i].screenheight = widget->allocation.height;
+  w_internal[i].screenwidth = g_alloc.width;
+  w_internal[i].screenheight = g_alloc.height;
   w_internal[i].status|=REDRAW;
   return FALSE;
 }
@@ -623,19 +629,33 @@ void W_Init2(Winfo *w,Ginfo *g)
         w[i].drawarea=gtk_drawing_area_new();
 	//
         gtk_container_add(GTK_CONTAINER(w[i].window),w[i].drawarea);
-        gtk_drawing_area_size(GTK_DRAWING_AREA(w[i].drawarea),w[i].screenwidth,w[i].screenheight);
+
+        /*
+        //// test
+        GtkWidget *button;
+        GtkWidget *button_box;
+        button_box = gtk_hbutton_box_new();
+        gtk_container_add (GTK_CONTAINER (w[i].window), button_box);
+        button = gtk_button_new_with_label ("Hello World");
+        gtk_container_add (GTK_CONTAINER (button_box), button);
+        //// test end
+        */
+        
+        gtk_widget_set_size_request(w[i].drawarea,
+                                    w[i].screenwidth,
+                                    w[i].screenheight);
 	//if(debug)fprintf(stderr,"Setup window %d %d.\n",i,(int)w[i].drawarea);
         gtk_widget_show(w[i].drawarea);
-        gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"expose_event",        (GtkSignalFunc)expose_event,NULL);
-        gtk_signal_connect(GTK_OBJECT(w[i].drawarea),"configure_event",     (GtkSignalFunc)configure_event,NULL);
+        g_signal_connect(GTK_OBJECT(w[i].drawarea),"expose_event", G_CALLBACK(expose_event),NULL);
+        g_signal_connect(GTK_OBJECT(w[i].drawarea),"configure_event",     G_CALLBACK(configure_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A0 %d.\n",i);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),  "motion_notify_event", (GtkSignalFunc)motion_notify_event,NULL);
+        g_signal_connect(GTK_OBJECT(w[i].window),  "motion_notify_event", G_CALLBACK(motion_notify_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A1 %d.\n",i);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),  "button_press_event",  (GtkSignalFunc)button_press_event,NULL);
+        g_signal_connect(GTK_OBJECT(w[i].window),  "button_press_event",  G_CALLBACK(button_press_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A2 %d.\n",i);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),  "button_release_event",(GtkSignalFunc)button_release_event,NULL);
+        g_signal_connect(GTK_OBJECT(w[i].window),  "button_release_event",G_CALLBACK(button_release_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A3 %d.\n",i);
-        gtk_signal_connect(GTK_OBJECT(w[i].window),  "key_press_event",     (GtkSignalFunc)key_press_cb,NULL);
+        g_signal_connect(GTK_OBJECT(w[i].window),  "key_press_event",     G_CALLBACK(key_press_cb),NULL);
 	if(debug)fprintf(stderr,"Setup window A4 %d.\n",i);
         gtk_widget_set_events(w[i].window,
                                 GDK_STRUCTURE_MASK
