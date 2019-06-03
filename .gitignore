@@ -8,6 +8,6 @@ yaplot
 *.o
 
 common.h
-
+*~
 @
 *~

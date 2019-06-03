@@ -127,7 +127,7 @@ void setlinewidth(Winfo *w,float thick)
 
 void waituntilflush()
 {
-  gdk_flush();
+  //gdk_flush(); DEPRECATED
 }
 
 void setfgcolor(Winfo *w,int palette)
@@ -166,21 +166,19 @@ void clearfb(Winfo *w)
 
 void exposefb(Winfo *w)
 {
-  cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(w->drawarea));
-  //cairo_t* cr = gdk_drawing_context_get_cairo_context(gtk_widget_get_window(w->drawarea));
-  //if(debug){fprintf(stderr,"exposefb: %d %d\n", (int)cr,(int)w->drawarea);}
-
+  cairo_t* cr = cairo_create( w->surface );
   cairo_set_source_surface(cr, w->surface, 0, 0);
+
+  GtkAllocation g_alloc;
+  gtk_widget_get_allocation(w->drawarea, &g_alloc);
   if(debug){
-    GtkAllocation g_alloc;
-    gtk_widget_get_allocation(w->drawarea, &g_alloc);
-    fprintf(stderr,"REQ::Expose::%d %d\n",
+    fprintf(stderr,"Forced expose::%d %d\n",
             g_alloc.width,
             g_alloc.height);
   }
   cairo_paint(cr);
-  cairo_destroy (cr);
-  
+  gtk_widget_queue_draw_area (w->drawarea, 0,0,g_alloc.width,g_alloc.height);
+  cairo_destroy(cr);
 }
 
 Ginfo *g_internal;
@@ -197,18 +195,21 @@ int WhichWidget(GtkWidget *widget)
   exit(1);
 }
   
-static gint expose_event(GtkWidget *widget,
-			 GdkEventExpose *event)
+static gboolean
+draw_cb(GtkWidget *widget,
+	cairo_t *cr,
+	gpointer data)
 {
   int i=WhichWidget(widget);
-  if(debug)
+  if(debug){
+    GtkAllocation g_alloc;
+    gtk_widget_get_allocation(widget, &g_alloc);
     fprintf(stderr,"Expose[%d]::%d %d\n",
-	  i,		  event->area.width,event->area.height);
-  cairo_t* cr = gdk_cairo_create(gtk_widget_get_window (widget));
-  //if(debug) fprintf(stderr,"expose_event %d\n",(int)cr);
+	  i,		  g_alloc.width,g_alloc.height);
+  }
   cairo_set_source_surface(cr, w_internal[i].surface, 0, 0);
-  //cairo_paint(cr);
-  cairo_destroy (cr);
+  cairo_paint(cr);
+  //cairo_paint(w_internal[i].cr);
 
   w_internal[i].status|=REDRAW;
   return FALSE;
@@ -223,6 +224,7 @@ static gint configure_event(GtkWidget *widget,
   }
   GtkAllocation g_alloc;
   gtk_widget_get_allocation(widget, &g_alloc);
+  // drawarea and surface are combined here....2019-06
   w_internal[i].surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, g_alloc.width, g_alloc.height);
   cairo_t* cr  = cairo_create(w_internal[i].surface);
   w_internal[i].cr = cr;
@@ -254,7 +256,7 @@ static gint motion_notify_event(GtkWidget *widget,
   if(debug) fprintf(stderr,"Motion::\n");
 
   if(event->is_hint){
-    gdk_window_get_pointer(event->window,&x,&y,&state);
+    gdk_window_get_device_position(event->window, event->device, &x,&y,&state);
   }else{
     x=event->x;
     y=event->y;
@@ -357,11 +359,11 @@ static gint key_press_cb(GtkWidget *widget,
     jumpto = jumpto*10+event->string[0]-'0';
   }else if(w[i].RecordMode){
     switch(key){
-    case GDK_r:
+    case GDK_KEY_r:
       eStopRecording(g,w,i);
       break;
-    case GDK_q:
-    case GDK_Break:
+    case GDK_KEY_q:
+    case GDK_KEY_Break:
       eStopRecording(g,w,i);
       exit(0);
       /*go absolute*/
@@ -371,156 +373,156 @@ static gint key_press_cb(GtkWidget *widget,
     switch(key)
       {
 	/*仕様を大幅に変更しよう*/
-      case GDK_q:
-      case GDK_Break:
+      case GDK_KEY_q:
+      case GDK_KEY_Break:
 	processed=eQuit(g,w,i);
 	break;
-      case GDK_g:
-      case GDK_G:
-      case GDK_Return:
-      case GDK_KP_Enter:
+      case GDK_KEY_g:
+      case GDK_KEY_G:
+      case GDK_KEY_Return:
+      case GDK_KEY_KP_Enter:
 	/*go absolute*/
 	processed=eGotoFrame(g,w,i,(((modstatus&GDK_SHIFT_MASK)&&(jumpto==0))?LASTFRAME:jumpto));
 	break;
-      case GDK_Page_Down:
-      case GDK_n:
-      case GDK_N:
-      case GDK_KP_Page_Down:
+      case GDK_KEY_Page_Down:
+      case GDK_KEY_n:
+      case GDK_KEY_N:
+      case GDK_KEY_KP_Page_Down:
 	/*go forward*/
 	processed=eGoRelativeFrame(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
-      case GDK_c:
-      case GDK_C:
+      case GDK_KEY_c:
+      case GDK_KEY_C:
 	//centering
 	processed = eToggleCentering(g,w,i);
 	break;
-      case GDK_percent:
+      case GDK_KEY_percent:
 	//slicing
 	processed = eToggleSlicing(g,w,i);
 	break;
-      case GDK_braceright:
+      case GDK_KEY_braceright:
 	processed=eSliceMove(g,w,i,1);
 	break;
-      case GDK_braceleft:
+      case GDK_KEY_braceleft:
 	processed=eSliceMove(g,w,i,-1);
 	break;
 	/*go backward*/
-      case GDK_R:
-      case GDK_r:
+      case GDK_KEY_R:
+      case GDK_KEY_r:
 	processed=eStartRecording(g,w,i);
 	break;
 #ifndef win32
-      case GDK_u:
-      case GDK_U:
+      case GDK_KEY_u:
+      case GDK_KEY_U:
 	processed=ePushView(g,w,i);
 	break;
-      case GDK_o:
-      case GDK_O:
+      case GDK_KEY_o:
+      case GDK_KEY_O:
 	processed=ePopView(g,w,i);
 	break;
 #endif
-      case GDK_v:
-      case GDK_V:
+      case GDK_KEY_v:
+      case GDK_KEY_V:
 	processed=eToggleVerbosity(g,w,i);
 	break;
-      case GDK_Page_Up:
-      case GDK_p:
-      case GDK_P:
-      case GDK_KP_Page_Up:
+      case GDK_KEY_Page_Up:
+      case GDK_KEY_p:
+      case GDK_KEY_P:
+      case GDK_KEY_KP_Page_Up:
 	processed=eGoRelativeFrame(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*first frame*/
-      case GDK_Home:
-      case GDK_KP_Home:
+      case GDK_KEY_Home:
+      case GDK_KEY_KP_Home:
 	processed=eGotoFrame(g,w,i,0);
 	break;
 	/*last frame*/
-      case GDK_End:
-      case GDK_KP_End:
+      case GDK_KEY_End:
+      case GDK_KEY_KP_End:
 	processed=eGotoFrame(g,w,i,LASTFRAME);
 	break;
 	/*Stop motion*/
-      case GDK_space:
-      case GDK_KP_Space:
+      case GDK_KEY_space:
+      case GDK_KEY_KP_Space:
 	processed=eStopMotion(g,w,i);
 	break;
 	/*Stop rotation*/
-      case GDK_Pause:
-      case GDK_exclam:
+      case GDK_KEY_Pause:
+      case GDK_KEY_exclam:
 	processed=eStopRotation(g,w,i);
 	break;
 	/*telescopic*/
-      case GDK_bracketright:
+      case GDK_KEY_bracketright:
 	processed=eWiden(g,w,i,(jumpto?-jumpto:-1));
 	break;
-      case GDK_asterisk:
-      case GDK_KP_Multiply:
+      case GDK_KEY_asterisk:
+      case GDK_KEY_KP_Multiply:
 	processed=eZoom(g,w,i,(jumpto?+jumpto:+1));
 	break;
 	/*wide*/
-      case GDK_bracketleft:
+      case GDK_KEY_bracketleft:
 	processed=eWiden(g,w,i,(jumpto?+jumpto:+1));
 	break;
-      case GDK_slash:
-      case GDK_KP_Divide:
+      case GDK_KEY_slash:
+      case GDK_KEY_KP_Divide:
 	processed=eZoom(g,w,i,(jumpto?-jumpto:-1));
 	break;
 	/*heading rotation*/
-      case GDK_H:
-      case GDK_h:
-      case GDK_Left:
-      case GDK_KP_Left:
+      case GDK_KEY_H:
+      case GDK_KEY_h:
+      case GDK_KEY_Left:
+      case GDK_KEY_KP_Left:
 	processed=eHeading(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*heading rotation*/
-      case GDK_L:
-      case GDK_l:
-      case GDK_Right:
-      case GDK_KP_Right:
+      case GDK_KEY_L:
+      case GDK_KEY_l:
+      case GDK_KEY_Right:
+      case GDK_KEY_KP_Right:
 	processed=eHeading(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*banking rotation*/
-      case GDK_K:
-      case GDK_k:
-      case GDK_Up:
-      case GDK_KP_Up:
+      case GDK_KEY_K:
+      case GDK_KEY_k:
+      case GDK_KEY_Up:
+      case GDK_KEY_KP_Up:
 	processed=eBanking(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*banking rotation*/
-      case GDK_J:
-      case GDK_j:
-      case GDK_Down:
-      case GDK_KP_Down:
+      case GDK_KEY_J:
+      case GDK_KEY_j:
+      case GDK_KEY_Down:
+      case GDK_KEY_KP_Down:
 	processed=eBanking(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*flush jumpto*/
-      case GDK_Escape:
+      case GDK_KEY_Escape:
 	processed=1;
 	break;
-      case GDK_s:
-      case GDK_S:
+      case GDK_KEY_s:
+      case GDK_KEY_S:
 	processed=eToggleSync(g,w,i);
 	break;
-      case GDK_f:
-      case GDK_F:
+      case GDK_KEY_f:
+      case GDK_KEY_F:
 	processed=eToggleLayer(g,w,i,(jumpto?jumpto:1));
 	break;
-      case GDK_x:
+      case GDK_KEY_x:
 	processed=eResetView(g,w,i,-40, 0, 0);
 	break;
-      case GDK_X:
+      case GDK_KEY_X:
 	processed=eResetView(g,w,i,+40, 0, 0);
 	break;
-      case GDK_y:
+      case GDK_KEY_y:
 	processed=eResetView(g,w,i,0,-40,0);
 	break;
-      case GDK_Y:
+      case GDK_KEY_Y:
 	processed=eResetView(g,w,i,0,+40,0);
 	break;
-      case GDK_z:
+      case GDK_KEY_z:
 	processed=eResetView(g,w,i,0,0,-40);
 	break;
-      case GDK_Z:
+      case GDK_KEY_Z:
 	processed=eResetView(g,w,i,0,0,+40);
 	break;
 	/*if(crawl){*/
@@ -537,64 +539,64 @@ static gint key_press_cb(GtkWidget *widget,
 	    for(i=0;i<g->nwindow;i++)
 	    w[i].status|=REDRAW;
 	    */
-      case GDK_Insert:
-      case GDK_KP_Insert:
-      case GDK_parenright:
+      case GDK_KEY_Insert:
+      case GDK_KEY_KP_Insert:
+      case GDK_KEY_parenright:
 	processed=eRelativeThickness(g,w,i,(jumpto?+jumpto:+1));
 	break;
-      case GDK_Delete:
-      case GDK_KP_Delete:
-      case GDK_parenleft:
+      case GDK_KEY_Delete:
+      case GDK_KEY_KP_Delete:
+      case GDK_KEY_parenleft:
 	processed=eRelativeThickness(g,w,i,(jumpto?-jumpto:-1));
 	break;
 	/*better quality*/
-      case GDK_plus:
-      case GDK_KP_Add:
+      case GDK_KEY_plus:
+      case GDK_KEY_KP_Add:
 	processed=eRelativeReality(g,w,i,+1);
 	break;
 	/*less quality*/
-      case GDK_minus:
-      case GDK_KP_Subtract:
+      case GDK_KEY_minus:
+      case GDK_KEY_KP_Subtract:
 	processed=eRelativeReality(g,w,i,-1);
 	break;
-      case GDK_Tab:
-      case GDK_KP_Tab:
+      case GDK_KEY_Tab:
+      case GDK_KEY_KP_Tab:
 	processed=eResetView(g,w,i, Eyex,Eyey,Eyez);
 	break;
-      case GDK_F1:
+      case GDK_KEY_F1:
 	processed=eToggleLayer(g,w,i,1);
 	break;
-      case GDK_F2:
+      case GDK_KEY_F2:
 	processed=eToggleLayer(g,w,i,2);
 	break;
-      case GDK_F3:
+      case GDK_KEY_F3:
 	processed=eToggleLayer(g,w,i,3);
 	break;
-      case GDK_F4:
+      case GDK_KEY_F4:
 	processed=eToggleLayer(g,w,i,4);
 	break;
-      case GDK_F5:
+      case GDK_KEY_F5:
 	processed=eToggleLayer(g,w,i,5);
 	break;
-      case GDK_F6:
+      case GDK_KEY_F6:
 	processed=eToggleLayer(g,w,i,6);
 	break;
-      case GDK_F7:
+      case GDK_KEY_F7:
 	processed=eToggleLayer(g,w,i,7);
 	break;
-      case GDK_F8:
+      case GDK_KEY_F8:
 	processed=eToggleLayer(g,w,i,8);
 	break;
-      case GDK_F9:
+      case GDK_KEY_F9:
 	processed=eToggleLayer(g,w,i,9);
 	break;
-      case GDK_F10:
+      case GDK_KEY_F10:
 	processed=eToggleLayer(g,w,i,10);
 	break;
-      case GDK_F11:
+      case GDK_KEY_F11:
 	processed=eToggleLayer(g,w,i,11);
 	break;
-      case GDK_F12:
+      case GDK_KEY_F12:
 	processed=eToggleLayer(g,w,i,12);
 	break;
       default:
@@ -630,32 +632,21 @@ void W_Init2(Winfo *w,Ginfo *g)
 	//
         gtk_container_add(GTK_CONTAINER(w[i].window),w[i].drawarea);
 
-        /*
-        //// test
-        GtkWidget *button;
-        GtkWidget *button_box;
-        button_box = gtk_hbutton_box_new();
-        gtk_container_add (GTK_CONTAINER (w[i].window), button_box);
-        button = gtk_button_new_with_label ("Hello World");
-        gtk_container_add (GTK_CONTAINER (button_box), button);
-        //// test end
-        */
-        
         gtk_widget_set_size_request(w[i].drawarea,
                                     w[i].screenwidth,
                                     w[i].screenheight);
 	//if(debug)fprintf(stderr,"Setup window %d %d.\n",i,(int)w[i].drawarea);
         gtk_widget_show(w[i].drawarea);
-        g_signal_connect(GTK_OBJECT(w[i].drawarea),"expose_event", G_CALLBACK(expose_event),NULL);
-        g_signal_connect(GTK_OBJECT(w[i].drawarea),"configure_event",     G_CALLBACK(configure_event),NULL);
+        g_signal_connect(w[i].drawarea, "draw", G_CALLBACK(draw_cb),NULL);
+        g_signal_connect(w[i].drawarea, "configure_event",     G_CALLBACK(configure_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A0 %d.\n",i);
-        g_signal_connect(GTK_OBJECT(w[i].window),  "motion_notify_event", G_CALLBACK(motion_notify_event),NULL);
+        g_signal_connect(w[i].window,  "motion_notify_event", G_CALLBACK(motion_notify_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A1 %d.\n",i);
-        g_signal_connect(GTK_OBJECT(w[i].window),  "button_press_event",  G_CALLBACK(button_press_event),NULL);
+        g_signal_connect(w[i].window,  "button_press_event",  G_CALLBACK(button_press_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A2 %d.\n",i);
-        g_signal_connect(GTK_OBJECT(w[i].window),  "button_release_event",G_CALLBACK(button_release_event),NULL);
+        g_signal_connect(w[i].window,  "button_release_event",G_CALLBACK(button_release_event),NULL);
 	if(debug)fprintf(stderr,"Setup window A3 %d.\n",i);
-        g_signal_connect(GTK_OBJECT(w[i].window),  "key_press_event",     G_CALLBACK(key_press_cb),NULL);
+        g_signal_connect(w[i].window,  "key_press_event",     G_CALLBACK(key_press_cb),NULL);
 	if(debug)fprintf(stderr,"Setup window A4 %d.\n",i);
         gtk_widget_set_events(w[i].window,
                                 GDK_STRUCTURE_MASK

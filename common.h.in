@@ -185,14 +185,14 @@ typedef struct WINFO
   int RecordMode;
   int lastColor;
   /*X11に依存する部分*/
-  GtkWidget *window,*drawarea;
+  GtkWidget *window, *drawarea;
   //GdkPixmap *pixmap;
   cairo_surface_t *surface;
   //for stipples
   //GdkPixmap *bitmap[16];
   //GdkGC *gc;
   cairo_t *cr;
-  GdkFont *font;
+  //GdkFont *font;
   GdkColor colortable[256];
   //GdkColormap *colormap;
   /*user clipping vector*/
