@@ -211,7 +211,7 @@ draw_cb(GtkWidget *widget,
   cairo_paint(cr);
   //cairo_paint(w_internal[i].cr);
 
-  w_internal[i].status|=REDRAW;
+  //w_internal[i].status|=REDRAW;
   return FALSE;
 }
 
