@@ -14,11 +14,11 @@ It is useful to watch spaciotemporal data.
 It is the least beautiful and not durable for presentation, but  enough quick and smooth for daily use.  (Do not expect much to yaplot!)
 
 ## Installation
-Yaplot requires gtk and pkg-config.
+Yaplot requires gtk+3 and pkg-config.
 
 If you are using Mac, install them via [HomeBrew](https://brew.sh) package manager.
 
-            prompt% brew install pkg-config gtk+
+            prompt% brew install pkg-config gtk+3
 
 Then, compile it.
 
