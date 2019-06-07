@@ -135,6 +135,7 @@ Winfo *GetOptions(int argc,char *argv[],Ainfo *a,Ginfo *g)
   if(argc==optind)
     errflg++;
   if (errflg) {
+    fprintf(stderr,"Yaplot ver. %s \n\n",VERSION);
     fprintf(stderr,"usage : %s [options] infile [infile ...]\n",argv[0]);
     fprintf(stderr,"\t-e x,y,z\tset eyepoint\n");
     fprintf(stderr,"\t-l x,y,z\tset lookpoint\n");

@@ -10,9 +10,10 @@ CFLAGS=-g -Wall -Werror          -I/opt/X11/include $(GTK_CFLAGS) -DGTK_DISABLE_
 LDFLAGS=$(GTK_LDFLAGS) $(PNG_LDFLAGS) -lm
 PKGDATADIR=/usr/local/share/yaplot
 BINDIR=/usr/local/bin
+VERSION=\"4.0\"
 
-%.h: %.h.in
-	sed -e sX@pkgdatadir@X$(PKGDATADIR)X $< > $@
+%.h: %.h.in Makefile
+	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X $< > $@
 %.o: common.h
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)

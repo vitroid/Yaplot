@@ -5,10 +5,10 @@
 #include "varray.h"
 #include "cache.h"
 #ifndef HELPFILE
-#define HELPFILE "@pkgdatadir@/help.yap"
+#define HELPFILE "%%pkgdatadir%%/help.yap"
 #endif
 #ifndef DEFAULTPALETTE
-#define DEFAULTPALETTE "@pkgdatadir@/yaplot.col"
+#define DEFAULTPALETTE "%%pkgdatadir%%/yaplot.col"
 #endif
 #ifndef VIEWFILE
 #define VIEWFILE "./.yapviewstack"
@@ -27,7 +27,7 @@
 #ifndef TRUE
 #define TRUE 0
 #endif
-
+#define VERSION %%version%%
 
 typedef struct _Vertex
 {
