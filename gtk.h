@@ -25,7 +25,7 @@ void handleevent(Ginfo *g,Winfo w[]);
 void G_Init0(int *argc,char **argv[]);
 void overridepalette(Winfo *w,int palette,int red,int green,int blue);
 void W_SaveSnapShot(Winfo *w,int i);
-void W_StartRecording(Winfo *w);
+void W_StartRecording(Winfo *w, int mode, int windowid);
 void W_StopRecording(Winfo *w);
 
 #endif

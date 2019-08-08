@@ -6,11 +6,13 @@ DEPENDS=$(patsubst %.c,%.d,$(SRC))
 GTK_CFLAGS=$(shell pkg-config gtk+-3.0 --cflags)
 GTK_LDFLAGS=$(shell pkg-config gtk+-3.0 --libs)
 PNG_LDFLAGS=$(shell pkg-config libpng --libs)
-CFLAGS=-g -Wall -Werror          -I/opt/X11/include $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE
 LDFLAGS=$(GTK_LDFLAGS) $(PNG_LDFLAGS) -lm
 PKGDATADIR=/usr/local/share/yaplot
 BINDIR=/usr/local/bin
-VERSION=\"4.0\"
+# FFMPEG=
+FFMPEG=-DFFMPEG=\"'$(BINDIR)/ffmpeg -r 30 -i - -pix_fmt yuv420p'\"
+VERSION=\"4.1\"
+CFLAGS=-g -Wall -Werror          -I/opt/X11/include $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE $(FFMPEG)
 
 %.h: %.h.in Makefile
 	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X $< > $@

@@ -450,21 +450,21 @@ int eQuit(Ginfo *g,Winfo w[],int i)
     exit(0);
 }
 
-int eStartRecording(Ginfo *g,Winfo w[],int i)
+int eStartRecording(Ginfo *g,Winfo w[], int mode)
 {
     /*全部同時に録画する。*/
-    for(i=0;i<g->nwindow;i++){
-        W_StartRecording(&w[i]);
+    for(int i=0;i<g->nwindow;i++){
+      W_StartRecording(&w[i], mode, i);
         w[i].status|=REDRAW;
         if (debug) fprintf(stderr,"REDRAW because recording is started [Window %d]\n",i);
     }
     return TRUE;
 }
 
-int eStopRecording(Ginfo *g,Winfo w[],int i)
+int eStopRecording(Ginfo *g,Winfo w[])
 {
     /*全部同時に録画する。*/
-    for(i=0;i<g->nwindow;i++){
+    for(int i=0;i<g->nwindow;i++){
         W_StopRecording(&w[i]);
         w[i].status|=REDRAW;
         if (debug) fprintf(stderr,"REDRAW because recording is stopped [Window %d]\n",i);
