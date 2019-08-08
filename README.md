@@ -83,7 +83,8 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 * Tab:Undo rotation.
 * "*" and "/":Scale up and down
 * "[" and "]":Zoom in and out
-* "r":Start/stop recording.
+* "r":Start/stop recording snapshots. (PNG)
+* "R":Start/stop recording snapshots. (h264 video)
 * "u":pUsh; Push current view information in the view stack.
 * "o":pOp; Pop current view information from the view stack.
 * PageDown or "n":Next frame.
@@ -106,7 +107,7 @@ One line of the command files corresponds to one command. A command consists of 
 
     r {radius}:Specify the radius of circles, rings, and sticks.
     l {x} {y} {z} {x} {y} {z}:Draw a line.
-    s {x} {y} {z} {x} {y} {z}:Draw a stick,
+    s {x} {y} {z} {x} {y} {z}:Draw a stick. (A styled line.)
     p {n} {x} {y} {z} {x} {y} {z} {x} {y} {z} ...:Draw a polygon
     c {x} {y} {z}:Draw a circle.
     o {x} {y} {z}:Draw a ring sign.
@@ -116,7 +117,7 @@ One line of the command files corresponds to one command. A command consists of 
     6 {x} {y} {z}:Draw a hexagon sign.
     t {x} {y} {z} {text....}:Draw a string.
     @ {n}:Specify palette No. (Palette colors are specified in palette file.)
-    @ {n} {r} {g} {b}:Specify color of the n'th palette. r,g,b are integer between 0 to 255.
+    @ {n} {r} {g} {b}:Specify color of the n'th palette temporarily. R,g, and b are integers between 0 and 255.
     # {comment}:Comment. (Ignored.)
     y {layer}:Change current layer(default layer=1)
     a {arrowtype}:Change current arrow type(default type = 0)
@@ -202,7 +203,8 @@ MakefileでRECORDオプションを追加してあると、録画機能が使え
 * Tab:回転する前の状態にもどす。
 * "*"と"/":ズームインとアウト(望遠と広角)
 * "["と"]":視野角を広げる/狭める
-* "r":録画開始/終了
+* "r":録画開始/終了 (PNG)
+* "R":録画開始/終了 (h264 movie)
 * "u":pUsh; 現在の視野情報をカレントディレクトリの".yapviewstack"ファイルの末尾に追加します。
 * "o":pOp; カレントディレクトリの".yapviewstack"ファイルの末尾行を読み込み、現在の視野情報とします。
 * PageDownまたは"n":次のフレーム
