@@ -331,16 +331,30 @@ static gint button_release_event(GtkWidget *widget,
 
 void W_StopRecording(Winfo *w)
 {
-  /*automatic recording mode; will save each frame to file*/
+#ifdef FFMPEG
+  if ( w->RecordMode == 2 ){
+    //close the pipe to FFMPEG
+    pclose(w->pffmpeg);
+  }
+#endif
   w->RecordMode=0;
   gtk_window_set_title((GtkWindow *)w->window,"Done");
 }
 
-void W_StartRecording(Winfo *w)
+void W_StartRecording(Winfo *w, int mode, int windowid)
 {
-  w->RecordMode=1;
+  /*automatic recording mode; will save each frame to file*/
+  w->RecordMode = mode; // 1: still pictures PNG 2: video h264
   w->df=w->wh=w->wp=w->wb=0;
   gtk_window_set_title((GtkWindow *)w->window,"Recording");
+#ifdef FFMPEG
+  if ( mode == 2 ){
+    //open the pipe to FFMPEG
+    char output[1000];
+    sprintf(output, "%s yaplot%02d.mp4", FFMPEG, windowid);
+    w->pffmpeg=popen(output, "w");
+  }
+#endif
 }
 
 static gint key_press_cb(GtkWidget *widget,
@@ -360,11 +374,11 @@ static gint key_press_cb(GtkWidget *widget,
   }else if(w[i].RecordMode){
     switch(key){
     case GDK_KEY_r:
-      eStopRecording(g,w,i);
+      eStopRecording(g,w);
       break;
     case GDK_KEY_q:
     case GDK_KEY_Break:
-      eStopRecording(g,w,i);
+      eStopRecording(g,w);
       exit(0);
       /*go absolute*/
     }
@@ -406,10 +420,14 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_KEY_braceleft:
 	processed=eSliceMove(g,w,i,-1);
 	break;
-	/*go backward*/
       case GDK_KEY_R:
+#ifdef FFMPEG
+	// if FFMPEG is defined, key R records the pictures into a video
+	processed=eStartRecording(g,w,2);
+	break;
+#endif
       case GDK_KEY_r:
-	processed=eStartRecording(g,w,i);
+	processed=eStartRecording(g,w,1);
 	break;
 #ifndef win32
       case GDK_KEY_u:
@@ -734,9 +752,23 @@ void handleevent(Ginfo *g,Winfo w[])
 }
 
 
+cairo_status_t my_write_function(void *closure,
+				 unsigned char *data,
+				 unsigned int length)
+{
+  fwrite(data, 1, length, (FILE*)closure);
+  return CAIRO_STATUS_SUCCESS;
+}
+
 
 void W_SaveSnapShot(Winfo *w,int windowid)
 {
+#ifdef FFMPEG
+  if ( w->RecordMode == 2 ){
+    cairo_surface_write_to_png_stream(w->surface, (cairo_write_func_t)my_write_function, w->pffmpeg);
+    return;
+  }
+#endif
   char filename[1024];
   sprintf(filename,"yaplot%02d_%05d.png",windowid,w->currentframe);
   cairo_surface_write_to_png (w->surface, filename);

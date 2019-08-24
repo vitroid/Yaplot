@@ -140,6 +140,10 @@ typedef struct AINFO
 typedef struct WINFO
 {
   FILE *inputfile;/*窓ごとに別*/
+#ifdef FFMPEG
+  // pipe to ffmpeg
+  FILE *pffmpeg;
+#endif
   varray *framepos;/*窓ごとに別*/
   /*もっとも描画要素が多かったフレームの要素数*/
   int maxprim;
