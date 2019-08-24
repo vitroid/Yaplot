@@ -1548,7 +1548,7 @@ void W_InitActionVarsOne(Winfo *w,int cachesize)
     w->fov=1.0/tan(45.0*PI/360.0);
     w->reality=0;
     w->thick=2;
-    w->layermask=0xfff;/*12layers*/
+    w->layermask=0x3fffffff;/*12layers*/
     W_setvectors(w);
     W_resetcenter(w);
 }
