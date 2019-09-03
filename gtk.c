@@ -244,7 +244,7 @@ static gint configure_event(GtkWidget *widget,
 }
 
 /*global*/
-extern int jumpto;
+extern int prefix;
 int crawl=0;
 int originx=0,originy=0;
 
@@ -341,7 +341,7 @@ void W_StopRecording(Winfo *w)
   gtk_window_set_title((GtkWindow *)w->window,"Done");
 }
 
-void W_StartRecording(Winfo *w, int mode, int windowid)
+void W_StartRecording(Winfo *w, int mode, int windowid, int fps)
 {
   /*automatic recording mode; will save each frame to file*/
   w->RecordMode = mode; // 1: still pictures PNG 2: video h264
@@ -350,8 +350,10 @@ void W_StartRecording(Winfo *w, int mode, int windowid)
 #ifdef FFMPEG
   if ( mode == 2 ){
     //open the pipe to FFMPEG
+    char output0[1000];
     char output[1000];
-    sprintf(output, "%s yaplot%02d.mp4", FFMPEG, windowid);
+    sprintf(output0, FFMPEG, fps);
+    sprintf(output, "%s yaplot%02d.mp4", output0, windowid);
     w->pffmpeg=popen(output, "w");
   }
 #endif
@@ -370,7 +372,7 @@ static gint key_press_cb(GtkWidget *widget,
   }
   /*このあたりの処理はすべてのコマンドに拡張すべき。*/
   if((event->length==1)&&(event->string[0]>='0')&&(event->string[0]<='9')){
-    jumpto = jumpto*10+event->string[0]-'0';
+    prefix = prefix*10+event->string[0]-'0';
   }else if(w[i].RecordMode){
     switch(key){
     case GDK_KEY_r:
@@ -396,14 +398,14 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_KEY_Return:
       case GDK_KEY_KP_Enter:
 	/*go absolute*/
-	processed=eGotoFrame(g,w,i,(((modstatus&GDK_SHIFT_MASK)&&(jumpto==0))?LASTFRAME:jumpto));
+	processed=eGotoFrame(g,w,i,(((modstatus&GDK_SHIFT_MASK)&&(prefix==0))?LASTFRAME:prefix));
 	break;
       case GDK_KEY_Page_Down:
       case GDK_KEY_n:
       case GDK_KEY_N:
       case GDK_KEY_KP_Page_Down:
 	/*go forward*/
-	processed=eGoRelativeFrame(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
+	processed=eGoRelativeFrame(g,w,i,(prefix?+prefix:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
       case GDK_KEY_c:
       case GDK_KEY_C:
@@ -423,11 +425,12 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_KEY_R:
 #ifdef FFMPEG
 	// if FFMPEG is defined, key R records the pictures into a video
-	processed=eStartRecording(g,w,2);
+	// prefix value is used as the frame rate
+	processed=eStartRecording(g,w,2,(prefix?+prefix:+10));
 	break;
 #endif
       case GDK_KEY_r:
-	processed=eStartRecording(g,w,1);
+	processed=eStartRecording(g,w,1,1);
 	break;
 #ifndef win32
       case GDK_KEY_u:
@@ -447,7 +450,7 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_KEY_p:
       case GDK_KEY_P:
       case GDK_KEY_KP_Page_Up:
-	processed=eGoRelativeFrame(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
+	processed=eGoRelativeFrame(g,w,i,(prefix?-prefix:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*first frame*/
       case GDK_KEY_Home:
@@ -471,49 +474,49 @@ static gint key_press_cb(GtkWidget *widget,
 	break;
 	/*telescopic*/
       case GDK_KEY_bracketright:
-	processed=eWiden(g,w,i,(jumpto?-jumpto:-1));
+	processed=eWiden(g,w,i,(prefix?-prefix:-1));
 	break;
       case GDK_KEY_asterisk:
       case GDK_KEY_KP_Multiply:
-	processed=eZoom(g,w,i,(jumpto?+jumpto:+1));
+	processed=eZoom(g,w,i,(prefix?+prefix:+1));
 	break;
 	/*wide*/
       case GDK_KEY_bracketleft:
-	processed=eWiden(g,w,i,(jumpto?+jumpto:+1));
+	processed=eWiden(g,w,i,(prefix?+prefix:+1));
 	break;
       case GDK_KEY_slash:
       case GDK_KEY_KP_Divide:
-	processed=eZoom(g,w,i,(jumpto?-jumpto:-1));
+	processed=eZoom(g,w,i,(prefix?-prefix:-1));
 	break;
 	/*heading rotation*/
       case GDK_KEY_H:
       case GDK_KEY_h:
       case GDK_KEY_Left:
       case GDK_KEY_KP_Left:
-	processed=eHeading(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
+	processed=eHeading(g,w,i,(prefix?+prefix:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*heading rotation*/
       case GDK_KEY_L:
       case GDK_KEY_l:
       case GDK_KEY_Right:
       case GDK_KEY_KP_Right:
-	processed=eHeading(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
+	processed=eHeading(g,w,i,(prefix?-prefix:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*banking rotation*/
       case GDK_KEY_K:
       case GDK_KEY_k:
       case GDK_KEY_Up:
       case GDK_KEY_KP_Up:
-	processed=eBanking(g,w,i,(jumpto?+jumpto:+1),(modstatus&GDK_SHIFT_MASK));
+	processed=eBanking(g,w,i,(prefix?+prefix:+1),(modstatus&GDK_SHIFT_MASK));
 	break;
 	/*banking rotation*/
       case GDK_KEY_J:
       case GDK_KEY_j:
       case GDK_KEY_Down:
       case GDK_KEY_KP_Down:
-	processed=eBanking(g,w,i,(jumpto?-jumpto:-1),(modstatus&GDK_SHIFT_MASK));
+	processed=eBanking(g,w,i,(prefix?-prefix:-1),(modstatus&GDK_SHIFT_MASK));
 	break;
-	/*flush jumpto*/
+	/*flush prefix*/
       case GDK_KEY_Escape:
 	processed=1;
 	break;
@@ -523,7 +526,7 @@ static gint key_press_cb(GtkWidget *widget,
 	break;
       case GDK_KEY_f:
       case GDK_KEY_F:
-	processed=eToggleLayer(g,w,i,(jumpto?jumpto:1));
+	processed=eToggleLayer(g,w,i,(prefix?prefix:1));
 	break;
       case GDK_KEY_x:
 	processed=eResetView(g,w,i,-40, 0, 0);
@@ -560,12 +563,12 @@ static gint key_press_cb(GtkWidget *widget,
       case GDK_KEY_Insert:
       case GDK_KEY_KP_Insert:
       case GDK_KEY_parenright:
-	processed=eRelativeThickness(g,w,i,(jumpto?+jumpto:+1));
+	processed=eRelativeThickness(g,w,i,(prefix?+prefix:+1));
 	break;
       case GDK_KEY_Delete:
       case GDK_KEY_KP_Delete:
       case GDK_KEY_parenleft:
-	processed=eRelativeThickness(g,w,i,(jumpto?-jumpto:-1));
+	processed=eRelativeThickness(g,w,i,(prefix?-prefix:-1));
 	break;
 	/*better quality*/
       case GDK_KEY_plus:
@@ -622,7 +625,7 @@ static gint key_press_cb(GtkWidget *widget,
 	break;
       }
     if(processed){
-      jumpto=0;
+      prefix=0;
     }
   }
   return FALSE;

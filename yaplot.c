@@ -219,7 +219,7 @@ int debug=0;
 float Eyex=0,Eyey=-40,Eyez=0;
 float Lookx=0,Looky=0,Lookz=0;
 float Upx=0,Upy=0,Upz=1;
-int jumpto=0;
+int prefix=0;
 
 #define DBGTMRSTART if(debug) getitimer(ITIMER_REAL,&deb1);
 #define DBGTMRSTOP  if(debug){\
@@ -251,9 +251,9 @@ float powif(float x,int n)
 }
 #endif
 
-int eWiden(Ginfo *g,Winfo w[],int i,int jumpto)
+int eWiden(Ginfo *g,Winfo w[],int i,int prefix)
 {
-    float ratio=powif(1.05,jumpto);
+    float ratio=powif(1.05,prefix);
     if(w[i].async){
         w[i].fov*=ratio;
         EyeMotion(&w[i],1.0-ratio);
@@ -271,21 +271,21 @@ int eWiden(Ginfo *g,Winfo w[],int i,int jumpto)
 }
 
 
-int eGoRelativeFrame(Ginfo *g,Winfo w[],int i,int jumpto,int keepmoving)
+int eGoRelativeFrame(Ginfo *g,Winfo w[],int i,int prefix,int keepmoving)
 {
     if(w[i].async){
         if(keepmoving)
-            w[i].df=+jumpto;
+            w[i].df=+prefix;
         else{
-            w[i].realcurrent+=jumpto;
+            w[i].realcurrent+=prefix;
             w[i].df=0;
         }
     }else{
         for(i=0;i<g->nwindow;i++){
             if(keepmoving){
-                w[i].df=+jumpto;
+                w[i].df=+prefix;
             }else{
-                w[i].realcurrent+=jumpto;
+                w[i].realcurrent+=prefix;
                 w[i].df=0;
             }
         }
@@ -293,7 +293,7 @@ int eGoRelativeFrame(Ginfo *g,Winfo w[],int i,int jumpto,int keepmoving)
     return TRUE;
 }
 
-int eBanking(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
+int eBanking(Ginfo *g,Winfo w[],int i,int prefix, int fine)
 {
     /*if(crawl){*/
     /*float deltah;
@@ -312,16 +312,16 @@ int eBanking(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
     /*}else{*/
     if(w[i].async){
       if (fine){
-        w[i].wb +=jumpto*0.1;
+        w[i].wb +=prefix*0.1;
       }
       else{
-        w[i].wb +=jumpto;
+        w[i].wb +=prefix;
       }
       w[i].status|=REDRAW;
       if (debug) fprintf(stderr,"REDRAW because of banking (1)[Window %d]\n",i);
     }else{
       for(i=0;i<g->nwindow;i++){
-	w[i].wb +=jumpto;
+	w[i].wb +=prefix;
 	w[i].status|=REDRAW;
 	if (debug) fprintf(stderr,"REDRAW because of banking (2)[Window %d]\n",i);
       }
@@ -329,7 +329,7 @@ int eBanking(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
     return TRUE;
 }
 
-int eHeading(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
+int eHeading(Ginfo *g,Winfo w[],int i,int prefix, int fine)
 {
     /*if(crawl){*/
     /*float deltab;
@@ -348,16 +348,16 @@ int eHeading(Ginfo *g,Winfo w[],int i,int jumpto, int fine)
   /*}else{*/
     if(w[i].async){
       if (fine){
-        w[i].wh +=jumpto*0.1;
+        w[i].wh +=prefix*0.1;
       }
       else {
-        w[i].wh +=jumpto;
+        w[i].wh +=prefix;
       }
       w[i].status|=REDRAW;
       if (debug) fprintf(stderr,"REDRAW because of heading (1)[Window %d]\n",i);
     }else{
       for(i=0;i<g->nwindow;i++){
-	w[i].wh +=jumpto;
+	w[i].wh +=prefix;
 	w[i].status|=REDRAW;
 	if (debug) fprintf(stderr,"REDRAW because of heading (2)[Window %d]\n",i);
       }
@@ -384,17 +384,17 @@ int eToggleSync(Ginfo *g,Winfo w[],int i)
     return TRUE;
 }
 
-int eRelativeThickness(Ginfo *g,Winfo w[],int i,int jumpto)
+int eRelativeThickness(Ginfo *g,Winfo w[],int i,int prefix)
 {
     if(w[i].async){
-        w[i].thick+=jumpto;
+        w[i].thick+=prefix;
         if(w[i].thick<0)
             w[i].thick=0;
         w[i].status|=REDRAW;
 		if (debug) fprintf(stderr,"REDRAW because line thickness is changed (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
-            w[i].thick+=jumpto;
+            w[i].thick+=prefix;
             if(w[i].thick<0)
                 w[i].thick=0;
             w[i].status|=REDRAW;
@@ -404,9 +404,9 @@ int eRelativeThickness(Ginfo *g,Winfo w[],int i,int jumpto)
     return TRUE;
 }
 
-int eZoom(Ginfo *g,Winfo w[],int i,int jumpto)
+int eZoom(Ginfo *g,Winfo w[],int i,int prefix)
 {
-    float ratio=powif(1.05,jumpto);
+    float ratio=powif(1.05,prefix);
     w[i].depthratio*=ratio;
     w[i].status|=REDRAW;
     if (debug) fprintf(stderr,"REDRAW because zoom is changed [Window %d]\n",i);
@@ -450,11 +450,11 @@ int eQuit(Ginfo *g,Winfo w[],int i)
     exit(0);
 }
 
-int eStartRecording(Ginfo *g,Winfo w[], int mode)
+int eStartRecording(Ginfo *g,Winfo w[], int mode, int fps)
 {
     /*全部同時に録画する。*/
     for(int i=0;i<g->nwindow;i++){
-      W_StartRecording(&w[i], mode, i);
+      W_StartRecording(&w[i], mode, i, fps);
         w[i].status|=REDRAW;
         if (debug) fprintf(stderr,"REDRAW because recording is started [Window %d]\n",i);
     }
@@ -525,25 +525,25 @@ int eToggleVerbosity(Ginfo *g,Winfo w[],int i)
     return TRUE;
 }
 
-int eGotoFrame(Ginfo *g,Winfo w[],int i,int jumpto)
+int eGotoFrame(Ginfo *g,Winfo w[],int i,int prefix)
 {
     /*jump to the last frame if only one G is pressed.*/
     if(w[i].async){
-        w[i].realcurrent=jumpto;
+        w[i].realcurrent=prefix;
         w[i].df=0;
     }else{
         for(i=0;i<g->nwindow;i++){
-            w[i].realcurrent=jumpto;
+            w[i].realcurrent=prefix;
             w[i].df=0;
         }
     }
     return TRUE;
 }
 
-int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto)
+int eRelativeReality(Ginfo *g,Winfo w[],int i,int prefix)
 {
     if(w[i].async){
-        w[i].reality+=jumpto;
+        w[i].reality+=prefix;
         if(w[i].reality>MAXREALITY)
             w[i].reality=MAXREALITY;
         else if (w[i].reality<0)
@@ -555,7 +555,7 @@ int eRelativeReality(Ginfo *g,Winfo w[],int i,int jumpto)
         if (debug) fprintf(stderr,"REDRAW because reality is changed (1)[Window %d]\n",i);
     }else{
         for(i=0;i<g->nwindow;i++){
-            w[i].reality+=jumpto;
+            w[i].reality+=prefix;
             if(w[i].reality>MAXREALITY)
                 w[i].reality=MAXREALITY;
             else if (w[i].reality<0)
@@ -1358,7 +1358,7 @@ void InsertFrameInfo(Winfo *w,float framerate,int verbose)
     sprintf(num,"Frame %d (n p)",w->currentframe);
     drawstring2fb(w,5,base,num,strlen(num));
     base+=14;
-    sprintf(num,"Keybuf %d",jumpto);
+    sprintf(num,"Keybuf %d",prefix);
     drawstring2fb(w,5,base,num,strlen(num));
     base+=14;
     sprintf(num,"Reality %d (+ -)",w->reality);

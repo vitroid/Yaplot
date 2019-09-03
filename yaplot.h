@@ -25,7 +25,7 @@ int eZoom(Ginfo *g,Winfo w[],int i,int jumpto);
 int eStopRotation(Ginfo *g,Winfo w[],int i);
 int eStopMotion(Ginfo *g,Winfo w[],int i);
 int eQuit(Ginfo *g,Winfo w[],int i);
-int eStartRecording(Ginfo *g,Winfo w[],int mode);
+int eStartRecording(Ginfo *g,Winfo w[],int mode, int fps);
 int eStopRecording(Ginfo *g,Winfo w[]);
 int eToggleVerbosity(Ginfo *g,Winfo w[],int i);
 int eGotoFrame(Ginfo *g,Winfo w[],int i,int jumpto);

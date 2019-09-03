@@ -10,8 +10,8 @@ LDFLAGS=$(GTK_LDFLAGS) $(PNG_LDFLAGS) -lm
 PKGDATADIR=/usr/local/share/yaplot
 BINDIR=/usr/local/bin
 # FFMPEG=
-FFMPEG=-DFFMPEG=\"'$(BINDIR)/ffmpeg -r 30 -i - -pix_fmt yuv420p'\"
-VERSION=\"4.1\"
+FFMPEG=-DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
+VERSION=\"4.1.1\"
 CFLAGS=-g -Wall -Werror          -I/opt/X11/include $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE $(FFMPEG)
 
 %.h: %.h.in Makefile
