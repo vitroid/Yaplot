@@ -596,9 +596,9 @@ int eResetViewOne( Winfo* w, float eyex, float eyey, float eyez )
       w->up[2] = 1;
     }
     else if (eyey != 0){
-      w->up[0] = 1;
+      w->up[0] = 0;
       w->up[1] = 0;
-      w->up[2] = 0;
+      w->up[2] = 1;
     }
     else{
       w->up[0] = 0;
