@@ -27,7 +27,7 @@
 #ifndef TRUE
 #define TRUE 0
 #endif
-#define VERSION %%version%%
+#define VERSION "%%version%%"
 
 typedef struct _Vertex
 {
