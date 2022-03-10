@@ -2,7 +2,7 @@ require "formula"
 
 class Yaplot < Formula
   homepage "https://github.com/vitroid/Yaplot"
-  url "https://github.com/vitroid/Yaplot/tarballs/Yaplot-%%version%%.tar.gz"
+  url "https://github.com/vitroid/Yaplot/raw/master/Yaplot-%%version%%.tar.gz"
   sha1 "%%sha%%"
 
   depends_on "gtk+"

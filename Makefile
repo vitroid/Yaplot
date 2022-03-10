@@ -17,7 +17,7 @@ CFLAGS=-g -Wall -Werror -Werror=vla  -I/opt/X11/include $(GTK_CFLAGS) -DGTK_DISA
 %.h: %.h.in Makefile
 	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X $< > $@
 %.rb: %.rb.in Makefile tarball
-	set `shasum docs/tarballs/Yaplot-$(VERSION).tar.gz`; \
+	set `shasum Yaplot-$(VERSION).tar.gz`; \
 	    sed -e sX%%sha%%X$$1X -e sX%%version%%X$(VERSION)X $< > $@
 %.o: common.h
 $(PROG): $(OBJS)
@@ -29,7 +29,7 @@ install: yaplot
 tarball:
 	-mkdir Yaplot-$(VERSION)
 	cd Yaplot-$(VERSION); cp ../*.h ../*.c ../Makefile .
-	tar zcf docs/tarballs/Yaplot-$(VERSION).tar.gz Yaplot-$(VERSION)
+	tar zcf Yaplot-$(VERSION).tar.gz Yaplot-$(VERSION)
 .PHONY: clean depend distclean
 clean:
 	-$(RM) $(PROG) $(OBJS) $(DEPENDS)
