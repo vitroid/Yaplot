@@ -353,7 +353,8 @@ void W_StartRecording(Winfo *w, int mode, int windowid, int fps)
     char output0[1000];
     char output[1000];
     sprintf(output0, FFMPEG, fps);
-    sprintf(output, "%s yaplot%02d.mp4", output0, windowid);
+    // sprintf(output, "%s yaplot%02d.mp4", output0, windowid);
+    snprintf(output, sizeof(output), "%.*s yaplot%02d.mp4", (int)(sizeof(output) - strlen(output0) - 11), output0, windowid);
     w->pffmpeg=popen(output, "w");
   }
 #endif
