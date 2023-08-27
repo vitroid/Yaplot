@@ -1,0 +1,328 @@
+w(wake): Shaking display with a period of about 2 seconds.
+
+Reality 0: Line: thin line, bar: thin line, circle: thin line, polygon: thin line.
+Reality 1: Bars are drawn with a rectangular border. No fill.
+Reality 2: Polygons and circles are drawn semi-transparently. Borders are drawn. Bars are painted solid.
+Reality 3: Solid color with a solid border. No border.
+Reality 4: Solid color with a black border.
+The thickness of the thin line is variable.
+Border lines are drawn with a very thin line and a color.
+Bars have the same thickness as circles.
+Circles are bordered by thin lines.
+o is like a marker, so there is no fill. Always a thin line.
+
+Thursday, December 5, 2002 It seems strange that only the on-the-fly specification of the palette is global.
+I think the rule is that you can only specify on-the-fly at the beginning of the file, because it would be bad to change it in the middle of the file.
+I think it would be better to make it a rule that in-place specification can only be done at the beginning of a file.
+
+Thursday, December 5, 2002: The most time consuming part is quick sort, but it is difficult to make it faster than this.
+If you use GL or something like that, it will probably use z-buffer, so it is difficult to speed up quicksort.
+If you use GL, you can free up the entire time for quicksort and speed up the process considerably.
+It may be time to switch to such a route.
+
+$Id: ToDo,v 1.9 2008-04-07 04:05:40 matto Exp $
+$Log: ToDo,v $
+Revision 1.9 2008-04-07 04:05:40 matto
+Reality expressions are a little bit modified. display in reality level 2..4 will be improved when many lines, sticks, and polygons are there.
+
+Revision 1.8 2003/04/25 02:25:33 matto
+*** empty log message ***
+
+Revision 1.7 2002/01/22 06:48:03 matto
+Supported automake.
+
+Revision 1.6 2001/07/18 03:40:56 matto
+Compiled on windows, too.
+
+Revision 1.5 2001/07/16 08:09:16 matto
+OS- and GUI- dependent codes are separated.
+
+Revision 1.4 2001/07/16 02:22:42 matto
+Redrawing action is refined.
+
+Revision 1.3 2001/06/16 07:50:24 matto
+Jerky motion is refined.
+
+Revision 1.2 1999/08/25 03:40:55 matto
+This is the real first edition of Yaplot 2.
+
+Revision 1.10 1999/08/24 10:09:11 matto
+Crawling mode is disabled.
+
+Revision 1.9 1999/08/24 08:34:56 matto
+Revision 1.8 1999/08/24 10:09:11 matto Crawling mode is disabled.
+
+Revision 1.8 1999/08/24 08:25:40 matto
+Hash is renewed.
+Accuracy is introduced.
+
+Revision 1.7 1999/08/24 03:26:55 matto
+Zoom ratio can be specified independently for each window.
+
+Revision 1.6 1999/08/24 01:00:46 matto
+CVS test from flash memory card.
+
+Revision 1.5 1999/08/20 03:39:59 matto
+yaplot.c is divided.
+
+Revision 1.4 1999/08/19 12:47:05 matto
+*** empty log message ***
+
+Revision 1.3 1999/03/08 04:34:32 matto
+quick sort is replaced and became faster.
+event management becomes a little bit smarter.
+
+Revision 1.2 1998/10/15 07:37:11 matto
+variable length array is introduced for primitives.
+
+Revision 1.1.1.1 1998/09/28 04:40:47 matto
+First release of Yaplot
+
+Revision 1.1 1998/09/04 03:29:03 matto
+Initial revision
+
+
+
+
+Postscript output
+
+I want to output a desired frame at a desired resolution, at a desired rendering quality, and at a desired angle.
+I want to output the desired frame at the desired resolution, at the desired rendering quality and at the desired angle. It would be even better if it could be output as a tgif for later editing. Snapshot output is interactive.
+Snapshots can only be output in interactive mode.
+
+Output in gif and video format
+
+We want the output to be cleaner than the screen display. Display at twice the size and use a filter to reduce the size of the image.
+
+Camera action description
+
+There are two types of time axis
+When the time axis is not a parameter:
+When the time axis can also be specified as a parameter
+When the time axis is made a parameter, it is easy to rewind the image.
+
+The center-of-gravity motion can eventually be specified as a spline.
+Rotational motion may be linear.
+Time should also be linear.
+
+A list of numerical values is sufficient.
+There is no need to use advanced description methods.
+
+The camera position is expressed in three variables. (Whether the coordinates are relative to the object or absolute.)
+One fov (field of view) variable
+Camera orientation can be Euler, Quaternion, or (Eyep-Lookp-Up). (Internally, all are treated as rotation matrices, and the rotation axis is found and the micro-rotation is integrated.)
+Specify the real time and the frame number.
+"*" wildcard means interpolation.
+
+The output can be a normal yaplot window or an animated gif.
+When output is finished, return to interactive operation.
+
+
+If you want to make it much faster than the current speed, you can optimize the coordinate calculation (rotation of coordinates).
+(rotation of coordinates). Creating an intermediate file may also be effective to speed up the process. To speed up the process, it may be useful to create an intermediate file.
+If you convert the input file to the internal format in the background and store it in the cache (or an intermediate file), it will be possible to speed up the animation process.
+If double buffering is implemented properly, it is possible to speed up both animation and rotation.
+
+
+If double buffering is implemented properly, it can probably be done even faster.
+If you are drawing on pixmap, hardware acceleration may not work?
+
+
+Wednesday, October 14, 1998: I mistakenly tuned mol3p.
+I was wrong and tuned the mol3p one.
+
+Thursday, October 15, 1998: Tuning of yaplot is completed. Variable length arrays were introduced,
+It can now run with minimum memory requirement. Now, cache can be done easily.
+
+Thursday, October 15, 1998: Cache is implemented. It makes the rotation a little smoother.
+
+Thursday, October 15, 1998 Data from standard input is not cached properly.
+Caching of data from standard input is not working properly.
+
+Friday, October 16, 1998: Check whether a file is being read or not using feof?
+I think feof does not return accurate results.
+
+
+
+
+Thursday, August 19, 1999Improvements
+
+Change depth
+Thursday, August 19, 1999: I have already introduced: shift+"/" and shift+"*" to change the parsing.
+I want to introduce the concept of "layer".
+
+I would like to introduce the concept of layer.
+August 19, 1999 (Thursday)-New "y" command was added,
+
+function key.
+
+Verbose degree setting
+Defined "v" key only on Thursday, August 19, 1999.
+
+Add more actions that combine numbers.
+
+Simplify "install" a bit more.
+
+Coordinates are now held independently by each object, but it would be better to centralize them.
+(Then, we can define more actions that combine numbers. (This would make it easier to condense the same coordinates.)
+(This would make it easier to reduce the same coordinates.) The question is how much accuracy to guarantee when reducing the coordinates. The problem is how much accuracy to guarantee when collapsing coordinates.
+If we limit the number of digits at the time of reading, and evaluate whether the coordinates are the same or not by matching them exactly, we can use Hash.
+If the coordinates are evaluated by matching them exactly, Hash can be used, which avoids speed reduction due to matching.
+Usually, the last three digits are sufficient.
+Hash should be used only for reading and should be released immediately.
+August 19, 1999 (Thursday) In order to achieve the above, we first remove the semi-diameter information from the information of each vertex and replace it with the zoom ratio.
+The first step was to remove the semi-diameter information from each Vertex and introduce zoom ratio information instead. Now, vertexes can be shared.
+Vertexes can now be shared.
+August 20, 1999 (Fri.) Hash was introduced.
+But it is not a problem once cached.
+
+I want to add polyline to line. in case of polygon I give the number of points,
+What do you do in the case of 'line?' Instead of extending the 'l' and 's' specifications, I think it would be better to decide on a new
+I think it would be better to decide on a new command.
+
+When sorting, is the position of the first point the only criterion, as with polygons?
+Or do we take the center of gravity properly? Or do we take the center of gravity properly? If center of gravity is taken, xwing will display more properly.
+xwing should display better.
+Friday, August 20, 1999: It was already calculated with the center of gravity.
+
+How to use realty, organize drawing elements (o, etc.)
+
+Could colors be specified directly?
+
+If cache can be used, data size could be a little larger.
+If layer is used, eliminate unnecessary coordinate transformations.
+Already done Tuesday, August 24, 1999
+
+I would like the * and / actions to simply change the magnification without messing with the viewing angle.
+I want them to simply change the magnification without changing the viewing angle. And it should always be async.
+Already done, Tuesday, August 24, 1999
+
+Add camera action
+Time feeds are not good for splines, so only linear time should be used. Camera
+motion is interpolated by a plane.
+
+Added camera move mode to register camera actions. Change the behavior of the cursor and *//.
+behavior.
+1999/8/23 Done
+Deleted "crawling mode" for now because it does not match with async mode.
+
+Added text decoration. Centering and so on.
+
+There should be a 2D graphic mode.
+
+Rotating an object is inherently wrong. There is no need for yaplot to rotate an object that is not included in the data.
+If it can rotate, it should be able to translate. If rotation is possible, translation should also be possible.
+If rotation is possible, then translation should also be possible, which would increase the number of control variables too much. Why not make the camera rotate?
+1999/8/23 Done
+
+Find out which part is taking the most time.
+Hash function is complicated.
+Tuesday, August 24, 1999 Improved.
+
+Can we evaluate the efficiency of the hash?
+SortI think we are exchanging data unnecessarily.
+
+Would like to be able to control multiple screens simultaneously.
+1999/8/23 Done
+I want to be able to control independently as well. For this purpose, it is necessary to transfer a lot of contents of Ainfo and Ginfo to Winfo and to rewrite them drastically.
+Winfo and rewrite them. I have a rough idea of what I want to do.
+Tuesday, August 24, 1999: Almost completed.
+Screen size changes are always async, otherwise actions in windows in async mode do not affect other windows.
+Actions in a window in async mode do not affect other windows, but actions in a window in sync mode are reflected in all windows.
+Actions in windows in sync mode are reflected in all windows.
+
+Shouldn't the verbose message displayed on the screen be in the other windows?
+Tuesday, August 24, 1999 Some of the information can be divided into other windows, but most of the information
+can be kept in different values for each window in async, so there is no need to create a window for messages now.
+There is no need to create a window for messages at this time.
+
+Standard input is not cached well. In the case of standard input, "-" is specified in the file name.
+In the case of standard input, it is easy to identify the file name because "-" is specified in the file name. In the case of stdin, you need to maximize the cache and prohibit skip reading.
+In the case of standard input, cache is maximized and skipped reading is prohibited.
+
+Clip out-of-field points.
+1999/8/23 Done
+
+I want to adjust the range of clipping.
+
+No need to store XPoints for all primitives.
+
+Want to introduce precision.
+Tuesday, August 24, 1999 Introduced in the form of #define for now.
+
+I want to optimize memory usage.
+
+Improve efficiency of Cashe.
+Pre-reading, etc.
+
+It must be ensured that all window motions are synchronized even if interrupts are received in the middle of drawing.
+It must be ensured that all window movements are synchronized even when interrupts occur in the middle of drawing.
+Dragging with the mouse, for example, will cause a large number of interrupts. If we had to stop the process each time an interruption occurred, we would not be able to keep all windows in sync.
+interrupting the process each time, the display will not be smooth, and this is also related to the above problem.
+The reason for the delay in quits is that the
+
+Why is the "QUIT" process slowing down?
+
+Friday, June 15, 2001
+It is strange that fewer display elements are more choppy.
+In volvic, it only gets jerky when you *don't* draw a circle. What the heck is that?
+
+Turns out I was calling XPending too often.
+Also, when rotating with the mouse (when autorotate is off), it would be better to disable interrupts and refer to the mouse status right after the drawing process is finished to determine the next action. If you use event-driven, there will be too many interrupts and the elements will not rotate smoothly.
+
+What if all interrupts are disabled and all events in the buffer are processed at once?
+
+Add 10 key operations.
+unimplemented keys: c
+c
+f
+
+non-repeatable keys: c
+q,break
+home
+home
+end
+space
+pause
+s
+plus
+minus
+tab
+Fnc
+
+repeatable key: page down,n,N
+page down,n,N
+page up,p
+bracketright,bracketleft
+*
+/
+left
+right
+up
+down
+insert
+delete
+
+new keys: G,return
+G,return
+
+Monday, July 16, 2001
+Migrate to GTK; aim to be up and running on Win within a couple of days.
+
+Monday, July 16, 2001
+I roughly separated os-dependent parts and gui-dependent parts for now.
+Avoid using too advanced GUI functions, as it will make porting difficult.
+
+Wednesday, July 18, 2001
+Extend @command to allow on-the-fly setting of palettes.
+@ palette number [r g b].
+r,g,b are values from 0 to 255, change palettes in the order they appear, and manage them separately for each window. Therefore, masterpalette is required for each window.
+
+Monday, July 23, 2001
+Support for automake.
+Unable to work with DEC OSF/1.
+
+Tuesday, January 22, 2002
+Conversion to GNOME.
+
+Replace main for now.
