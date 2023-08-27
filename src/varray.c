@@ -1,52 +1,49 @@
+#include "varray.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "varray.h"
 
-varray * varray_init(size_t nmemb,size_t size,int initval)
+varray *varray_init(size_t nmemb, size_t size, int initval)
 {
-    varray *v;
-    v = malloc(sizeof(varray));
-    v->initval = initval;
-    v->size = size;
-    v->n=nmemb;
-    v->a=malloc(size*nmemb);
-    memset(v->a,initval,size*nmemb);
+	varray *v;
+	v = malloc(sizeof(varray));
+	v->initval = initval;
+	v->size = size;
+	v->n = nmemb;
+	v->a = malloc(size * nmemb);
+	memset(v->a, initval, size * nmemb);
 #ifdef DEBUG
-	  fprintf(stderr,"VARRAY: alloc %d\n",v->n);
+	fprintf(stderr, "VARRAY: alloc %d\n", v->n);
 #endif
-    return v;
+	return v;
 }
 
-void *varray_ptr(varray *v,int i)
+void *varray_ptr(varray *v, int i)
 {
-    int last;
-    char *a;
-    last = v->n;
-    while(v->n <= i)
-      {
-	  v->n *= 2;
-      }
-    if(v->n!=last)
-      {
+	int last;
+	char *a;
+	last = v->n;
+	while (v->n <= i) {
+		v->n *= 2;
+	}
+	if (v->n != last) {
 #ifdef DEBUG
-	  fprintf(stderr,"VARRAY: realloc %d -> %d\n",last,v->n);
+		fprintf(stderr, "VARRAY: realloc %d -> %d\n", last, v->n);
 #endif
-	  a =  v->a = realloc(v->a,v->n*v->size);
-	  a +=last*v->size;
-	  memset(a,/*&v->a[last*v->size],*/
-		 v->initval,
-		 (v->n-last)*v->size);
-      }
-    a = v->a;
-    a += i*v->size;
-    return a;
+		a = v->a = realloc(v->a, v->n * v->size);
+		a += last * v->size;
+		memset(a, /*&v->a[last*v->size],*/
+		       v->initval, (v->n - last) * v->size);
+	}
+	a = v->a;
+	a += i * v->size;
+	return a;
 }
 
 void varray_done(varray *v)
 {
-    free(v->a);
-    free(v);
+	free(v->a);
+	free(v);
 }
 
 /*

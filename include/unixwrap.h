@@ -3,7 +3,7 @@
 #include "common.h"
 void resettimer();
 int deltatime2();
-Winfo *GetOptions(int argc,char *argv[],Ainfo *a,Ginfo *g);
-int ePushView(Ginfo *g,Winfo w[],int i);
-int ePopView(Ginfo *g,Winfo w[],int i);
+Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g);
+int ePushView(Ginfo *g, Winfo w[], int i);
+int ePopView(Ginfo *g, Winfo w[], int i);
 #endif

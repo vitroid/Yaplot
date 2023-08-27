@@ -1,6 +1,6 @@
 PROG = yaplot
 
-SRC = $(wildcard src/*.c)
+SRC  = $(wildcard src/*.c)
 OBJS = $(SRC:.c=.o)
 
 GTK_CFLAGS  = $(shell pkg-config gtk+-3.0 --cflags)
@@ -13,8 +13,8 @@ BINDIR     = /opt/homebrew/bin
 
 VERSION = 4.1.2
 
-CFLAGS  = -g -Wall -Werror -Werror=vla -I/opt/X11/include -I./include 
-CFLAGS += $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE 
+CFLAGS  = -g -Wall -Werror -Werror=vla -I/opt/X11/include -I./include
+CFLAGS += $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE
 CFLAGS += -DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
 
 .PHONY: all
@@ -36,11 +36,11 @@ tarball:
 	cp $(SRC) Makefile Yaplot-$(VERSION)/
 	tar zcf Yaplot-$(VERSION).tar.gz Yaplot-$(VERSION)
 
-.PHONY: clean
+.PHONY: clean format
 
 clean:
 	$(RM) $(PROG) $(OBJS) include/common.h
 
-# %.d: %.c
-# 	@$(CC) -MM $(CFLAGS) $< | sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@
-# -include $(DEPENDS)
+format:
+	fd -e h -e c -x clang-format -i {}
+	clang-format -i common.h.in
