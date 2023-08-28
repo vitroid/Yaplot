@@ -7,70 +7,64 @@
 /*非常に大きなキャッシュを作る場合には、このプログラムのように前方から */
 /*順番に探索する方法では時間がかかりすぎる。hashと組みあわせるようなこ */
 /*とも必要かも。*/
+#include "cache.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
-#include "cache.h"
 
-Cache *Cache_Init(int n,void (*destructor)(void *))
+Cache *Cache_Init(int n, void (*destructor)(void *))
 {
-    Cache *c;
-    c = malloc(sizeof(Cache));
-    c->destructor = destructor;
-    c->n=n;
-    c->index=malloc(sizeof(int)*n);
-    c->ptr=malloc(sizeof(void *)*n);
-    memset(c->index,-1,sizeof(int)*n);
-    memset(c->ptr,(intptr_t)NULL,sizeof(void *)*n);
-    return c;
+	Cache *c;
+	c = malloc(sizeof(Cache));
+	c->destructor = destructor;
+	c->n = n;
+	c->index = malloc(sizeof(int) * n);
+	c->ptr = malloc(sizeof(void *) * n);
+	memset(c->index, -1, sizeof(int) * n);
+	memset(c->ptr, (intptr_t)NULL, sizeof(void *) * n);
+	return c;
 }
 
-void **
-Cache_ptr(Cache *c,int i)
+void **Cache_ptr(Cache *c, int i)
 {
-    int j,k;
-    for(j=0;j<c->n;j++)
-      {
-	  if(c->index[j]==i)
-	    {
-		void *p=c->ptr[j];
+	int j, k;
+	for (j = 0; j < c->n; j++) {
+		if (c->index[j] == i) {
+			void *p = c->ptr[j];
 #ifdef DEBUG
-		fprintf(stderr,"Cache: found at %d\n",j);
-#endif 
-		for(k=j;k>0;k--)
-		  {
-		      c->index[k]=c->index[k-1];
-		      c->ptr[k]=c->ptr[k-1];
-		  }
-		c->index[0]=i;
-		c->ptr[0]=p;
-		return c->ptr;
-	    }
-      }
+			fprintf(stderr, "Cache: found at %d\n", j);
+#endif
+			for (k = j; k > 0; k--) {
+				c->index[k] = c->index[k - 1];
+				c->ptr[k] = c->ptr[k - 1];
+			}
+			c->index[0] = i;
+			c->ptr[0] = p;
+			return c->ptr;
+		}
+	}
 #ifdef DEBUG
-    fprintf(stderr,"Cache: Not found\n");
-#endif 
-    j--;
-    c->destructor(c->ptr[j]);
-    for(k=j;k>0;k--)
-      {
-	  c->index[k]=c->index[k-1];
-	  c->ptr[k]=c->ptr[k-1];
-      }
-    c->index[0]=i;
-    c->ptr[0]=NULL;
-    return c->ptr;
+	fprintf(stderr, "Cache: Not found\n");
+#endif
+	j--;
+	c->destructor(c->ptr[j]);
+	for (k = j; k > 0; k--) {
+		c->index[k] = c->index[k - 1];
+		c->ptr[k] = c->ptr[k - 1];
+	}
+	c->index[0] = i;
+	c->ptr[0] = NULL;
+	return c->ptr;
 }
 
 void Cache_print(Cache *c)
 {
-    int i;
-    for(i=0;i<c->n;i++)
-      {
-	  printf("%d %lx\n",c->index[i],(intptr_t)(c->ptr[i]));
-      }
-    printf("\n");
+	int i;
+	for (i = 0; i < c->n; i++) {
+		printf("%d %lx\n", c->index[i], (intptr_t)(c->ptr[i]));
+	}
+	printf("\n");
 }
 
 /*
@@ -84,7 +78,7 @@ void destructor(const void *v)
 	  free(v);
       }
 }
-    
+
 int main(int argc,char *argv[])
 {
     Cache *c;
@@ -128,5 +122,5 @@ int main(int argc,char *argv[])
     Cache_print(c);
 }
 
-    
+
 */

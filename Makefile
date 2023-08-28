@@ -1,42 +1,47 @@
-#requires pkg-config and gtk+3
-# (MacOS) brew install gtk+3; export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig
 
-PROG=yaplot
-SRC=Hash.c reality0.c reality2.c reality4.c varray.c cache.c  gtk.c  reality1.c reality3.c unixwrap.c yaplot.c
-OBJS=$(patsubst %.c,%.o,$(SRC))
-DEPENDS=$(patsubst %.c,%.d,$(SRC))
-GTK_CFLAGS=$(shell pkg-config gtk+-3.0 --cflags)
-GTK_LDFLAGS=$(shell pkg-config gtk+-3.0 --libs)
-PNG_LDFLAGS=$(shell pkg-config libpng --libs)
-LDFLAGS=$(GTK_LDFLAGS) $(PNG_LDFLAGS) -lm
-PKGDATADIR=/opt/homebrew/share/yaplot
-BINDIR=/opt/homebrew/bin
-# FFMPEG=
-FFMPEG=-DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
-VERSION=4.1.2
-CFLAGS=-g -Wall -Werror -Werror=vla  -I/opt/X11/include $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE $(FFMPEG)
+PROG = yaplot
 
-%.h: %.h.in Makefile
-	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X $< > $@
-%.o: common.h
+SRC  = $(wildcard src/*.c)
+OBJS = $(SRC:.c=.o)
+
+GTK_CFLAGS  = $(shell pkg-config gtk+-3.0 --cflags)
+GTK_LDFLAGS = $(shell pkg-config gtk+-3.0 --libs)
+PNG_LDFLAGS = $(shell pkg-config libpng --libs)
+LDFLAGS     = $(GTK_LDFLAGS) $(PNG_LDFLAGS) -lm
+
+PKGDATADIR = /opt/homebrew/share/yaplot
+BINDIR     = /opt/homebrew/bin
+
+VERSION = 4.1.2
+
+CFLAGS  = -g -Wall -Werror -Werror=vla -I/opt/X11/include -I./include
+CFLAGS += $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE
+CFLAGS += -DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
+
+.PHONY: all
+all: gen_common $(PROG)
+
+gen_common:
+	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X common.h.in > include/common.h
+
 $(PROG): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)
-install: yaplot
-	install yaplot $(BINDIR)
+	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
+
+install: $(PROG)
+	install $(PROG) $(BINDIR)
 	install -d $(PKGDATADIR)
 	install yaplot.col help.yap $(PKGDATADIR)
+
 tarball:
-	-mkdir Yaplot-$(VERSION)
-	cd Yaplot-$(VERSION); cp ../*.h ../*.c ../Makefile .
+	mkdir Yaplot-$(VERSION)
+	cp $(SRC) Makefile Yaplot-$(VERSION)/
 	tar zcf Yaplot-$(VERSION).tar.gz Yaplot-$(VERSION)
-.PHONY: clean depend distclean
+
+.PHONY: clean format
+
 clean:
-	-$(RM) $(PROG) $(OBJS) $(DEPENDS)
-distclean: clean
-	-rm *~
-	-rm common.h
-%.d: %.c common.h
-	@set -e; $(CC) -MM $(CFLAGS) $< \
-		| sed 's/\($*\)\.o[ :]*/\1.o $@ : /g' > $@; \
-		[ -s $@ ] || rm -f $@
--include $(DEPENDS)
+	$(RM) $(PROG) $(OBJS) include/common.h
+
+format:
+	fd -e h -e c -x clang-format -i {}
+	clang-format -i common.h.in
