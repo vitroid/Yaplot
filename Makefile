@@ -1,4 +1,6 @@
-#requires pkg-config and gtk+ via github
+#requires pkg-config and gtk+3
+# (MacOS) brew install gtk+3; export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig
+
 PROG=yaplot
 SRC=Hash.c reality0.c reality2.c reality4.c varray.c cache.c  gtk.c  reality1.c reality3.c unixwrap.c yaplot.c
 OBJS=$(patsubst %.c,%.o,$(SRC))
@@ -16,9 +18,6 @@ CFLAGS=-g -Wall -Werror -Werror=vla  -I/opt/X11/include $(GTK_CFLAGS) -DGTK_DISA
 
 %.h: %.h.in Makefile
 	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X $< > $@
-%.rb: %.rb.in Makefile tarball
-	set `shasum Yaplot-$(VERSION).tar.gz`; \
-	    sed -e sX%%sha%%X$$1X -e sX%%version%%X$(VERSION)X $< > $@
 %.o: common.h
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LIBS) $(LDFLAGS)
