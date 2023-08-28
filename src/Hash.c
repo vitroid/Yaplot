@@ -8,7 +8,6 @@
   タの挿入はしない。*/
 int Hash_QueryElement(sHash *h, unsigned int key, void *element)
 {
-	int dup = 0;
 	int d = 13;
 	while (1) {
 		if (h->value[key] == NULL) {
@@ -22,7 +21,6 @@ int Hash_QueryElement(sHash *h, unsigned int key, void *element)
 		}
 		key += d;
 		d++;
-		dup++;
 		/*fprintf(stderr,"(%d:%d)",dup,key);*/
 		if (key >= h->hashsize)
 			key -= h->hashsize;

@@ -887,7 +887,6 @@ void P_FreeFields(Pinfo *p)
 
 void O_Done(void *oo)
 {
-	int i;
 	Pinfo **p;
 	Vertex *v, *next;
 	NewOinfo *o = (NewOinfo *)oo;
@@ -900,7 +899,7 @@ void O_Done(void *oo)
 		free(v);
 		v = next;
 	}
-	for (i = 0, p = o->prims->a; *p != NULL; i++, p++) {
+	for (p = o->prims->a; *p != NULL; p++) {
 		P_FreeFields(*p);
 		free(*p);
 	}
@@ -1738,7 +1737,7 @@ void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
 				if (w[i].RecordMode) {
 					W_SaveSnapShot(&w[i], i);
 				}
-				waituntilflush(g);
+				// waituntilflush(g);
 				w[i].status &= ~REDRAW;
 				if (debug)
 					fprintf(stderr,
