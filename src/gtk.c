@@ -121,11 +121,6 @@ void setlinewidth(Winfo *w, float thick)
 	cairo_set_line_width(w->cr, thick);
 }
 
-void waituntilflush()
-{
-	// gdk_flush(); DEPRECATED
-}
-
 void setfgcolor(Winfo *w, int palette)
 {
 	cairo_set_source_rgb(w->cr, (float)w->colortable[palette].red / 65536.0,

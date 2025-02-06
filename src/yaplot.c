@@ -1737,7 +1737,6 @@ void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
 				if (w[i].RecordMode) {
 					W_SaveSnapShot(&w[i], i);
 				}
-				// waituntilflush(g);
 				w[i].status &= ~REDRAW;
 				if (debug)
 					fprintf(stderr,
