@@ -239,6 +239,11 @@ extern int prefix;
 int crawl = 0;
 int originx = 0, originy = 0;
 
+// Variables for trackpad gesture detection
+static int last_motion_x = 0, last_motion_y = 0;
+static guint32 last_motion_time = 0;
+static int gesture_tracking = 0;
+
 static gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 {
 	int x, y;
@@ -254,6 +259,55 @@ static gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 		y = event->y;
 		state = event->state;
 	}
+	
+	// Check for trackpad scrolling (which can be used for 2-finger gestures)
+	GdkDevice *device = gdk_event_get_source_device((GdkEvent *)event);
+	if (device && gdk_device_get_source(device) == GDK_SOURCE_TOUCHPAD) {
+		if (debug) {
+			fprintf(stderr, "Touchpad motion detected at %d,%d\n", x, y);
+		}
+		
+		// Track large vertical movements that might be 2-finger swipes
+		if (gesture_tracking && last_motion_time > 0) {
+			int delta_y = y - last_motion_y;
+			guint32 time_diff = event->time - last_motion_time;
+			
+			if (abs(delta_y) > 20 && time_diff < 100) { // Large movement in short time
+				if (debug) {
+					fprintf(stderr, "Potential 2-finger swipe: delta_y=%d, time_diff=%u\n", delta_y, time_diff);
+				}
+				
+				int i = WhichWidget(widget);
+				int fov_change = 0;
+				
+				if (delta_y < -20) {
+					fov_change = -1; // Swipe up -> narrow FOV
+					if (debug) {
+						fprintf(stderr, "Detected upward swipe via motion -> narrow FOV\n");
+					}
+				} else if (delta_y > 20) {
+					fov_change = +1; // Swipe down -> widen FOV  
+					if (debug) {
+						fprintf(stderr, "Detected downward swipe via motion -> widen FOV\n");
+					}
+				}
+				
+				if (fov_change != 0) {
+					eWiden(g_internal, w_internal, i, fov_change);
+					if (debug) {
+						fprintf(stderr, "FOV changed by motion swipe: %d\n", fov_change);
+					}
+					gesture_tracking = 0; // Reset to avoid multiple triggers
+				}
+			}
+		}
+		
+		last_motion_x = x;
+		last_motion_y = y;
+		last_motion_time = event->time;
+		gesture_tracking = 1;
+	}
+	
 	if (state & GDK_BUTTON1_MASK) {
 		if ((originx != x) || (originy != y)) {
 			int i;
@@ -280,6 +334,135 @@ static gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 		}
 	}
 	return FALSE;
+}
+
+static gint scroll_event(GtkWidget *widget, GdkEventScroll *event)
+{
+	if (debug) {
+		fprintf(stderr, "Scroll event detected - direction=%d, delta_x=%f, delta_y=%f\n", 
+		        event->direction, event->delta_x, event->delta_y);
+	}
+	
+	// Check for trackpad smooth scrolling (2-finger gestures)
+	if (event->direction == GDK_SCROLL_SMOOTH) {
+		int i = WhichWidget(widget);
+		
+		// Use vertical delta for FOV control
+		if (fabs(event->delta_y) > 0.5) { // Threshold for smooth scrolling
+			int fov_change = 0;
+			
+			if (event->delta_y < -0.5) {
+				fov_change = -1; // Scroll up -> narrow FOV
+				if (debug) {
+					fprintf(stderr, "Smooth scroll up -> narrow FOV\n");
+				}
+			} else if (event->delta_y > 0.5) {
+				fov_change = +1; // Scroll down -> widen FOV
+				if (debug) {
+					fprintf(stderr, "Smooth scroll down -> widen FOV\n");
+				}
+			}
+			
+			if (fov_change != 0) {
+				eWiden(g_internal, w_internal, i, fov_change);
+				if (debug) {
+					fprintf(stderr, "FOV changed by scroll: %d\n", fov_change);
+				}
+				return TRUE; // Event handled
+			}
+		}
+	}
+	
+	return FALSE;
+}
+
+static void zoom_begin_cb(GtkGestureZoom *gesture, GdkEventSequence *sequence, 
+                          gpointer user_data)
+{
+	if (debug) {
+		fprintf(stderr, "Zoom gesture begin\n");
+	}
+}
+
+static void zoom_scale_changed_cb(GtkGestureZoom *gesture, gdouble scale, 
+                                  gpointer user_data)
+{
+	static gdouble last_scale = 1.0;
+	gdouble scale_delta = scale / last_scale;
+	
+	if (debug) {
+		fprintf(stderr, "Zoom scale: %f, delta: %f\n", scale, scale_delta);
+	}
+	
+	// Get the widget and find which window this gesture belongs to
+	GtkWidget *widget = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(gesture));
+	int i = WhichWidget(widget);
+	
+	// Convert scale change to zoom level
+	// If scale_delta > 1.0, zoom in; if < 1.0, zoom out
+	int zoom_level = 0;
+	if (scale_delta > 1.05) {
+		zoom_level = 1;  // zoom in
+	} else if (scale_delta < 0.95) {
+		zoom_level = -1; // zoom out
+	}
+	
+	if (zoom_level != 0) {
+		eZoom(g_internal, w_internal, i, zoom_level);
+		last_scale = scale;
+	}
+}
+
+static void zoom_end_cb(GtkGestureZoom *gesture, GdkEventSequence *sequence, 
+                        gpointer user_data)
+{
+	if (debug) {
+		fprintf(stderr, "Zoom gesture end\n");
+	}
+}
+
+static void swipe_begin_cb(GtkGestureSwipe *gesture, GdkEventSequence *sequence, 
+                           gpointer user_data)
+{
+	if (debug) {
+		fprintf(stderr, "Swipe gesture BEGIN detected\n");
+	}
+}
+
+static void swipe_cb(GtkGestureSwipe *gesture, gdouble velocity_x, 
+                     gdouble velocity_y, gpointer user_data)
+{
+	if (debug) {
+		fprintf(stderr, "Swipe gesture detected - vx=%f, vy=%f\n", velocity_x, velocity_y);
+		fprintf(stderr, "abs(vy)=%f, abs(vx)=%f\n", fabs(velocity_y), fabs(velocity_x));
+	}
+	
+	// Get the widget and find which window this gesture belongs to
+	GtkWidget *widget = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(gesture));
+	int i = WhichWidget(widget);
+	
+	// Process vertical swipes for field of view control
+	if (fabs(velocity_y) > 100) {  // Reasonable threshold for gesture detection
+		int fov_change = 0;
+		if (velocity_y < 0) {
+			// Swipe up - narrow field of view (like ']' key)
+			fov_change = -1;
+			if (debug) {
+				fprintf(stderr, "Detected upward swipe -> narrow FOV\n");
+			}
+		} else {
+			// Swipe down - widen field of view (like '[' key)
+			fov_change = +1;
+			if (debug) {
+				fprintf(stderr, "Detected downward swipe -> widen FOV\n");
+			}
+		}
+		
+		eWiden(g_internal, w_internal, i, fov_change);
+		if (debug) {
+			fprintf(stderr, "FOV changed by swipe: %d (window %d)\n", fov_change, i);
+		}
+	}
 }
 
 static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
@@ -690,14 +873,35 @@ void W_Init2(Winfo *w, Ginfo *g)
 			fprintf(stderr, "Setup window A3 %d.\n", i);
 		g_signal_connect(w[i].window, "key_press_event",
 				 G_CALLBACK(key_press_cb), NULL);
+		g_signal_connect(w[i].window, "scroll_event",
+				 G_CALLBACK(scroll_event), NULL);
 		if (debug)
 			fprintf(stderr, "Setup window A4 %d.\n", i);
+		
+		// Add pinch gesture support for trackpad zoom
+		GtkGesture *zoom_gesture = gtk_gesture_zoom_new(w[i].drawarea);
+		g_signal_connect(zoom_gesture, "begin", G_CALLBACK(zoom_begin_cb), NULL);
+		g_signal_connect(zoom_gesture, "scale-changed", G_CALLBACK(zoom_scale_changed_cb), NULL);
+		g_signal_connect(zoom_gesture, "end", G_CALLBACK(zoom_end_cb), NULL);
+		if (debug)
+			fprintf(stderr, "Setup pinch gesture %d.\n", i);
+		
+		// Add swipe gesture support for field of view control
+		GtkGesture *swipe_gesture = gtk_gesture_swipe_new(w[i].drawarea);
+		gtk_gesture_single_set_touch_only(GTK_GESTURE_SINGLE(swipe_gesture), FALSE);
+		// Note: GTK+3 doesn't have gtk_gesture_set_n_points, we'll detect 2-finger swipes in the callback
+		g_signal_connect(swipe_gesture, "begin", G_CALLBACK(swipe_begin_cb), NULL);
+		g_signal_connect(swipe_gesture, "swipe", G_CALLBACK(swipe_cb), NULL);
+		if (debug)
+			fprintf(stderr, "Setup swipe gesture for window %d\n", i);
+		
 		gtk_widget_set_events(
 		    w[i].window,
 		    GDK_STRUCTURE_MASK | GDK_EXPOSURE_MASK |
 			GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
 			GDK_KEY_PRESS_MASK | GDK_POINTER_MOTION_MASK |
-			GDK_BUTTON1_MOTION_MASK); // this causes an error.
+			GDK_BUTTON1_MOTION_MASK | GDK_TOUCHPAD_GESTURE_MASK |
+			GDK_TOUCH_MASK | GDK_SCROLL_MASK); // Added scroll events for 2-finger gestures
 		if (debug)
 			fprintf(stderr, "Setup window C %d.\n", i);
 		gtk_widget_show(w[i].window);
