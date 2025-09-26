@@ -12,7 +12,7 @@ LDFLAGS     = $(GTK_LDFLAGS) $(PNG_LDFLAGS) -lm
 PKGDATADIR = /opt/homebrew/share/yaplot
 BINDIR     = /opt/homebrew/bin
 
-VERSION = 4.1.2
+VERSION = 4.1.3
 
 CFLAGS  = -g -Wall -Werror -Werror=vla -I/opt/X11/include -I./include
 CFLAGS += $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE

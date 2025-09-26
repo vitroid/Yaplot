@@ -1,3 +1,4 @@
 *.o
 yaplot
-common.h
+common.htest.yap
+xi.yap
