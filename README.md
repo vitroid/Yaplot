@@ -130,6 +130,8 @@ One line of the command files corresponds to one command. A command consists of 
     a {arrowtype}:Change current arrow type(default type = 0)
     Empty line:End of a frame.
 
+You can use long command names instead of single letters: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color (or palette), layer, arrow, comment. Example: `line 0 0 0 1 1 1` is the same as `l 0 0 0 1 1 1`.
+
 Settings such as size (radius), palette, and layer must be complete within each frame; status set in one frame is not carried over to another frame. (This allows random access to any frame.)
 
 ## Palette file format
@@ -251,6 +253,8 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
     y {layer}:レイヤを切り替えます(default layer=1)
     a {arrowtype}: Stickの描き方を変更します。(0=通常、1=矢印、2=ダート。Default = 0)
     空行:1フレームの終わりをあらわします。
+
+1文字コマンドの代わりに長い名前も使えます: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color（または palette）, layer, arrow, comment。例: `line 0 0 0 1 1 1` は `l 0 0 0 1 1 1` と同じです。
 
 size(半径)やpaletteやlayerなどの設定は**各フレームごとに完結**しており、あるフレームでのstatus設定は別のフレームには引き継がれません。(任意のフレームをランダムアクセスできるようにするため)
 

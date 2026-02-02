@@ -810,9 +810,51 @@ void W_setvectors(Winfo *w)
 
 char *skipspaces(char *s)
 {
-	while (*s == ' ')
+	while (*s == ' ' || *s == '\t')
 		s++;
 	return s;
+}
+
+/* 1文字または長いコマンド名を解釈し、既存の1文字コマンドコードを返す。未知なら0 */
+static int resolve_command(const char *token)
+{
+	if (!token || !*token)
+		return 0;
+	if (token[1] == '\0') {
+		/* 1文字コマンド */
+		return (unsigned char)*token;
+	}
+	if (strcmp(token, "line") == 0)
+		return 'l';
+	if (strcmp(token, "stick") == 0)
+		return 's';
+	if (strcmp(token, "polygon") == 0)
+		return 'p';
+	if (strcmp(token, "circle") == 0)
+		return 'c';
+	if (strcmp(token, "ring") == 0)
+		return 'o';
+	if (strcmp(token, "triangle") == 0)
+		return '3';
+	if (strcmp(token, "square") == 0)
+		return '4';
+	if (strcmp(token, "pentagon") == 0)
+		return '5';
+	if (strcmp(token, "hexagon") == 0)
+		return '6';
+	if (strcmp(token, "text") == 0)
+		return 't';
+	if (strcmp(token, "radius") == 0)
+		return 'r';
+	if (strcmp(token, "color") == 0 || strcmp(token, "palette") == 0)
+		return '@';
+	if (strcmp(token, "comment") == 0)
+		return '#';
+	if (strcmp(token, "layer") == 0)
+		return 'y';
+	if (strcmp(token, "arrow") == 0)
+		return 'a';
+	return 0;
 }
 
 void W_Seek(Winfo *w)
@@ -987,7 +1029,7 @@ int hash_compare(const void *a, const void *b)
 NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 {
 	int i;
-	char *string, readstr[YAP_LINE_MAX], ch2, *stringp;
+	char *string, readstr[YAP_LINE_MAX], *stringp;
 	int ch;
 	float x1, y1, z1, x2, y2, z2;
 	float currentradius;
@@ -1016,19 +1058,32 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 
 	h = Hash_Init(HASHSIZE, hash_compare);
 	while (fgets(readstr, YAP_LINE_MAX, file) != NULL) {
+		char *token, *rest, *p;
+		int saved;
 		string = skipspaces(readstr);
-		if (*string == '\n')
+		if (*string == '\n' || *string == '\0')
 			break;
-		switch (ch = *string) {
+		p = string;
+		while (*p && *p != ' ' && *p != '\t' && *p != '\n')
+			p++;
+		saved = (unsigned char)*p;
+		*p = '\0';
+		token = string;
+		rest = skipspaces(p + 1);
+		ch = resolve_command(token);
+		*p = (char)saved;
+		if (ch == 0)
+			continue;
+		switch (ch) {
 		case 'a':
-			sscanf(string, "%c %d\n", &ch2, &currentarrowtype);
+			sscanf(rest, "%d", &currentarrowtype);
 			break;
 		case 'l':
 		case 's':
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			sscanf(string, "%c %f %f %f %f %f %f\n", &ch2, &x1, &y1,
+			sscanf(rest, "%f %f %f %f %f %f", &x1, &y1,
 			       &z1, &x2, &y2, &z2);
 			qq->nvertex = 2;
 			qq->vertex = calloc(2, sizeof(Vertex *));
@@ -1052,7 +1107,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			strtok(string, " \t");
+			strtok(rest, " \t");
 			n = atoi(strtok(NULL, " \t"));
 			if (n < 3)
 				break;
@@ -1083,7 +1138,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			sscanf(string, "%c %f %f %f\n", &ch2, &x1, &y1, &z1);
+			sscanf(rest, "%f %f %f", &x1, &y1, &z1);
 			qq->nvertex = 1;
 			qq->vertex = calloc(1, sizeof(Vertex *));
 			qq->points = calloc(1, sizeof(ivector2));
@@ -1099,25 +1154,25 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			 * 't' : put a string at specified position.
 			 */
 		case 't': {
-			char *rest;
+			char *arg_rest;
 			char *p;
 			static char quoted_buf[YAP_LINE_MAX];
 			size_t qlen = 0;
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			strtok(string, " \t");
+			strtok(rest, " \t");
 			x1 = atof(strtok(NULL, " \t"));
 			y1 = atof(strtok(NULL, " \t"));
 			z1 = atof(strtok(NULL, " \t"));
-			rest = strtok(NULL, "\n");
-			if (rest == NULL)
-				rest = "";
-			while (*rest == ' ' || *rest == '\t')
-				rest++;
-			if (*rest == '"') {
+			arg_rest = strtok(NULL, "\n");
+			if (arg_rest == NULL)
+				arg_rest = "";
+			while (*arg_rest == ' ' || *arg_rest == '\t')
+				arg_rest++;
+			if (*arg_rest == '"') {
 				/* 引用符付き: "..." 内をそのまま使用。\" は " に、\\ は \ に */
-				for (p = rest + 1; *p != '\0' && *p != '"'; p++) {
+				for (p = arg_rest + 1; *p != '\0' && *p != '"'; p++) {
 					if (*p == '\\' && p[1] != '\0') {
 						p++;
 						if (qlen < sizeof(quoted_buf) - 1)
@@ -1130,7 +1185,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 				qq->label = malloc(qlen + 1);
 				strcpy(qq->label, quoted_buf);
 			} else {
-				stringp = rest;
+				stringp = arg_rest;
 				qq->label = malloc(strlen(stringp) + 1);
 				strcpy(qq->label, stringp);
 			}
@@ -1145,13 +1200,13 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			break;
 		}
 		case 'r':
-			sscanf(string, "r %f\n", &currentradius);
+			sscanf(rest, "%f", &currentradius);
 			break;
 		case '@':
 			/*平成13年7月18日(水)拡張：引数があと3つある場合はそれらをrgb強度(0-255)とみなし、パレットをその場で変更する。*/
 			{
 				int red, green, blue, narg;
-				narg = sscanf(string, "@ %d %d %d %d\n",
+				narg = sscanf(rest, "%d %d %d %d",
 					      &linecolor, &red, &green, &blue);
 				if (narg == 4) {
 					overridepalette(w, linecolor, red,
@@ -1169,7 +1224,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			/*puts(string);*/
 			break;
 		case 'y':
-			sscanf(string, "y %d\n", &currentlayer);
+			sscanf(rest, "%d", &currentlayer);
 			if (currentlayer > MAXLAYER) {
 				currentlayer = MAXLAYER;
 			}
