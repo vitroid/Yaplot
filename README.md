@@ -130,6 +130,8 @@ One line of the command files corresponds to one command. A command consists of 
     a {arrowtype}:Change current arrow type(default type = 0)
     Empty line:End of a frame.
 
+Settings such as size (radius), palette, and layer must be complete within each frame; status set in one frame is not carried over to another frame. (This allows random access to any frame.)
+
 ## Palette file format
 
 Each line of the palette file specifies the Red, Green and Blue intensity of the pallete. First line describes the color for palette 0. As the palettes 0 to 2 are reserved for system color (Black, Gray, and White), you should not modify them.
@@ -151,7 +153,7 @@ yaplot の画像は、本格的なプレゼンテーションに使用できる�
 
 ## インストール
 
-現在、yaplot は gtk を使って書かれています。インストールする前にあらかじめ GTK をインストールしておいて下さい。Mac OS では、 [HomeBrew](https://brew.sh)をおすすめします。
+現在、yaplot は gtk を使って書かれています。インストールする前にあらかじめ GTK をインストールしておいて下さい。Mac OS では、[HomeBrew](https://brew.sh)をおすすめします。
 
             prompt% brew install gtk+ pkg-config
 
@@ -176,13 +178,13 @@ yaplot の画像は、本格的なプレゼンテーションに使用できる�
         -d              デバッグモード
         infile          コマンドファイル
 
-キャッシュを大きくとると、ファイルの読み込み速度が向上する分メモ リを消費します。
+キャッシュを大きくとると、ファイルの読み込み速度が向上する分メモリを消費します。
 
 DOS 版では今のところすべてのオプションが認識されません。
 
-yaplot にはレイヤの概念があります。標準ではレイヤは 1 から 12 までの 12 枚あり、それぞれの表示/非表示をファンクションキーで制御できます。同一のデー タを様々な面から解析する場合に役立ちます。
+yaplot にはレイヤの概念があります。標準ではレイヤは 1 から 12 までの 12 枚あり、それぞれの表示/非表示をファンクションキーで制御できます。同一のデータを様々な面から解析する場合に役立ちます。
 
-コマンドファイル名に"-"を指定した場合には、標準入力からデータを 読みこみます。ただし、標準入力から読みこむ場合には、アニメーショ ン表示することはできません。
+コマンドファイル名に"-"を指定した場合には、標準入力からデータを 読みこみます。ただし、標準入力から読みこむ場合には、アニメーション表示することはできません。
 
 コマンドファイルを複数指定すると、複数のウィンドウが表示されます。 それぞれの窓の制御方法は同期モードと非同期モードがあります。非同 期モードの窓に対してキー入力やマウス操作を行うと、その結果はその 窓のみに反映されます。一方、同期モードの窓の対して行った操作は、 非同期窓を含むすべての窓に反映されます。ただし、窓のサイズの変更 と、拡大縮小だけは常に非同期で行われます。
 
@@ -194,7 +196,7 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
 
 コマンドファイルを指定しなかった場合には、ヘルプファイル /usr/local/matto/etc/yaplot/help.yap が表示されます。
 
-パレットファイルを指定しなかった場合には、まずカレントディレクト リの yaplot.col をさがし、見付からなかった場合には、環境変数 YAPLOTCOL の指すファイルを捜し、それでも見付からない場合にはホーム以下をさ がし、どうしても見付からない場合にはシステムの yaplot.col を読みこみます。なお、現在 のバージョンでは、コマンドファイル内で、"@"コマンドを使用してパレット の内容を変更することができますので、パレットファイルは必須ではありません。
+パレットファイルを指定しなかった場合には、まずカレントディレクト リの yaplot.col をさがし、見付からなかった場合には、環境変数 YAPLOTCOL の指すファイルを捜し、それでも見付からない場合にはホーム以下をさ がし、どうしても見付からない場合にはシステムの yaplot.col を読みこみます。なお、現在のバージョンでは、コマンドファイル内で、"@"コマンドを使用してパレット の内容を変更することができますので、パレットファイルは必須ではありません。
 
 パッケージには、いくつかサンプルが添付されていますから、試してみ て下さい。
 
@@ -235,7 +237,7 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
     r {radius}:円、棒、環の半径を指定する。
     l {x} {y} {z} {x} {y} {z}:線を描く。
     s {x} {y} {z} {x} {y} {z}:棒(太さのある線)を描く。
-    p {n} {x} {y} {z} {x} {y} {z} {x} {y} {z} ...:n角形を描  く。
+    p {n} {x} {y} {z} {x} {y} {z} {x} {y} {z} ...:n角形を描く。
     c {x} {y} {z}:円を描く。
     o {x} {y} {z}:環マークを描く。
     3 {x} {y} {z}:三角形マークを描く。
@@ -244,11 +246,13 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
     6 {x} {y} {z}:六角形マークを描く。
     t {x} {y} {z} {text....}:文字列を描く。
     @ {palette}:パレット番号を指定する。
-    @ {palette} {r} {g} {b}:パレット番号の色を変更する。 r,g,bはそれぞれ0..255の範囲の整数で指定する。
+    @ {palette} {r} {g} {b}:パレット番号の色を変更する。r,g,bはそれぞれ0..255の範囲の整数で指定する。
     # {comment}:コメント(無視されます)
     y {layer}:レイヤを切り替えます(default layer=1)
     a {arrowtype}: Stickの描き方を変更します。(0=通常、1=矢印、2=ダート。Default = 0)
     空行:1フレームの終わりをあらわします。
+
+size(半径)やpaletteやlayerなどの設定は**各フレームごとに完結**しており、あるフレームでのstatus設定は別のフレームには引き継がれません。(任意のフレームをランダムアクセスできるようにするため)
 
 ## パレットファイルフォーマット
 

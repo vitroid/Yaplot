@@ -339,18 +339,18 @@ static gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 static gint scroll_event(GtkWidget *widget, GdkEventScroll *event)
 {
 	if (debug) {
-		fprintf(stderr, "Scroll event detected - direction=%d, delta_x=%f, delta_y=%f\n", 
+		fprintf(stderr, "Scroll event detected - direction=%d, delta_x=%f, delta_y=%f\n",
 		        event->direction, event->delta_x, event->delta_y);
 	}
-	
+
 	// Check for trackpad smooth scrolling (2-finger gestures)
 	if (event->direction == GDK_SCROLL_SMOOTH) {
 		int i = WhichWidget(widget);
-		
+
 		// Use vertical delta for FOV control
 		if (fabs(event->delta_y) > 0.5) { // Threshold for smooth scrolling
 			int fov_change = 0;
-			
+
 			if (event->delta_y < -0.5) {
 				fov_change = -1; // Scroll up -> narrow FOV
 				if (debug) {
@@ -362,7 +362,7 @@ static gint scroll_event(GtkWidget *widget, GdkEventScroll *event)
 					fprintf(stderr, "Smooth scroll down -> widen FOV\n");
 				}
 			}
-			
+
 			if (fov_change != 0) {
 				eWiden(g_internal, w_internal, i, fov_change);
 				if (debug) {
@@ -372,7 +372,7 @@ static gint scroll_event(GtkWidget *widget, GdkEventScroll *event)
 			}
 		}
 	}
-	
+
 	return FALSE;
 }
 
