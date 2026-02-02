@@ -153,19 +153,20 @@ t -10 0  10 4. Data format
 t -10 0   8 All command lines in the data file are made of the single
 t -10 0   7 command character at the first column, followed by
 t -10 0   6 parameters. No parameters can be omitted.
-t -10 0   5 You can easily make the data file by Fortran or other
-t -10 0   4 scripting languages.
-t -10 0   2 r {radius} Specify the radius of the circle, ring, and stick
-t -10 0   1 l {x} {y} {z} {x} {y} {z} Draw a line
-t -10 0   0 s {x} {y} {z} {x} {y} {z} Draw a stick. (=thick line)
-t -10 0  -1 p {x} {y} {z} {x} {y} {z} {x} {y} {z} ...Draw a polygon
-t -10 0  -2 c {x} {y} {z} Draw a circle
-t -10 0  -3 o {x} {y} {z} Draw a ring
-t -10 0  -4 t {x} {y} {z} {text....} Draw a string
-t -10 0  -5 @ {palette} Change the current palette
-t -10 0  -6 y {layer} Change the current layer
-t -10 0  -7 # {comment} Comment(ignored)
-t -10 0  -8 NULL line: End of a frame
+t -10 0   5 Long names (line, stick, circle, color, layer...) work as well as l, s, c, @, y.
+t -10 0   4 You can easily make the data file by Fortran or other
+t -10 0   3 scripting languages.
+t -10 0   1 r {radius} Specify the radius of the circle, ring, and stick
+t -10 0   0 l {x} {y} {z} {x} {y} {z} Draw a line
+t -10 0  -1 s {x} {y} {z} {x} {y} {z} Draw a stick. (=thick line)
+t -10 0  -2 p {x} {y} {z} {x} {y} {z} {x} {y} {z} ...Draw a polygon
+t -10 0  -3 c {x} {y} {z} Draw a circle
+t -10 0  -4 o {x} {y} {z} Draw a ring
+t -10 0  -5 t {x} {y} {z} {text....} Draw a string
+t -10 0  -6 @ {palette} Change the current palette
+t -10 0  -7 y {layer} Change the current layer
+t -10 0  -8 # {comment} Comment(ignored)
+t -10 0  -9 NULL line: End of a frame
 @ 3
 t -10 0 -10 Press "g" to the first page.
 t -10 0 -11 Press "n" to next page.

@@ -1107,8 +1107,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			strtok(rest, " \t");
-			n = atoi(strtok(NULL, " \t"));
+			n = atoi(strtok(rest, " \t"));
 			if (n < 3)
 				break;
 			qq->nvertex = n + 1;
@@ -1161,8 +1160,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			strtok(rest, " \t");
-			x1 = atof(strtok(NULL, " \t"));
+			x1 = atof(strtok(rest, " \t"));
 			y1 = atof(strtok(NULL, " \t"));
 			z1 = atof(strtok(NULL, " \t"));
 			arg_rest = strtok(NULL, "\n");
