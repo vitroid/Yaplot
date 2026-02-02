@@ -937,12 +937,16 @@ Vertex *Vertex_Insert(sHash *h, NewOinfo *o, float x, float y, float z,
 	ix = (int)x;
 	iy = (int)y;
 	iz = (int)z;
-	key = ix;
-	key <<= 10;
-	key ^= iy;
-	key <<= 10;
-	key ^= iz;
-	key %= h->hashsize;
+	/* 32-bit mix (MurmurHash3 finalizer style) for good distribution */
+	key = (unsigned int)ix;
+	key = key * 31u + (unsigned int)iy;
+	key = key * 31u + (unsigned int)iz;
+	key ^= key >> 16u;
+	key *= 0x85ebca6bu;
+	key ^= key >> 13u;
+	key *= 0xc2b2ae35u;
+	key ^= key >> 16u;
+	key %= (unsigned int)h->hashsize;
 	key = Hash_QueryElement(h, key, newv);
 	v = (Vertex *)h->value[key];
 	if (v != NULL) {
