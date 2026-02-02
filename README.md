@@ -122,7 +122,7 @@ One line of the command files corresponds to one command. A command consists of 
     4 {x} {y} {z}:Draw a square sign.
     5 {x} {y} {z}:Draw a pentagon sign.
     6 {x} {y} {z}:Draw a hexagon sign.
-    t {x} {y} {z} {text....}:Draw a string.
+    t {x} {y} {z} {text....}:Draw a string. Lines are read up to 64KB. You can use quoted strings: t 0 0 0 "long text with spaces"; inside quotes, \" and \\ are escaped.
     @ {n}:Specify palette No. (Palette colors are specified in palette file.)
     @ {n} {r} {g} {b}:Specify color of the n'th palette temporarily. R,g, and b are integers between 0 and 255.
     # {comment}:Comment. (Ignored.)
@@ -244,7 +244,7 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
     4 {x} {y} {z}:四角形マークを描く。
     5 {x} {y} {z}:五角形マークを描く。
     6 {x} {y} {z}:六角形マークを描く。
-    t {x} {y} {z} {text....}:文字列を描く。
+    t {x} {y} {z} {text....}:文字列を描く。1行は最大64KBまで。引用符付き t 0 0 0 "空白を含む長い文字列" も使える。\" と \\ はエスケープされる。
     @ {palette}:パレット番号を指定する。
     @ {palette} {r} {g} {b}:パレット番号の色を変更する。r,g,bはそれぞれ0..255の範囲の整数で指定する。
     # {comment}:コメント(無視されます)

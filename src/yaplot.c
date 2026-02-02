@@ -818,7 +818,7 @@ char *skipspaces(char *s)
 void W_Seek(Winfo *w)
 {
 	long int *pos;
-	char readstr[4096], *string;
+	char readstr[YAP_LINE_MAX], *string;
 
 	if (w->currentframe < 0) {
 		w->currentframe = 0;
@@ -849,7 +849,7 @@ void W_Seek(Winfo *w)
 		while (i != w->currentframe) {
 			do {
 				/*もしファイルの末尾まできたら*/
-				if (fgets(readstr, 4096, w->inputfile) ==
+				if (fgets(readstr, YAP_LINE_MAX, w->inputfile) ==
 				    NULL) {
 					/*あきらめて、i番目のフレームを表示*/
 					w->currentframe = i;
@@ -987,7 +987,7 @@ int hash_compare(const void *a, const void *b)
 NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 {
 	int i;
-	char *string, readstr[4096], ch2, *stringp;
+	char *string, readstr[YAP_LINE_MAX], ch2, *stringp;
 	int ch;
 	float x1, y1, z1, x2, y2, z2;
 	float currentradius;
@@ -1015,7 +1015,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 	nel = 0;
 
 	h = Hash_Init(HASHSIZE, hash_compare);
-	while (fgets(readstr, 4096, file) != NULL) {
+	while (fgets(readstr, YAP_LINE_MAX, file) != NULL) {
 		string = skipspaces(readstr);
 		if (*string == '\n')
 			break;
@@ -1098,7 +1098,11 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			/*
 			 * 't' : put a string at specified position.
 			 */
-		case 't':
+		case 't': {
+			char *rest;
+			char *p;
+			static char quoted_buf[YAP_LINE_MAX];
+			size_t qlen = 0;
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
@@ -1106,7 +1110,30 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			x1 = atof(strtok(NULL, " \t"));
 			y1 = atof(strtok(NULL, " \t"));
 			z1 = atof(strtok(NULL, " \t"));
-			stringp = strtok(NULL, "\n");
+			rest = strtok(NULL, "\n");
+			if (rest == NULL)
+				rest = "";
+			while (*rest == ' ' || *rest == '\t')
+				rest++;
+			if (*rest == '"') {
+				/* 引用符付き: "..." 内をそのまま使用。\" は " に、\\ は \ に */
+				for (p = rest + 1; *p != '\0' && *p != '"'; p++) {
+					if (*p == '\\' && p[1] != '\0') {
+						p++;
+						if (qlen < sizeof(quoted_buf) - 1)
+							quoted_buf[qlen++] = *p;
+					} else if (qlen < sizeof(quoted_buf) - 1) {
+						quoted_buf[qlen++] = *p;
+					}
+				}
+				quoted_buf[qlen] = '\0';
+				qq->label = malloc(qlen + 1);
+				strcpy(qq->label, quoted_buf);
+			} else {
+				stringp = rest;
+				qq->label = malloc(strlen(stringp) + 1);
+				strcpy(qq->label, stringp);
+			}
 			qq->nvertex = 1;
 			qq->vertex = calloc(1, sizeof(Vertex *));
 			qq->points = calloc(1, sizeof(ivector2));
@@ -1115,9 +1142,8 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			    Vertex_Insert(h, o, x1, y1, z1, currentlayermask);
 			qq->id = ch;
 			qq->color = linecolor;
-			qq->label = malloc(strlen(stringp) + 1);
-			strcpy(qq->label, stringp);
 			break;
+		}
 		case 'r':
 			sscanf(string, "r %f\n", &currentradius);
 			break;

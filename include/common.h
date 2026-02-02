@@ -71,6 +71,8 @@ typedef struct {
 #define DEFAULTX 512
 #define DEFAULTY 512
 #define PI 3.1415926535897932
+/* 1行の最大長（t コマンドの長い文字列など） */
+#define YAP_LINE_MAX 65536
 #define BUFFER0 240
 #define BUFFER1 15
 #define MAXREALITY 4
