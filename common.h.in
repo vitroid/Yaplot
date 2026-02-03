@@ -16,7 +16,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <gtk/gtk.h>
+#include <cairo.h>
 #ifdef win32
 #define M_PI 3.1415926535897932384L
 #define rint(x) floor((x) + 0.5)
@@ -84,6 +84,11 @@ typedef struct {
 #define ACCURACY 1024.0
 #define IACC (1.0 / ACCURACY)
 
+/* GTK に依存しない色型（0..65535、既存の << 8 と互換） */
+typedef struct {
+	unsigned short red, green, blue;
+} YapColor;
+
 /*すべての窓に共通の情報*/
 typedef struct GINFO {
 	char commandname[256];
@@ -94,9 +99,8 @@ typedef struct GINFO {
 	int nwindow;
 	/*clipping distance*/
 	float clip;
-	/*X11に依存する変数*/
-	/*colormapはGinfoで一旦初期化し、各ウィンドウ用にコピーして使用する。*/
-	GdkColor mastercolortable[256];
+	/*色パレット（表示バックエンド非依存）*/
+	YapColor mastercolortable[256];
 	/*GdkColormap *colormap;*/
 	/*UNIXに依存する変数*/
 	FILE *palettefile;
@@ -172,16 +176,11 @@ typedef struct WINFO {
 	/*animating mode*/
 	int RecordMode;
 	int lastColor;
-	/*X11に依存する部分*/
-	GtkWidget *window, *drawarea;
-	// GdkPixmap *pixmap;
+	/*表示バックエンド用ハンドル（中身はバックエンド実装のみが知る）*/
+	void *window, *drawarea;
 	cairo_surface_t *surface;
-	// for stipples
-	// GdkPixmap *bitmap[16];
-	// GdkGC *gc;
 	cairo_t *cr;
-	// GdkFont *font;
-	GdkColor colortable[256];
+	YapColor colortable[256];
 	// GdkColormap *colormap;
 	/*user clipping vector*/
 	int slice;

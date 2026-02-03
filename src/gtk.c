@@ -164,13 +164,13 @@ void exposefb(Winfo *w)
 	cairo_set_source_surface(cr, w->surface, 0, 0);
 
 	GtkAllocation g_alloc;
-	gtk_widget_get_allocation(w->drawarea, &g_alloc);
+	gtk_widget_get_allocation((GtkWidget *)w->drawarea, &g_alloc);
 	if (debug) {
 		fprintf(stderr, "Forced expose::%d %d\n", g_alloc.width,
 			g_alloc.height);
 	}
 	cairo_paint(cr);
-	gtk_widget_queue_draw_area(w->drawarea, 0, 0, g_alloc.width,
+	gtk_widget_queue_draw_area((GtkWidget *)w->drawarea, 0, 0, g_alloc.width,
 				   g_alloc.height);
 	cairo_destroy(cr);
 }
@@ -190,7 +190,7 @@ int WhichWidget(GtkWidget *widget)
 	exit(1);
 }
 
-static gboolean draw_cb(GtkWidget *widget, cairo_t *cr, gpointer data)
+static int draw_cb(GtkWidget *widget, cairo_t *cr, void *data)
 {
 	int i = WhichWidget(widget);
 	if (debug) {
@@ -204,10 +204,10 @@ static gboolean draw_cb(GtkWidget *widget, cairo_t *cr, gpointer data)
 	// cairo_paint(w_internal[i].cr);
 
 	// w_internal[i].status|=REDRAW;
-	return FALSE;
+	return 0;
 }
 
-static gint configure_event(GtkWidget *widget, GdkEventConfigure *event)
+static int configure_event(GtkWidget *widget, GdkEventConfigure *event)
 {
 	int i = WhichWidget(widget);
 	if (w_internal[i].surface) {
@@ -231,7 +231,7 @@ static gint configure_event(GtkWidget *widget, GdkEventConfigure *event)
 	w_internal[i].screenwidth = g_alloc.width;
 	w_internal[i].screenheight = g_alloc.height;
 	w_internal[i].status |= REDRAW;
-	return FALSE;
+	return 0;
 }
 
 /*global*/
@@ -241,10 +241,10 @@ int originx = 0, originy = 0;
 
 // Variables for trackpad gesture detection
 static int last_motion_x = 0, last_motion_y = 0;
-static guint32 last_motion_time = 0;
+static unsigned int last_motion_time = 0;
 static int gesture_tracking = 0;
 
-static gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
+static int motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 {
 	int x, y;
 	GdkModifierType state;
@@ -297,17 +297,17 @@ static gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 					if (debug) {
 						fprintf(stderr, "FOV changed by motion swipe: %d\n", fov_change);
 					}
-					gesture_tracking = 0; // Reset to avoid multiple triggers
+			gesture_tracking = 0; // Reset to avoid multiple triggers
 				}
 			}
 		}
-		
+
 		last_motion_x = x;
 		last_motion_y = y;
-		last_motion_time = event->time;
+		last_motion_time = (unsigned int)event->time;
 		gesture_tracking = 1;
 	}
-	
+
 	if (state & GDK_BUTTON1_MASK) {
 		if ((originx != x) || (originy != y)) {
 			int i;
@@ -333,10 +333,10 @@ static gint motion_notify_event(GtkWidget *widget, GdkEventMotion *event)
 			}
 		}
 	}
-	return FALSE;
+	return 0;
 }
 
-static gint scroll_event(GtkWidget *widget, GdkEventScroll *event)
+static int scroll_event(GtkWidget *widget, GdkEventScroll *event)
 {
 	if (debug) {
 		fprintf(stderr, "Scroll event detected - direction=%d, delta_x=%f, delta_y=%f\n",
@@ -368,27 +368,27 @@ static gint scroll_event(GtkWidget *widget, GdkEventScroll *event)
 				if (debug) {
 					fprintf(stderr, "FOV changed by scroll: %d\n", fov_change);
 				}
-				return TRUE; // Event handled
+				return 1; // Event handled
 			}
 		}
 	}
 
-	return FALSE;
+	return 0;
 }
 
 static void zoom_begin_cb(GtkGestureZoom *gesture, GdkEventSequence *sequence, 
-                          gpointer user_data)
+                          void *user_data)
 {
 	if (debug) {
 		fprintf(stderr, "Zoom gesture begin\n");
 	}
 }
 
-static void zoom_scale_changed_cb(GtkGestureZoom *gesture, gdouble scale, 
-                                  gpointer user_data)
+static void zoom_scale_changed_cb(GtkGestureZoom *gesture, double scale,
+                                  void *user_data)
 {
-	static gdouble last_scale = 1.0;
-	gdouble scale_delta = scale / last_scale;
+	static double last_scale = 1.0;
+	double scale_delta = scale / last_scale;
 	
 	if (debug) {
 		fprintf(stderr, "Zoom scale: %f, delta: %f\n", scale, scale_delta);
@@ -413,24 +413,24 @@ static void zoom_scale_changed_cb(GtkGestureZoom *gesture, gdouble scale,
 	}
 }
 
-static void zoom_end_cb(GtkGestureZoom *gesture, GdkEventSequence *sequence, 
-                        gpointer user_data)
+static void zoom_end_cb(GtkGestureZoom *gesture, GdkEventSequence *sequence,
+                        void *user_data)
 {
 	if (debug) {
 		fprintf(stderr, "Zoom gesture end\n");
 	}
 }
 
-static void swipe_begin_cb(GtkGestureSwipe *gesture, GdkEventSequence *sequence, 
-                           gpointer user_data)
+static void swipe_begin_cb(GtkGestureSwipe *gesture, GdkEventSequence *sequence,
+                           void *user_data)
 {
 	if (debug) {
 		fprintf(stderr, "Swipe gesture BEGIN detected\n");
 	}
 }
 
-static void swipe_cb(GtkGestureSwipe *gesture, gdouble velocity_x, 
-                     gdouble velocity_y, gpointer user_data)
+static void swipe_cb(GtkGestureSwipe *gesture, double velocity_x,
+                     double velocity_y, void *user_data)
 {
 	if (debug) {
 		fprintf(stderr, "Swipe gesture detected - vx=%f, vy=%f\n", velocity_x, velocity_y);
@@ -465,7 +465,7 @@ static void swipe_cb(GtkGestureSwipe *gesture, gdouble velocity_x,
 	}
 }
 
-static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
+static int button_press_event(GtkWidget *widget, GdkEventButton *event)
 {
 	int i;
 	if (debug)
@@ -481,10 +481,10 @@ static gint button_press_event(GtkWidget *widget, GdkEventButton *event)
 			w_internal[i].AbsoluteRotationMode = 1;
 		}
 	}
-	return FALSE;
+	return 0;
 }
 
-static gint button_release_event(GtkWidget *widget, GdkEventButton *event)
+static int button_release_event(GtkWidget *widget, GdkEventButton *event)
 {
 	int i;
 	if (debug)
@@ -502,7 +502,7 @@ static gint button_release_event(GtkWidget *widget, GdkEventButton *event)
 			/*w_internal[i].status |=REDRAW;*/
 		}
 	}
-	return FALSE;
+	return 0;
 }
 
 void W_StopRecording(Winfo *w)
@@ -538,7 +538,7 @@ void W_StartRecording(Winfo *w, int mode, int windowid, int fps)
 #endif
 }
 
-static gint key_press_cb(GtkWidget *widget, GdkEventKey *event)
+static int key_press_cb(GtkWidget *widget, GdkEventKey *event)
 {
 	int i = WhichWidget(widget);
 	int key = event->keyval;
@@ -822,7 +822,7 @@ static gint key_press_cb(GtkWidget *widget, GdkEventKey *event)
 			prefix = 0;
 		}
 	}
-	return FALSE;
+	return 0;
 }
 
 void W_Init2(Winfo *w, Ginfo *g)
@@ -846,40 +846,42 @@ void W_Init2(Winfo *w, Ginfo *g)
 			fprintf(stderr, "Setup window Y %d.\n", i);
 		w[i].drawarea = gtk_drawing_area_new();
 		//
-		gtk_container_add(GTK_CONTAINER(w[i].window), w[i].drawarea);
+		gtk_container_add(GTK_CONTAINER((GtkWidget *)w[i].window),
+				  (GtkWidget *)w[i].drawarea);
 
-		gtk_widget_set_size_request(w[i].drawarea, w[i].screenwidth,
-					    w[i].screenheight);
+		gtk_widget_set_size_request((GtkWidget *)w[i].drawarea,
+					    w[i].screenwidth, w[i].screenheight);
 		// if(debug)fprintf(stderr,"Setup window %d
 		// %d.\n",i,(int)w[i].drawarea);
-		gtk_widget_show(w[i].drawarea);
-		g_signal_connect(w[i].drawarea, "draw", G_CALLBACK(draw_cb),
-				 NULL);
-		g_signal_connect(w[i].drawarea, "configure_event",
+		gtk_widget_show((GtkWidget *)w[i].drawarea);
+		g_signal_connect((GtkWidget *)w[i].drawarea, "draw",
+				 G_CALLBACK(draw_cb), NULL);
+		g_signal_connect((GtkWidget *)w[i].drawarea, "configure_event",
 				 G_CALLBACK(configure_event), NULL);
 		if (debug)
 			fprintf(stderr, "Setup window A0 %d.\n", i);
-		g_signal_connect(w[i].window, "motion_notify_event",
+		g_signal_connect((GtkWidget *)w[i].window, "motion_notify_event",
 				 G_CALLBACK(motion_notify_event), NULL);
 		if (debug)
 			fprintf(stderr, "Setup window A1 %d.\n", i);
-		g_signal_connect(w[i].window, "button_press_event",
+		g_signal_connect((GtkWidget *)w[i].window, "button_press_event",
 				 G_CALLBACK(button_press_event), NULL);
 		if (debug)
 			fprintf(stderr, "Setup window A2 %d.\n", i);
-		g_signal_connect(w[i].window, "button_release_event",
+		g_signal_connect((GtkWidget *)w[i].window, "button_release_event",
 				 G_CALLBACK(button_release_event), NULL);
 		if (debug)
 			fprintf(stderr, "Setup window A3 %d.\n", i);
-		g_signal_connect(w[i].window, "key_press_event",
+		g_signal_connect((GtkWidget *)w[i].window, "key_press_event",
 				 G_CALLBACK(key_press_cb), NULL);
-		g_signal_connect(w[i].window, "scroll_event",
+		g_signal_connect((GtkWidget *)w[i].window, "scroll_event",
 				 G_CALLBACK(scroll_event), NULL);
 		if (debug)
 			fprintf(stderr, "Setup window A4 %d.\n", i);
-		
+
 		// Add pinch gesture support for trackpad zoom
-		GtkGesture *zoom_gesture = gtk_gesture_zoom_new(w[i].drawarea);
+		GtkGesture *zoom_gesture =
+		    gtk_gesture_zoom_new((GtkWidget *)w[i].drawarea);
 		g_signal_connect(zoom_gesture, "begin", G_CALLBACK(zoom_begin_cb), NULL);
 		g_signal_connect(zoom_gesture, "scale-changed", G_CALLBACK(zoom_scale_changed_cb), NULL);
 		g_signal_connect(zoom_gesture, "end", G_CALLBACK(zoom_end_cb), NULL);
@@ -887,7 +889,8 @@ void W_Init2(Winfo *w, Ginfo *g)
 			fprintf(stderr, "Setup pinch gesture %d.\n", i);
 		
 		// Add swipe gesture support for field of view control
-		GtkGesture *swipe_gesture = gtk_gesture_swipe_new(w[i].drawarea);
+		GtkGesture *swipe_gesture =
+		    gtk_gesture_swipe_new((GtkWidget *)w[i].drawarea);
 		gtk_gesture_single_set_touch_only(GTK_GESTURE_SINGLE(swipe_gesture), FALSE);
 		// Note: GTK+3 doesn't have gtk_gesture_set_n_points, we'll detect 2-finger swipes in the callback
 		g_signal_connect(swipe_gesture, "begin", G_CALLBACK(swipe_begin_cb), NULL);
@@ -896,7 +899,7 @@ void W_Init2(Winfo *w, Ginfo *g)
 			fprintf(stderr, "Setup swipe gesture for window %d\n", i);
 		
 		gtk_widget_set_events(
-		    w[i].window,
+		    (GtkWidget *)w[i].window,
 		    GDK_STRUCTURE_MASK | GDK_EXPOSURE_MASK |
 			GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
 			GDK_KEY_PRESS_MASK | GDK_POINTER_MOTION_MASK |
@@ -904,11 +907,10 @@ void W_Init2(Winfo *w, Ginfo *g)
 			GDK_TOUCH_MASK | GDK_SCROLL_MASK); // Added scroll events for 2-finger gestures
 		if (debug)
 			fprintf(stderr, "Setup window C %d.\n", i);
-		gtk_widget_show(w[i].window);
+		gtk_widget_show((GtkWidget *)w[i].window);
 		if (debug)
 			fprintf(stderr, "Setup window D %d.\n", i);
-		gtk_window_set_title((GtkWindow *)w[i].window,
-				     w[i].inputfilename);
+		gtk_window_set_title((GtkWindow *)w[i].window, w[i].inputfilename);
 	}
 	for (i = 0; i < g->nwindow; i++) {
 		if (debug)
