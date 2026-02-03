@@ -4,18 +4,20 @@ PROG = yaplot
 SRC  = $(wildcard src/*.c)
 OBJS = $(SRC:.c=.o)
 
-GTK_CFLAGS  = $(shell pkg-config gtk+-3.0 --cflags)
-GTK_LDFLAGS = $(shell pkg-config gtk+-3.0 --libs)
-PNG_LDFLAGS = $(shell pkg-config libpng --libs)
-LDFLAGS     = $(GTK_LDFLAGS) $(PNG_LDFLAGS) -lm
+SDL2_CFLAGS  = $(shell pkg-config sdl2 --cflags)
+SDL2_LDFLAGS = $(shell pkg-config sdl2 --libs)
+CAIRO_CFLAGS = $(shell pkg-config cairo --cflags)
+CAIRO_LDFLAGS = $(shell pkg-config cairo --libs)
+PNG_LDFLAGS  = $(shell pkg-config libpng --libs)
+LDFLAGS      = $(SDL2_LDFLAGS) $(CAIRO_LDFLAGS) $(PNG_LDFLAGS) -lm
 
 PKGDATADIR = /opt/homebrew/share/yaplot
 BINDIR     = /opt/homebrew/bin
 
 VERSION = 4.2
 
-CFLAGS  = -g -Wall -Werror -Werror=vla -I/opt/X11/include -I./include
-CFLAGS += $(GTK_CFLAGS) -DGTK_DISABLE_SINGLE_INCLUDES -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE
+CFLAGS  = -g -Wall -Werror -Werror=vla -I./include
+CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS)
 CFLAGS += -DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
 
 .PHONY: all

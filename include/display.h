@@ -1,6 +1,8 @@
-#ifndef _GTKWRAP_H
-#define _GTKWRAP_H
+#ifndef _DISPLAY_H
+#define _DISPLAY_H
 #include "common.h"
+
+/* 表示 API（バックエンド非依存） */
 void drawline2fb(Winfo *w, int x0, int y0, int x1, int y1);
 void drawcircle2fb(Winfo *w, int x, int y, int r, int fill);
 void drawpoly2fb(Winfo *w, ivector2 *poly, int n, int fill);
@@ -15,8 +17,6 @@ void setstippledfill(Winfo *w);
 void setstipple(Winfo *w, int i);
 void clearfb(Winfo *w);
 void exposefb(Winfo *w);
-void createfb(Winfo *w);
-void createwindow(Ginfo *g, Winfo *w);
 void G_loadpalettes(Ginfo *g);
 void G_Init2(Ginfo *g);
 void W_Init2(Winfo *w, Ginfo *g);
