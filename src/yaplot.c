@@ -221,6 +221,28 @@ float Lookx = 0, Looky = 0, Lookz = 0;
 float Upx = 0, Upy = 0, Upz = 1;
 int prefix = 0;
 
+static char last_cmd_display[128] = "";
+
+void ClearLastCommand(void)
+{
+	last_cmd_display[0] = '\0';
+}
+
+void SetLastCommand(int prefix_used, const char *key, const char *desc_fmt)
+{
+	char desc_buf[80];
+	if (desc_fmt && strchr(desc_fmt, '%'))
+		snprintf(desc_buf, sizeof(desc_buf), desc_fmt, prefix_used);
+	else
+		snprintf(desc_buf, sizeof(desc_buf), "%s", desc_fmt ? desc_fmt : "");
+	if (prefix_used > 0)
+		snprintf(last_cmd_display, sizeof(last_cmd_display), "%d%s (%s)",
+			 prefix_used, key, desc_buf);
+	else
+		snprintf(last_cmd_display, sizeof(last_cmd_display), "%s (%s)",
+			 key, desc_buf);
+}
+
 #define DBGTMRSTART                                                            \
 	if (debug)                                                             \
 		getitimer(ITIMER_REAL, &deb1);
@@ -1489,8 +1511,13 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 		sprintf(num, "Frame %d (n p)", w->currentframe);
 		drawstring2fb(w, 5, base, num, strlen(num));
 		base += 14;
-		sprintf(num, "Keybuf %d", prefix);
-		drawstring2fb(w, 5, base, num, strlen(num));
+		if (last_cmd_display[0] != '\0')
+			drawstring2fb(w, 5, base, last_cmd_display,
+				       (int)strlen(last_cmd_display));
+		else {
+			sprintf(num, "Keybuf %d", prefix);
+			drawstring2fb(w, 5, base, num, strlen(num));
+		}
 		base += 14;
 		sprintf(num, "Reality %d (+ -)", w->reality);
 		drawstring2fb(w, 5, base, num, strlen(num));

@@ -37,4 +37,6 @@ int eToggleSlicing(Ginfo *g, Winfo w[], int i);
 int eSliceMove(Ginfo *g, Winfo w[], int i, float delta);
 void W_setcenter(Winfo *w);
 void W_resetcenter(Winfo *w);
+void SetLastCommand(int prefix_used, const char *key, const char *desc_fmt);
+void ClearLastCommand(void);
 #endif

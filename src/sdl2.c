@@ -236,15 +236,19 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 	if (debug)
 		fprintf(stderr, "Key: %d mod: %d\n", (int)key, modstatus);
 
-	/* Digit prefix */
+	/* Digit prefix (only when Shift is not held; Shift+8 = *, etc.) */
 	if (key >= SDLK_0 && key <= SDLK_9) {
-		prefix = prefix * 10 + (int)(key - SDLK_0);
-		{
-			int j;
-			for (j = 0; j < g->nwindow; j++)
-				w[j].status |= REDRAW;
+		if (!(modstate & KMOD_SHIFT)) {
+			ClearLastCommand();
+			prefix = prefix * 10 + (int)(key - SDLK_0);
+			{
+				int j;
+				for (j = 0; j < g->nwindow; j++)
+					w[j].status |= REDRAW;
+			}
+			return;
 		}
-		return;
+		/* Shift+digit: fall through to switch (e.g. Shift+8 = *) */
 	}
 
 	if (w[i].RecordMode) {
@@ -263,180 +267,280 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 		switch (key) {
 		case SDLK_q:
 			(void)eQuit(g, w, i);
+			SetLastCommand(0, "q", "quit");
 			break;
 		case SDLK_g:
 		case SDLK_RETURN:
-		case SDLK_KP_ENTER:
-			(void)eGotoFrame(g, w, i,
-					 (modstatus && prefix == 0)
-						 ? LASTFRAME
-						 : prefix);
+		case SDLK_KP_ENTER: {
+			int p = (modstatus && prefix == 0) ? LASTFRAME : prefix;
+			(void)eGotoFrame(g, w, i, p);
+			SetLastCommand(p, "g", "goto frame %d");
 			break;
+		}
 		case SDLK_PAGEDOWN:
-		case SDLK_n:
-			(void)eGoRelativeFrame(g, w, i, prefix ? prefix : 1,
-					      modstatus);
+		case SDLK_n: {
+			int n = prefix ? prefix : 1;
+			(void)eGoRelativeFrame(g, w, i, n, modstatus);
+			if (modstatus)
+				SetLastCommand(n, "N", "proceed at %d fps");
+			else
+				SetLastCommand(n, "n", "proceed %d frames");
 			break;
+		}
 		case SDLK_c:
 			(void)eToggleCentering(g, w, i);
+			SetLastCommand(0, "c", "toggle center");
 			break;
 		case SDLK_PERCENT:
+		case SDLK_5:
+			if (key == SDLK_5 && !(modstate & KMOD_SHIFT))
+				break;
 			(void)eToggleSlicing(g, w, i);
+			SetLastCommand(0, "% key", "toggle slice");
 			break;
 		case SDLK_RIGHTBRACKET:
 			(void)((modstate & KMOD_SHIFT)
 				       ? eSliceMove(g, w, i, 1)
 				       : eWiden(g, w, i, -1));
+			SetLastCommand(0, "] key", (modstate & KMOD_SHIFT)
+					    ? "shift slice right"
+					    : "widen in");
 			break;
 		case SDLK_LEFTBRACKET:
 			(void)((modstate & KMOD_SHIFT)
 				       ? eSliceMove(g, w, i, -1)
 				       : eWiden(g, w, i, 1));
+			SetLastCommand(0, "[ key", (modstate & KMOD_SHIFT)
+					    ? "shift slice left"
+					    : "widen out");
 			break;
 		case SDLK_r:
 			if (modstate & KMOD_SHIFT) {
 #ifdef FFMPEG
 				(void)eStartRecording(g, w, 2,
 						     prefix ? prefix : 10);
+				SetLastCommand(prefix ? prefix : 10, "R",
+					      "record at %d fps");
 #endif
 			} else {
 				(void)eStartRecording(g, w, 1, 1);
+				SetLastCommand(0, "r", "start recording");
 			}
 			break;
 #ifndef win32
 		case SDLK_u:
 			(void)ePushView(g, w, i);
+			SetLastCommand(0, "u", "push view");
 			break;
 		case SDLK_o:
 			(void)ePopView(g, w, i);
+			SetLastCommand(0, "o", "pop view");
 			break;
 #endif
 		case SDLK_v:
 			(void)eToggleVerbosity(g, w, i);
+			SetLastCommand(0, "v", "toggle verbosity");
 			break;
 		case SDLK_PAGEUP:
-		case SDLK_p:
-			(void)eGoRelativeFrame(g, w, i, prefix ? -prefix : -1,
-					      modstatus);
+		case SDLK_p: {
+			int n = prefix ? prefix : 1;
+			(void)eGoRelativeFrame(g, w, i, -n, modstatus);
+			if (modstatus)
+				SetLastCommand(n, "P", "go back at %d fps");
+			else
+				SetLastCommand(n, "p", "go back %d frames");
 			break;
+		}
 		case SDLK_HOME:
 			(void)eGotoFrame(g, w, i, 0);
+			SetLastCommand(0, "Home", "goto frame 0");
 			break;
 		case SDLK_END:
 			(void)eGotoFrame(g, w, i, LASTFRAME);
+			SetLastCommand(0, "End", "goto last frame");
 			break;
 		case SDLK_SPACE:
 			(void)eStopMotion(g, w, i);
+			SetLastCommand(0, "Space", "stop motion");
 			break;
 		case SDLK_PAUSE:
 		case SDLK_EXCLAIM:
 			(void)eStopRotation(g, w, i);
+			SetLastCommand(0, "Pause", "stop rotation");
 			break;
 		case SDLK_KP_MULTIPLY:
 		case SDLK_ASTERISK:
-			(void)eZoom(g, w, i, prefix ? prefix : 1);
+		case SDLK_8:
+			if (key == SDLK_8 && !(modstate & KMOD_SHIFT))
+				break;
+			{
+				int n = prefix ? prefix : 1;
+				(void)eZoom(g, w, i, n);
+				SetLastCommand(n, "* key", "zoom in %d steps");
+			}
 			break;
 		case SDLK_KP_DIVIDE:
-		case SDLK_SLASH:
-			(void)eZoom(g, w, i, prefix ? -prefix : -1);
+		case SDLK_SLASH: {
+			int n = prefix ? prefix : 1;
+			(void)eZoom(g, w, i, -n);
+			SetLastCommand(n, "/ key", "zoom out %d steps");
 			break;
+		}
 		case SDLK_h:
-		case SDLK_LEFT:
-			(void)eHeading(g, w, i, prefix ? prefix : 1, modstatus);
+		case SDLK_LEFT: {
+			int n = prefix ? prefix : 1;
+			(void)eHeading(g, w, i, n, modstatus);
+			SetLastCommand(n, "h", "heading left %d");
 			break;
+		}
 		case SDLK_l:
-		case SDLK_RIGHT:
-			(void)eHeading(g, w, i, prefix ? -prefix : -1, modstatus);
+		case SDLK_RIGHT: {
+			int n = prefix ? prefix : 1;
+			(void)eHeading(g, w, i, -n, modstatus);
+			SetLastCommand(n, "l", "heading right %d");
 			break;
+		}
 		case SDLK_k:
-		case SDLK_UP:
-			(void)eBanking(g, w, i, prefix ? prefix : 1, modstatus);
+		case SDLK_UP: {
+			int n = prefix ? prefix : 1;
+			(void)eBanking(g, w, i, n, modstatus);
+			SetLastCommand(n, "k", "banking %d");
 			break;
+		}
 		case SDLK_j:
-		case SDLK_DOWN:
-			(void)eBanking(g, w, i, prefix ? -prefix : -1, modstatus);
+		case SDLK_DOWN: {
+			int n = prefix ? prefix : 1;
+			(void)eBanking(g, w, i, -n, modstatus);
+			SetLastCommand(n, "j", "banking -%d");
 			break;
+		}
 		case SDLK_ESCAPE:
+			ClearLastCommand();
 			break;
 		case SDLK_s:
 			(void)eToggleSync(g, w, i);
+			SetLastCommand(0, "s", "toggle sync");
 			break;
-		case SDLK_f:
-			(void)eToggleLayer(g, w, i, prefix ? prefix : 1);
+		case SDLK_f: {
+			int layer = prefix ? prefix : 1;
+			(void)eToggleLayer(g, w, i, layer);
+			SetLastCommand(layer, "f", "toggle layer %d");
 			break;
+		}
 		case SDLK_x:
 			(void)((modstate & KMOD_SHIFT)
 				       ? eResetView(g, w, i, +40, 0, 0)
 				       : eResetView(g, w, i, -40, 0, 0));
+			SetLastCommand(0, "x", "reset view X");
 			break;
 		case SDLK_y:
 			(void)((modstate & KMOD_SHIFT)
 				       ? eResetView(g, w, i, 0, +40, 0)
 				       : eResetView(g, w, i, 0, -40, 0));
+			SetLastCommand(0, "y", "reset view Y");
 			break;
 		case SDLK_z:
 			(void)((modstate & KMOD_SHIFT)
 				       ? eResetView(g, w, i, 0, 0, +40)
 				       : eResetView(g, w, i, 0, 0, -40));
+			SetLastCommand(0, "z", "reset view Z");
 			break;
 		case SDLK_INSERT:
 		case SDLK_RIGHTPAREN:
-			(void)eRelativeThickness(g, w, i, prefix ? prefix : 1);
+		case SDLK_0:
+			if (key == SDLK_0 && !(modstate & KMOD_SHIFT))
+				break;
+			{
+				int n = prefix ? prefix : 1;
+				(void)eRelativeThickness(g, w, i, n);
+				SetLastCommand(n, ") key", "thickness +%d");
+			}
 			break;
 		case SDLK_DELETE:
 		case SDLK_LEFTPAREN:
-			(void)eRelativeThickness(g, w, i, prefix ? -prefix : -1);
+		case SDLK_9:
+			if (key == SDLK_9 && !(modstate & KMOD_SHIFT))
+				break;
+			{
+				int n = prefix ? prefix : 1;
+				(void)eRelativeThickness(g, w, i, -n);
+				SetLastCommand(n, "( key", "thickness -%d");
+			}
 			break;
 		case SDLK_KP_PLUS:
 		case SDLK_PLUS:
+		case SDLK_EQUALS:
+			if (key == SDLK_EQUALS && !(modstate & KMOD_SHIFT))
+				break;
 			(void)eRelativeReality(g, w, i, 1);
+			SetLastCommand(0, "+ key", "reality +1");
 			break;
 		case SDLK_KP_MINUS:
 		case SDLK_MINUS:
 			(void)eRelativeReality(g, w, i, -1);
+			SetLastCommand(0, "- key", "reality -1");
 			break;
 		case SDLK_TAB:
 			(void)eResetView(g, w, i, Eyex, Eyey, Eyez);
+			SetLastCommand(0, "Tab", "reset view");
 			break;
 		case SDLK_F1:
 			(void)eToggleLayer(g, w, i, 1);
+			SetLastCommand(0, "F1", "toggle layer 1");
 			break;
 		case SDLK_F2:
 			(void)eToggleLayer(g, w, i, 2);
+			SetLastCommand(0, "F2", "toggle layer 2");
 			break;
 		case SDLK_F3:
 			(void)eToggleLayer(g, w, i, 3);
+			SetLastCommand(0, "F3", "toggle layer 3");
 			break;
 		case SDLK_F4:
 			(void)eToggleLayer(g, w, i, 4);
+			SetLastCommand(0, "F4", "toggle layer 4");
 			break;
 		case SDLK_F5:
 			(void)eToggleLayer(g, w, i, 5);
+			SetLastCommand(0, "F5", "toggle layer 5");
 			break;
 		case SDLK_F6:
 			(void)eToggleLayer(g, w, i, 6);
+			SetLastCommand(0, "F6", "toggle layer 6");
 			break;
 		case SDLK_F7:
 			(void)eToggleLayer(g, w, i, 7);
+			SetLastCommand(0, "F7", "toggle layer 7");
 			break;
 		case SDLK_F8:
 			(void)eToggleLayer(g, w, i, 8);
+			SetLastCommand(0, "F8", "toggle layer 8");
 			break;
 		case SDLK_F9:
 			(void)eToggleLayer(g, w, i, 9);
+			SetLastCommand(0, "F9", "toggle layer 9");
 			break;
 		case SDLK_F10:
 			(void)eToggleLayer(g, w, i, 10);
+			SetLastCommand(0, "F10", "toggle layer 10");
 			break;
 		case SDLK_F11:
 			(void)eToggleLayer(g, w, i, 11);
+			SetLastCommand(0, "F11", "toggle layer 11");
 			break;
 		case SDLK_F12:
 			(void)eToggleLayer(g, w, i, 12);
+			SetLastCommand(0, "F12", "toggle layer 12");
 			break;
 		default:
 			break;
 		}
+		/* Ignore modifier-only key press: do not flush keybuf or redraw */
+		if (key == SDLK_LSHIFT || key == SDLK_RSHIFT ||
+		    key == SDLK_LCTRL || key == SDLK_RCTRL ||
+		    key == SDLK_LALT || key == SDLK_RALT ||
+		    key == SDLK_LGUI || key == SDLK_RGUI)
+			return;
 		/* Flush keybuf on any non-digit key (e.g. alphabet, ESC) */
 		prefix = 0;
 		{
