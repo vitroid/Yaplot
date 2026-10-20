@@ -458,15 +458,32 @@ int eRelativeThickness(Ginfo *g, Winfo w[], int i, int prefix)
 	return TRUE;
 }
 
+int eZoomFactor(Ginfo *g, Winfo w[], int i, float ratio)
+{
+	if (w[i].async) {
+		w[i].depthratio *= ratio;
+		w[i].status |= REDRAW;
+		if (debug)
+			fprintf(stderr,
+				"REDRAW because zoom is changed (1)[Window %d]\n",
+				i);
+	} else {
+		for (i = 0; i < g->nwindow; i++) {
+			w[i].depthratio *= ratio;
+			w[i].status |= REDRAW;
+			if (debug)
+				fprintf(stderr,
+					"REDRAW because zoom is changed "
+					"(2)[Window %d]\n",
+					i);
+		}
+	}
+	return TRUE;
+}
+
 int eZoom(Ginfo *g, Winfo w[], int i, int prefix)
 {
-	float ratio = powif(1.05, prefix);
-	w[i].depthratio *= ratio;
-	w[i].status |= REDRAW;
-	if (debug)
-		fprintf(stderr, "REDRAW because zoom is changed [Window %d]\n",
-			i);
-	return TRUE;
+	return eZoomFactor(g, w, i, powif(1.05, prefix));
 }
 
 int eStopRotation(Ginfo *g, Winfo w[], int i)
@@ -793,6 +810,37 @@ void WindowMotion(Winfo *w, float head, float bank)
 	w->eyep[0] = w->lookp[0] - eyex;
 	w->eyep[1] = w->lookp[1] - eyey;
 	w->eyep[2] = w->lookp[2] - eyez;
+	w->accump = w->accumh = w->accumb = 0;
+}
+
+/* Roll around the view axis. pitch > 0 turns the object clockwise
+ * (camera rolls the opposite way). */
+void WindowRoll(Winfo *w, float pitch)
+{
+	float c, s;
+	float hx, hy, hz, ux, uy, uz;
+
+	w->wp = w->wh = w->wb = 0;
+	w->status |= REDRAW;
+	if (debug)
+		fprintf(stderr, "REDRAW because window is rolled");
+	c = cos(pitch);
+	s = sin(pitch);
+	hx = w->h[0];
+	hy = w->h[1];
+	hz = w->h[2];
+	ux = w->u[0];
+	uy = w->u[1];
+	uz = w->u[2];
+	w->h[0] = hx * c - ux * s;
+	w->h[1] = hy * c - uy * s;
+	w->h[2] = hz * c - uz * s;
+	w->u[0] = hx * s + ux * c;
+	w->u[1] = hy * s + uy * c;
+	w->u[2] = hz * s + uz * c;
+	w->up[0] = w->u[0];
+	w->up[1] = w->u[1];
+	w->up[2] = w->u[2];
 	w->accump = w->accumh = w->accumb = 0;
 }
 
@@ -1828,6 +1876,24 @@ void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
 				w[i].eyep[0] = w[i].lookp[0] - eyex;
 				w[i].eyep[1] = w[i].lookp[1] - eyey;
 				w[i].eyep[2] = w[i].lookp[2] - eyez;
+				/*視線まわりロール（wp/accump）。角速度は維持*/
+				if (w[i].accump != 0) {
+					float c = cos(w[i].accump);
+					float s = sin(w[i].accump);
+					float hx = w[i].h[0], hy = w[i].h[1],
+					      hz = w[i].h[2];
+					float ux = w[i].u[0], uy = w[i].u[1],
+					      uz = w[i].u[2];
+					w[i].h[0] = hx * c - ux * s;
+					w[i].h[1] = hy * c - uy * s;
+					w[i].h[2] = hz * c - uz * s;
+					w[i].u[0] = hx * s + ux * c;
+					w[i].u[1] = hy * s + uy * c;
+					w[i].u[2] = hz * s + uz * c;
+					w[i].up[0] = w[i].u[0];
+					w[i].up[1] = w[i].u[1];
+					w[i].up[2] = w[i].u[2];
+				}
 				w[i].accump = w[i].accumh = w[i].accumb = 0;
 				/*end of addition*/
 			}

@@ -252,7 +252,7 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 	}
 
 	if (w[i].RecordMode) {
-		if (key == SDLK_r) {
+		if (key == SDLK_r || key == (SDL_Keycode)'R') {
 			eStopRecording(g, w);
 			return;
 		}
@@ -557,8 +557,9 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 	Ginfo *g = g_internal;
 	if (state & SDL_BUTTON_LMASK) {
 		if (originx != x || originy != y) {
-			float tick = (state & KMOD_SHIFT) ? (1.0f / 400.0f)
-							: (10.0f / 400.0f);
+			float tick = (SDL_GetModState() & KMOD_SHIFT)
+					     ? (1.0f / 400.0f)
+					     : (10.0f / 400.0f);
 			float bank = (float)(originy - y) * tick;
 			float head = (float)(originx - x) * tick;
 			originx = x;
@@ -580,6 +581,41 @@ static void handle_mousewheel(int i, int y)
 		int fov_change = (y > 0) ? 1 : -1;
 		eWiden(g_internal, w_internal, i, fov_change);
 	}
+}
+
+/* Pinch scale / rotate. dDist>0 = fingers apart; SDL dTheta is CCW-positive. */
+static void handle_multigesture(int i, float dTheta, float dDist)
+{
+	Winfo *w = w_internal;
+	Ginfo *g = g_internal;
+	const float zoom_k = 3.0f;
+
+	if (dDist != 0.0f)
+		(void)eZoomFactor(g, w, i, expf(zoom_k * dDist));
+
+	if (dTheta != 0.0f) {
+		float pitch = -dTheta; /* object-clockwise positive */
+		if (w[i].async)
+			WindowRoll(&w[i], pitch);
+		else {
+			int j;
+			for (j = 0; j < g->nwindow; j++)
+				WindowRoll(&w[j], pitch);
+		}
+	}
+}
+
+static int focused_window_index(Ginfo *g, Winfo *w)
+{
+	SDL_Window *fw = SDL_GetMouseFocus();
+	if (!fw)
+		fw = SDL_GetKeyboardFocus();
+	if (fw) {
+		int i = window_id_to_index(g, w, SDL_GetWindowID(fw));
+		if (i >= 0)
+			return i;
+	}
+	return 0;
 }
 
 static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
@@ -677,6 +713,10 @@ void handleevent(Ginfo *g, Winfo w[])
 		if (i >= 0)
 			handle_mousewheel(i, e->wheel.y);
 		break;
+	case SDL_MULTIGESTURE:
+		i = focused_window_index(g, w);
+		handle_multigesture(i, e->mgesture.dTheta, e->mgesture.dDist);
+		break;
 	case SDL_WINDOWEVENT:
 		handle_window_event(g, w, &e->window);
 		break;
@@ -692,6 +732,8 @@ void G_Init0(int *argc, char **argv[])
 {
 	(void)argc;
 	(void)argv;
+	/* Help synthesize touch events so SDL_MULTIGESTURE can fire */
+	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "1");
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
 		exit(1);

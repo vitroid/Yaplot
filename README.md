@@ -86,6 +86,8 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 - Up and down arrow, or "j" and "k":Pitching rotation.
 - Left and right arrow, or "h" and "l":Heading rotation.
 - Mouse drag with left button:Rotate immediately
+- Trackpad pinch:Scale up and down (same as "*" / "/")
+- Trackpad rotate gesture:Roll the object around the view axis (clockwise)
 - Pause or "!":Stop automatic rotation.
 - Tab:Undo rotation.
 - "\*" and "/":Scale up and down

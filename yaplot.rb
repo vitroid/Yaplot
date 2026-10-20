@@ -4,12 +4,13 @@
 class Yaplot < Formula
   desc "Yet another plotter in 3D - easy 3D modeller and animator with trackpad gesture support"
   homepage "https://github.com/vitroid/Yaplot"
-  url "https://github.com/vitroid/Yaplot/archive/v4.2.tar.gz"
+  url "https://github.com/vitroid/Yaplot/archive/v5.0.tar.gz"
   sha256 "2d07b552bc8510e366fc04fbcd5b09191986bd78c21d6edfc3bfa3b0a425594f"
   license "MIT"
 
-  depends_on "gtk+3"
   depends_on "pkg-config" => :build
+  depends_on "sdl2"
+  depends_on "cairo"
   depends_on "libpng"
 
   def install

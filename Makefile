@@ -4,17 +4,20 @@ PROG = yaplot
 SRC  = $(wildcard src/*.c)
 OBJS = $(SRC:.c=.o)
 
-SDL2_CFLAGS  = $(shell pkg-config sdl2 --cflags)
-SDL2_LDFLAGS = $(shell pkg-config sdl2 --libs)
-CAIRO_CFLAGS = $(shell pkg-config cairo --cflags)
-CAIRO_LDFLAGS = $(shell pkg-config cairo --libs)
-PNG_LDFLAGS  = $(shell pkg-config libpng --libs)
+BREW_PREFIX ?= /opt/homebrew
+PKG_CONFIG  ?= $(BREW_PREFIX)/bin/pkg-config
+
+SDL2_CFLAGS  = $(shell $(PKG_CONFIG) sdl2 --cflags)
+SDL2_LDFLAGS = $(shell $(PKG_CONFIG) sdl2 --libs)
+CAIRO_CFLAGS = $(shell $(PKG_CONFIG) cairo --cflags)
+CAIRO_LDFLAGS = $(shell $(PKG_CONFIG) cairo --libs)
+PNG_LDFLAGS  = $(shell $(PKG_CONFIG) libpng --libs)
 LDFLAGS      = $(SDL2_LDFLAGS) $(CAIRO_LDFLAGS) $(PNG_LDFLAGS) -lm
 
 PKGDATADIR = /opt/homebrew/share/yaplot
 BINDIR     = /opt/homebrew/bin
 
-VERSION = 4.2
+VERSION = 5.0
 
 CFLAGS  = -g -Wall -Werror -Werror=vla -I./include
 CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS)
