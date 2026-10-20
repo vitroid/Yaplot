@@ -49,8 +49,6 @@ When it is compiled successfully, install them to the appropriate places.
         -d              Debug mode.
         infile          Yaplot command file.
 
-Currently all options are unavailable on DOS.
-
 Yaplot has the concept of layers. It has 12 layers by default. You can show/hide each layer by function keys.
 
 When "-" is specified as the command file name, commands are read from standard input.
@@ -63,7 +61,7 @@ If no command file is specified, help file is displayed.
 
 By specifying "RECORD" option in Makefile, recording feature becomes available. When "r" key is pressed, hardcopies of the windows are saved in yaplotxx_yyyyy.gif(xx is window No.、yyyyy is frame No.) To stop recording, press "r" again.
 
-If "u" is pressed, current view information (eye position, field of view, etc.) is saved in ".yapviewstack" file of the current directory. If "o" is pressed, last view information is recovered from ".yapviewstack" file. It is useful to share the view information on multiple yaplot. (This feature is not available on DOS)
+If "u" is pressed, current view information (eye position, field of view, etc.) is saved in ".yapviewstack" file of the current directory. If "o" is pressed, last view information is recovered from ".yapviewstack" file. It is useful to share the view information on multiple yaplot.
 
 When no palette file is specified, yaplot searches the palette file in the following order:
 
@@ -184,8 +182,6 @@ yaplot の画像は、本格的なプレゼンテーションに使用できる�
 
 キャッシュを大きくとると、ファイルの読み込み速度が向上する分メモリを消費します。
 
-DOS 版では今のところすべてのオプションが認識されません。
-
 yaplot にはレイヤの概念があります。標準ではレイヤは 1 から 12 までの 12 枚あり、それぞれの表示/非表示をファンクションキーで制御できます。同一のデータを様々な面から解析する場合に役立ちます。
 
 コマンドファイル名に"-"を指定した場合には、標準入力からデータを 読みこみます。ただし、標準入力から読みこむ場合には、アニメーション表示することはできません。
@@ -196,7 +192,7 @@ yaplot にはレイヤの概念があります。標準ではレイヤは 1 か�
 
 Makefile で RECORD オプションを追加してあると、録画機能が使えます。"r"キーを押すと、現在表示されているフレーム以降を次々に gif ファイルに保存していきます。録画を停止するには、再度"r"を押すか、"q"(yaplot の終了)を押して下さい。ファイル名は、yaplotxx_yyyyy.gif(xx の部分がウィンドウの番号、yyyyy がフレーム番号)となります。
 
-"u"(pUsh)を押すと、現在の視野情報をカレントディレクトリの ".yapviewstack"ファイルの末尾に追加します。また、"o"(pOp)を押すとカレ ントディレクトリの".yapviewstack"ファイルの末尾行を読み込み、現在の視 野情報とします。"u"とくみあわせることで、異なる yaplot や、異なる window の間で同じ視点を共有することができます。(DOS 版では使えません)
+"u"(pUsh)を押すと、現在の視野情報をカレントディレクトリの ".yapviewstack"ファイルの末尾に追加します。また、"o"(pOp)を押すとカレ ントディレクトリの".yapviewstack"ファイルの末尾行を読み込み、現在の視 野情報とします。"u"とくみあわせることで、異なる yaplot や、異なる window の間で同じ視点を共有することができます。
 
 コマンドファイルを指定しなかった場合には、ヘルプファイル /usr/local/matto/etc/yaplot/help.yap が表示されます。
 
