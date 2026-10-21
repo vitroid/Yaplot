@@ -148,7 +148,10 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 		fprintf(stderr, "\t and then $HOME/yaplot.col is searched.\n");
 		g->nwindow = 1;
 		w = W_Init(1);
-		strcpy(w[0].inputfilename, HELPFILE);
+		if (access("help.yap", R_OK) == 0)
+			strcpy(w[0].inputfilename, "help.yap");
+		else
+			strcpy(w[0].inputfilename, HELPFILE);
 
 	} else {
 		g->nwindow = argc - optind;

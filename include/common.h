@@ -27,7 +27,7 @@
 #ifndef TRUE
 #define TRUE 1
 #endif
-#define VERSION "5.1.2"
+#define VERSION "5.2"
 
 typedef struct _Vertex {
 	struct _Vertex *next;
@@ -172,7 +172,7 @@ typedef struct WINFO {
 	/*accumulated rotation angle (for the next frame)*/
 	float accump, accumh, accumb;
 	/*rotation speed*/
-	int wp, wh, wb;
+	float wp, wh, wb;
 	/*animating mode*/
 	int RecordMode;
 	int lastColor;

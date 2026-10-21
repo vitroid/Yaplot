@@ -172,7 +172,7 @@ typedef struct WINFO {
 	/*accumulated rotation angle (for the next frame)*/
 	float accump, accumh, accumb;
 	/*rotation speed*/
-	int wp, wh, wb;
+	float wp, wh, wb;
 	/*animating mode*/
 	int RecordMode;
 	int lastColor;
