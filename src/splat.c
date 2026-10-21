@@ -4,24 +4,131 @@
 #include <stdlib.h>
 
 /*
- * Layer L (0-based), with n = w->splat layers (1..3):
+ * Always 3 splat layers (L = 0, 1, 2) when w->splat is 1..3:
  *   depth_factor  = 2^L
  *   radius_factor = 2 * 2^L
- *   alpha        = base(n) / n
- *     n=1: base 0.25
- *     n=2: base 0.25*(2/3)
- *     n=3: base 0.25*(1/2)
+ * Opacity scales with w->splat level d (1..3):
+ *   d=3: full (total alpha 0.125 across 3 layers)
+ *   d=2: 1/2 of d=3
+ *   d=1: 1/4 of d=3
  */
-#define SPLAT_BASE_ALPHA 0.25f
+#define SPLAT_D3_ALPHA (0.125f / 3.0f)
 #define SPLAT_MAX_LAYERS 3
+#define SPLAT_MASK_CACHE_ENTRIES 64
+#define SPLAT_MASK_CACHE_BYTES (16u * 1024u * 1024u)
+#define SPLAT_MASK_MAX_RADIUS 512
+#define SPLAT_RADIUS_QUANTUM 2
 
-static float splat_base_alpha(int n)
+typedef struct {
+	int radius;
+	size_t bytes;
+	unsigned long age;
+	cairo_surface_t *surface;
+} SplatMaskEntry;
+
+static SplatMaskEntry splat_mask_cache[SPLAT_MASK_CACHE_ENTRIES];
+static size_t splat_mask_cache_bytes;
+static unsigned long splat_mask_cache_age;
+
+static float splat_layer_alpha(int level)
 {
-	if (n == 2)
-		return SPLAT_BASE_ALPHA * (2.0f / 3.0f);
-	if (n == 3)
-		return SPLAT_BASE_ALPHA * 0.5f;
-	return SPLAT_BASE_ALPHA;
+	if (level == 1)
+		return SPLAT_D3_ALPHA * 0.25f;
+	if (level == 2)
+		return SPLAT_D3_ALPHA * 0.5f;
+	return SPLAT_D3_ALPHA;
+}
+
+static cairo_surface_t *create_circle_mask(int radius, size_t *bytes)
+{
+	int size = 2 * radius + 3;
+	cairo_surface_t *surface =
+	    cairo_image_surface_create(CAIRO_FORMAT_A8, size, size);
+	cairo_t *cr;
+
+	if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+		cairo_surface_destroy(surface);
+		return NULL;
+	}
+	cr = cairo_create(surface);
+	if (cairo_status(cr) != CAIRO_STATUS_SUCCESS) {
+		cairo_destroy(cr);
+		cairo_surface_destroy(surface);
+		return NULL;
+	}
+	cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+	cairo_paint(cr);
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+	cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);
+	cairo_set_source_rgba(cr, 1, 1, 1, 1);
+	cairo_arc(cr, radius + 1, radius + 1, radius, 0, 2 * M_PI);
+	cairo_fill(cr);
+	cairo_destroy(cr);
+	cairo_surface_flush(surface);
+	*bytes = (size_t)cairo_image_surface_get_stride(surface) * (size_t)size;
+	return surface;
+}
+
+static cairo_surface_t *get_circle_mask(int radius)
+{
+	int i, slot = -1, oldest = -1;
+	unsigned long oldest_age = ~0ul;
+	size_t bytes = 0;
+	cairo_surface_t *surface;
+
+	if (radius < 1 || radius > SPLAT_MASK_MAX_RADIUS)
+		return NULL;
+	splat_mask_cache_age++;
+	for (i = 0; i < SPLAT_MASK_CACHE_ENTRIES; i++) {
+		SplatMaskEntry *entry = &splat_mask_cache[i];
+		if (entry->surface != NULL && entry->radius == radius) {
+			entry->age = splat_mask_cache_age;
+			return entry->surface;
+		}
+		if (entry->surface == NULL && slot < 0)
+			slot = i;
+		if (entry->surface != NULL && entry->age < oldest_age) {
+			oldest_age = entry->age;
+			oldest = i;
+		}
+	}
+
+	surface = create_circle_mask(radius, &bytes);
+	if (surface == NULL || bytes > SPLAT_MASK_CACHE_BYTES) {
+		if (surface != NULL)
+			cairo_surface_destroy(surface);
+		return NULL;
+	}
+	while (splat_mask_cache_bytes + bytes > SPLAT_MASK_CACHE_BYTES ||
+	       slot < 0) {
+		SplatMaskEntry *entry;
+		if (oldest < 0)
+			break;
+		entry = &splat_mask_cache[oldest];
+		splat_mask_cache_bytes -= entry->bytes;
+		cairo_surface_destroy(entry->surface);
+		entry->surface = NULL;
+		slot = oldest;
+		oldest = -1;
+		oldest_age = ~0ul;
+		for (i = 0; i < SPLAT_MASK_CACHE_ENTRIES; i++) {
+			entry = &splat_mask_cache[i];
+			if (entry->surface != NULL && entry->age < oldest_age) {
+				oldest_age = entry->age;
+				oldest = i;
+			}
+		}
+	}
+	if (slot < 0) {
+		cairo_surface_destroy(surface);
+		return NULL;
+	}
+	splat_mask_cache[slot].radius = radius;
+	splat_mask_cache[slot].bytes = bytes;
+	splat_mask_cache[slot].age = splat_mask_cache_age;
+	splat_mask_cache[slot].surface = surface;
+	splat_mask_cache_bytes += bytes;
+	return surface;
 }
 
 typedef struct {
@@ -149,6 +256,7 @@ static void draw_circle_splat(Winfo *w, Pinfo *qq, float ex, float ey,
 	float eyedist_s = v->eyedist + df * r;
 	float zoom_s;
 	int ix, iy, rr;
+	cairo_surface_t *mask;
 
 	if (eyedist_s <= 0)
 		return;
@@ -157,7 +265,16 @@ static void draw_circle_splat(Winfo *w, Pinfo *qq, float ex, float ey,
 	rr = (int)(zoom_s * rf * r);
 	if (rr < 1)
 		rr = 1;
-	drawcircle2fb(w, ix, iy, rr, TRUE);
+	rr = ((rr + SPLAT_RADIUS_QUANTUM / 2) / SPLAT_RADIUS_QUANTUM) *
+	     SPLAT_RADIUS_QUANTUM;
+	if (ix + rr < 0 || iy + rr < 0 || ix - rr >= w->screenwidth ||
+	    iy - rr >= w->screenheight)
+		return;
+	mask = get_circle_mask(rr);
+	if (mask != NULL)
+		cairo_mask_surface(w->cr, mask, ix - rr - 1, iy - rr - 1);
+	else
+		drawcircle2fb(w, ix, iy, rr, TRUE);
 }
 
 static void draw_poly_splat(Winfo *w, Pinfo *qq, float ex, float ey, float ez,
@@ -203,7 +320,7 @@ static void draw_poly_splat(Winfo *w, Pinfo *qq, float ex, float ey, float ez,
 	free(poly);
 }
 
-void paint_with_splats(Winfo *w, NewOinfo *o, SplatSolidFn draw_solid)
+int paint_with_splats(Winfo *w, NewOinfo *o, SplatSolidFn draw_solid)
 {
 	int i, n, L, nlay;
 	float ex, ey, ez;
@@ -211,17 +328,13 @@ void paint_with_splats(Winfo *w, NewOinfo *o, SplatSolidFn draw_solid)
 	PaintItem *items;
 
 	if (w->nrealize == 0)
-		return;
-	nlay = (int)w->splat;
-	if (nlay < 1)
-		nlay = 1;
-	if (nlay > SPLAT_MAX_LAYERS)
-		nlay = SPLAT_MAX_LAYERS;
-	alpha = splat_base_alpha(nlay) / (float)nlay;
+		return 0;
+	nlay = SPLAT_MAX_LAYERS;
+	alpha = splat_layer_alpha((int)w->splat);
 
 	items = malloc((size_t)w->nrealize * (1 + nlay) * sizeof(PaintItem));
 	if (items == NULL)
-		return;
+		return 0;
 
 	eye_basis_exyz(w, &ex, &ey, &ez);
 	n = 0;
@@ -259,7 +372,7 @@ void paint_with_splats(Winfo *w, NewOinfo *o, SplatSolidFn draw_solid)
 		Pinfo *qq = items[i].p;
 		if (((i % 1000) == 0) && existevent(NULL)) {
 			free(items);
-			return;
+			return 1;
 		}
 		if (items[i].is_splat) {
 			int layer = (int)items[i].layer;
@@ -274,4 +387,5 @@ void paint_with_splats(Winfo *w, NewOinfo *o, SplatSolidFn draw_solid)
 	}
 
 	free(items);
+	return 0;
 }

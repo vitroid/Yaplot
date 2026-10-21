@@ -390,8 +390,27 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 			}
 			break;
 		case SDLK_d:
-			(void)eCycleSplat(g, w, i);
-			SetLastCommand(0, "d", "cycle depth splat");
+			if (prefix > 0) {
+				char sval = (char)((prefix > 3) ? 3 : prefix);
+				if (w[i].async) {
+					w[i].splat = sval;
+					if (sval && w[i].reality < 2)
+						w[i].reality = 3;
+					w[i].status |= REDRAW;
+				} else {
+					for (int wi = 0; wi < g->nwindow;
+					     wi++) {
+						w[wi].splat = sval;
+						if (sval && w[wi].reality < 2)
+							w[wi].reality = 3;
+						w[wi].status |= REDRAW;
+					}
+				}
+				SetLastCommand(sval, "d", "depth splat %d");
+			} else {
+				(void)eCycleSplat(g, w, i);
+				SetLastCommand(0, "d", "cycle depth splat");
+			}
 			break;
 		case SDLK_PAGEUP:
 		case SDLK_p: {
@@ -696,6 +715,11 @@ static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
 			end_left_drag(g, w, i);
 		return;
 	}
+	if (ev->event == SDL_WINDOWEVENT_EXPOSED ||
+	    ev->event == SDL_WINDOWEVENT_SHOWN) {
+		w[i].status |= REDRAW;
+		return;
+	}
 	if (ev->event == SDL_WINDOWEVENT_RESIZED) {
 		SDL2Context *ctx = (SDL2Context *)w[i].drawarea;
 		if (w[i].surface)
@@ -902,11 +926,42 @@ void W_Init2(Winfo *w, Ginfo *g)
 
 int existevent(Ginfo *g)
 {
-	(void)g;
-	if (have_saved_event)
+	if (have_saved_event) {
+		if (g == NULL && saved_event.type == SDL_MOUSEMOTION)
+			return 0;
 		return 1;
-	if (SDL_PollEvent(&saved_event)) {
+	}
+	while (SDL_PollEvent(&saved_event)) {
+		switch (saved_event.type) {
+		case SDL_MOUSEMOTION:
+			/* Ignore passive mouse movement when not dragging. */
+			if (!mouse_dragging &&
+			    !(saved_event.motion.state & SDL_BUTTON_LMASK))
+				continue;
+			break;
+		case SDL_QUIT:
+		case SDL_KEYDOWN:
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			break;
+		case SDL_WINDOWEVENT:
+			if (saved_event.window.event !=
+				SDL_WINDOWEVENT_RESIZED &&
+			    saved_event.window.event !=
+				SDL_WINDOWEVENT_EXPOSED &&
+			    saved_event.window.event !=
+				SDL_WINDOWEVENT_SHOWN &&
+			    saved_event.window.event !=
+				SDL_WINDOWEVENT_FOCUS_LOST)
+				continue;
+			break;
+		default:
+			/* Ignore KEYUP, MOUSEWHEEL, MULTIGESTURE, etc. */
+			continue;
+		}
 		have_saved_event = 1;
+		if (g == NULL && saved_event.type == SDL_MOUSEMOTION)
+			return 0;
 		return 1;
 	}
 	return 0;

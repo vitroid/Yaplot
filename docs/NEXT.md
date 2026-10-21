@@ -1,0 +1,12 @@
+- [x] Globalブロックの実装
+  - [x] GlobalブロックにUI初期値（`reality`, `fov`, `verbose`, `thickness`, `rotation`, `fps`, `hide`/`show`/`layers`, `message`）を追加
+- [ ] GPU描画バックエンドの検討（`cursor/splat-shadows-9a1e` ブランチはCPU版を実装して一旦休止）
+  - [x] Reality 2〜4に3層depth splatを実装。`d` / `splat {0..3}` は枚数ではなく濃さを切り替える
+  - [x] A8円マスクのLRUキャッシュと2px半径量子化により、512×512・1,846 objects・splat 3で約7 fpsから約39 fpsへ高速化
+  - [x] 描画割り込み時の未完成フレーム表示、受動的マウス移動による割り込み、ドラッグ中の停止・更新不良を修正
+  - [ ] 将来は `SDL_RenderGeometry` 等で円、stick、polygon、line、textをGPU描画し、splatと本体の深度順を維持する
+- [ ] WebAssemblyモード（`wasm` ブランチに WIP 保存・一旦中断）
+  - [x] Emscripten + Canvas 2D (`src/web.c`) 足場
+  - [ ] ブラウザで gray100 背景すら出ない問題の切り分け
+  - [ ] Colabへの組みこみ
+- [ ] 二本指操作の再構築

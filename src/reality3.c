@@ -85,8 +85,7 @@ int Reality3(NewOinfo *o, Winfo *w)
 	setlinewidth(w, r3_thickness);
 
 	if (w->splat) {
-		paint_with_splats(w, o, reality3_solid);
-		return 0;
+		return paint_with_splats(w, o, reality3_solid);
 	}
 
 	for (i = 0; i < w->nrealize; i++) {
