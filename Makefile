@@ -23,14 +23,21 @@ CFLAGS  = -g -Wall -Werror -Werror=vla -I./include
 CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS)
 CFLAGS += -DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
 
-.PHONY: all
-all: gen_common $(PROG)
+HEADERS = $(filter-out include/common.h,$(wildcard include/*.h)) include/common.h
 
-gen_common:
-	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X common.h.in > include/common.h
+.PHONY: all
+all: $(PROG)
+
+include/common.h: common.h.in Makefile
+	sed -e sX%%pkgdatadir%%X$(PKGDATADIR)X -e sX%%version%%X$(VERSION)X $< > $@
 
 $(PROG): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
+
+$(OBJS): $(HEADERS)
+
+src/%.o: src/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 install: $(PROG)
 	install $(PROG) $(BINDIR)
