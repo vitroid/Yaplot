@@ -556,6 +556,9 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 	Winfo *w = w_internal;
 	Ginfo *g = g_internal;
 	if (state & SDL_BUTTON_LMASK) {
+		/* mode 2d: drag is heading/banking — skip (roll via trackpad OK) */
+		if (w[i].mode2d)
+			return;
 		if (originx != x || originy != y) {
 			float tick = (SDL_GetModState() & KMOD_SHIFT)
 					     ? (1.0f / 400.0f)

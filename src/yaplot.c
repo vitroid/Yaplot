@@ -207,6 +207,7 @@
 #include "varray.h"
 #include <ctype.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -343,6 +344,8 @@ int eBanking(Ginfo *g, Winfo w[], int i, int prefix, int fine)
       g->lookp[2]=g->eyep[2]+g->e[2]*dd;*/
 	/*}else{*/
 	if (w[i].async) {
+		if (w[i].mode2d)
+			return TRUE;
 		if (fine) {
 			w[i].wb += prefix * 0.1;
 		} else {
@@ -355,6 +358,8 @@ int eBanking(Ginfo *g, Winfo w[], int i, int prefix, int fine)
 				i);
 	} else {
 		for (i = 0; i < g->nwindow; i++) {
+			if (w[i].mode2d)
+				continue;
 			w[i].wb += prefix;
 			w[i].status |= REDRAW;
 			if (debug)
@@ -385,6 +390,8 @@ int eHeading(Ginfo *g, Winfo w[], int i, int prefix, int fine)
       g->lookp[2]=g->eyep[2]+g->e[2]*dd;*/
 	/*}else{*/
 	if (w[i].async) {
+		if (w[i].mode2d)
+			return TRUE;
 		if (fine) {
 			w[i].wh += prefix * 0.1;
 		} else {
@@ -397,6 +404,8 @@ int eHeading(Ginfo *g, Winfo w[], int i, int prefix, int fine)
 				i);
 	} else {
 		for (i = 0; i < g->nwindow; i++) {
+			if (w[i].mode2d)
+				continue;
 			w[i].wh += prefix;
 			w[i].status |= REDRAW;
 			if (debug)
@@ -674,6 +683,13 @@ int eRelativeReality(Ginfo *g, Winfo w[], int i, int prefix)
 int eResetViewOne(Winfo *w, float eyex, float eyey, float eyez)
 {
 	float dx, dy, dz, ox, oy, oz, dd;
+	if (w->mode2d) {
+		W_ApplyMode2dCamera(w);
+		w->status |= REDRAW;
+		if (debug)
+			fprintf(stderr, "REDRAW because the view is reset (2d)");
+		return TRUE;
+	}
 	w->wp = w->wh = w->wb = 0;
 	w->accump = w->accumh = w->accumb = 0;
 	dx = w->eyep[0] - w->lookp[0];
@@ -782,6 +798,7 @@ void W_Sync(Winfo *to, Winfo *from)
 	to->wp = from->wp;
 	to->wh = from->wh;
 	to->wb = from->wb;
+	to->mode2d = from->mode2d;
 }
 
 void WindowMotion(Winfo *w, float head, float bank)
@@ -789,6 +806,8 @@ void WindowMotion(Winfo *w, float head, float bank)
 	float dx, dy, dz;
 	float eyex, eyey, eyez, eyed;
 	float deltah, deltab;
+	if (w->mode2d)
+		return;
 	w->wp = w->wh = w->wb = 0;
 	w->status |= REDRAW;
 	if (debug)
@@ -878,6 +897,23 @@ void W_setvectors(Winfo *w)
     */
 }
 
+/* Eye above xy plane looking toward origin; +y up on screen, +x right. */
+void W_ApplyMode2dCamera(Winfo *w)
+{
+	w->eyep[0] = 0;
+	w->eyep[1] = 0;
+	w->eyep[2] = 40;
+	w->lookp[0] = 0;
+	w->lookp[1] = 0;
+	w->lookp[2] = 0;
+	w->up[0] = 0;
+	w->up[1] = 1;
+	w->up[2] = 0;
+	w->wh = w->wb = 0;
+	w->accumh = w->accumb = 0;
+	W_setvectors(w);
+}
+
 char *skipspaces(char *s)
 {
 	while (*s == ' ' || *s == '\t')
@@ -953,6 +989,7 @@ void W_LoadGlobalDefaults(Winfo *w)
 	w->def_fillcolor = 2;
 	w->def_linecolor = 0;
 	w->def_arrowtype = 0;
+	w->mode2d = 0;
 
 	if (!w->inputfile)
 		return;
@@ -1001,6 +1038,22 @@ void W_LoadGlobalDefaults(Winfo *w)
 		token = string;
 		rest = skipspaces(p + 1);
 		ch = resolve_command(token);
+		if (ch == 0 && strcmp(token, "mode") == 0) {
+			char modebuf[32];
+			if (sscanf(rest, "%31s", modebuf) == 1 &&
+			    (strcmp(modebuf, "2d") == 0 ||
+			     strcmp(modebuf, "2D") == 0)) {
+				w->mode2d = 1;
+			} else {
+				*p = (char)saved;
+				trim_line_copy(snippet, sizeof(snippet), string);
+				fprintf(stderr, "global ignored: %s\n",
+					snippet);
+				continue;
+			}
+			*p = (char)saved;
+			continue;
+		}
 		*p = (char)saved;
 
 		if (ch == 'r') {
@@ -1029,6 +1082,9 @@ void W_LoadGlobalDefaults(Winfo *w)
 			fprintf(stderr, "global ignored: %s\n", snippet);
 		}
 	}
+
+	if (w->mode2d)
+		W_ApplyMode2dCamera(w);
 
 	pos = varray_ptr(w->framepos, 0);
 	*pos = ftell(w->inputfile);
@@ -1203,6 +1259,49 @@ int hash_compare(const void *a, const void *b)
 	return 0;
 }
 
+/* Collect up to max floats from s. Stops at first non-float token. */
+static int collect_floats(const char *s, float *out, int max)
+{
+	int n = 0;
+	const char *p = s;
+
+	while (n < max) {
+		char *end;
+		float v;
+		while (*p == ' ' || *p == '\t')
+			p++;
+		if (*p == '\0' || *p == '\n' || *p == '\r')
+			break;
+		v = strtof(p, &end);
+		if (end == p)
+			break;
+		out[n++] = v;
+		p = end;
+	}
+	return n;
+}
+
+/* Parse x y [z]; if only two floats, z defaults to 0. Returns 1 on success. */
+static int parse_xyz(const char *s, float *x, float *y, float *z)
+{
+	float coords[3];
+	int n = collect_floats(s, coords, 3);
+
+	if (n == 2) {
+		*x = coords[0];
+		*y = coords[1];
+		*z = 0;
+		return 1;
+	}
+	if (n >= 3) {
+		*x = coords[0];
+		*y = coords[1];
+		*z = coords[2];
+		return 1;
+	}
+	return 0;
+}
+
 NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 {
 	int i;
@@ -1257,12 +1356,33 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			sscanf(rest, "%d", &currentarrowtype);
 			break;
 		case 'l':
-		case 's':
+		case 's': {
+			float coords[6];
+			int narg;
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			sscanf(rest, "%f %f %f %f %f %f", &x1, &y1,
-			       &z1, &x2, &y2, &z2);
+			narg = collect_floats(rest, coords, 6);
+			if (narg == 4) {
+				x1 = coords[0];
+				y1 = coords[1];
+				z1 = 0;
+				x2 = coords[2];
+				y2 = coords[3];
+				z2 = 0;
+			} else if (narg >= 6) {
+				x1 = coords[0];
+				y1 = coords[1];
+				z1 = coords[2];
+				x2 = coords[3];
+				y2 = coords[4];
+				z2 = coords[5];
+			} else {
+				free(qq);
+				*q = NULL;
+				nel--;
+				break;
+			}
 			qq->nvertex = 2;
 			qq->vertex = calloc(2, sizeof(Vertex *));
 			qq->points = calloc(2, sizeof(ivector2));
@@ -1281,41 +1401,70 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			else
 				qq->color = fillcolor;
 			break;
-		case 'p':
+		}
+		case 'p': {
+			char *endp;
+			float *floats;
+			int nf, dim;
+			const char *coords;
+
+			while (*rest == ' ' || *rest == '\t')
+				rest++;
+			n = (int)strtol(rest, &endp, 10);
+			if (endp == rest || n < 3)
+				break;
+			coords = endp;
+			floats = malloc(sizeof(float) * (size_t)n * 3);
+			if (!floats)
+				break;
+			nf = collect_floats(coords, floats, n * 3);
+			if (nf == 2 * n)
+				dim = 2;
+			else if (nf == 3 * n)
+				dim = 3;
+			else {
+				free(floats);
+				break;
+			}
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			n = atoi(strtok(rest, " \t"));
-			if (n < 3)
-				break;
 			qq->nvertex = n + 1;
 			qq->vertex = calloc(n + 1, sizeof(Vertex *));
 			qq->points = calloc(n + 1, sizeof(ivector2));
 			qq->layermask = currentlayermask;
 			for (i = 0; i < n; i++) {
-				x1 = atof(strtok(NULL, " \t"));
-				y1 = atof(strtok(NULL, " \t"));
-				z1 = atof(strtok(NULL, " \t"));
-				// fprintf(stderr,"%f %f %f\n", x1,y1,z1);
+				if (dim == 2) {
+					x1 = floats[2 * i];
+					y1 = floats[2 * i + 1];
+					z1 = 0;
+				} else {
+					x1 = floats[3 * i];
+					y1 = floats[3 * i + 1];
+					z1 = floats[3 * i + 2];
+				}
 				qq->vertex[i] = Vertex_Insert(h, o, x1, y1, z1,
 							      currentlayermask);
 			}
+			free(floats);
 			qq->vertex[n] = qq->vertex[0];
 
 			qq->id = ch;
 			qq->label = NULL;
 			qq->color = fillcolor;
 			break;
+		}
 		case 'c':
 		case 'o':
 		case '3':
 		case '4':
 		case '5':
 		case '6':
+			if (!parse_xyz(rest, &x1, &y1, &z1))
+				break;
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			sscanf(rest, "%f %f %f", &x1, &y1, &z1);
 			qq->nvertex = 1;
 			qq->vertex = calloc(1, sizeof(Vertex *));
 			qq->points = calloc(1, sizeof(ivector2));
@@ -1329,32 +1478,54 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			break;
 			/*
 			 * 't' : put a string at specified position.
+			 * Accepts t x y text... (z=0) or t x y z text...
 			 */
 		case 't': {
 			char *arg_rest;
-			char *p;
+			char *tp;
+			char *endx, *endy, *endz;
 			static char quoted_buf[YAP_LINE_MAX];
 			size_t qlen = 0;
+
+			while (*rest == ' ' || *rest == '\t')
+				rest++;
+			x1 = strtof(rest, &endx);
+			if (endx == rest)
+				break;
+			rest = skipspaces(endx);
+			y1 = strtof(rest, &endy);
+			if (endy == rest)
+				break;
+			rest = skipspaces(endy);
+			z1 = 0;
+			arg_rest = rest;
+			if (*rest != '\0' && *rest != '"' && *rest != '\n' &&
+			    *rest != '\r') {
+				float zcand = strtof(rest, &endz);
+				if (endz != rest) {
+					/* third token is numeric → z */
+					z1 = zcand;
+					arg_rest = skipspaces(endz);
+				}
+				/* else non-numeric → z=0, rest starts label */
+			}
 			q = varray_ptr(o->prims, nel++);
 			*q = malloc(sizeof(Pinfo));
 			qq = *q;
-			x1 = atof(strtok(rest, " \t"));
-			y1 = atof(strtok(NULL, " \t"));
-			z1 = atof(strtok(NULL, " \t"));
-			arg_rest = strtok(NULL, "\n");
 			if (arg_rest == NULL)
 				arg_rest = "";
 			while (*arg_rest == ' ' || *arg_rest == '\t')
 				arg_rest++;
 			if (*arg_rest == '"') {
 				/* 引用符付き: "..." 内をそのまま使用。\" は " に、\\ は \ に */
-				for (p = arg_rest + 1; *p != '\0' && *p != '"'; p++) {
-					if (*p == '\\' && p[1] != '\0') {
-						p++;
+				for (tp = arg_rest + 1; *tp != '\0' && *tp != '"';
+				     tp++) {
+					if (*tp == '\\' && tp[1] != '\0') {
+						tp++;
 						if (qlen < sizeof(quoted_buf) - 1)
-							quoted_buf[qlen++] = *p;
+							quoted_buf[qlen++] = *tp;
 					} else if (qlen < sizeof(quoted_buf) - 1) {
-						quoted_buf[qlen++] = *p;
+						quoted_buf[qlen++] = *tp;
 					}
 				}
 				quoted_buf[qlen] = '\0';
@@ -1362,8 +1533,17 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 				strcpy(qq->label, quoted_buf);
 			} else {
 				stringp = arg_rest;
-				qq->label = malloc(strlen(stringp) + 1);
-				strcpy(qq->label, stringp);
+				/* strip trailing newline */
+				{
+					size_t len = strlen(stringp);
+					while (len > 0 &&
+					       (stringp[len - 1] == '\n' ||
+						stringp[len - 1] == '\r'))
+						len--;
+					qq->label = malloc(len + 1);
+					memcpy(qq->label, stringp, len);
+					qq->label[len] = '\0';
+				}
 			}
 			qq->nvertex = 1;
 			qq->vertex = calloc(1, sizeof(Vertex *));
@@ -1467,11 +1647,24 @@ void RotateAllPrims0(Ginfo *g, Winfo *w)
 	ex = w->h[0] * w->eyep[0] + w->h[1] * w->eyep[1] + w->h[2] * w->eyep[2];
 	ey = w->u[0] * w->eyep[0] + w->u[1] * w->eyep[1] + w->u[2] * w->eyep[2];
 	ez = w->e[0] * w->eyep[0] + w->e[1] * w->eyep[1] + w->e[2] * w->eyep[2];
+	/* mode 2d: constant zoom (orthographic-like) from eye–look distance */
+	if (w->mode2d) {
+		float dx = w->lookp[0] - w->eyep[0];
+		float dy = w->lookp[1] - w->eyep[1];
+		float dz = w->lookp[2] - w->eyep[2];
+		float eyedist_ref = sqrt(dx * dx + dy * dy + dz * dz);
+		if (eyedist_ref < 1e-6f)
+			eyedist_ref = 40.0f;
+		zoomfactor = w->screendepth / eyedist_ref;
+	} else {
+		zoomfactor = 0;
+	}
 	/*まずすべての点を回転する。*/
 
 	v = o->vertex;
 	while (v != NULL) {
 		if (v->layermask & w->layermask) {
+			float zf;
 			v->rx = v->x - w->centerx;
 			v->ry = v->y - w->centery;
 			v->rz = v->z - w->centerz;
@@ -1480,12 +1673,13 @@ void RotateAllPrims0(Ginfo *g, Winfo *w)
 			v->yy = pr10 * v->rx + pr11 * v->ry + pr12 * v->rz;
 			v->zz = pr20 * v->rx + pr21 * v->ry + pr22 * v->rz;
 			v->eyedist = v->zz - ez;
-			zoomfactor = w->screendepth / v->eyedist;
-			v->zoom = zoomfactor;
-			v->ix = (int)(zoomfactor * (v->xx - ex)) +
-				w->screenwidth / 2;
-			v->iy = -(int)(zoomfactor * (v->yy - ey)) +
-				w->screenheight / 2;
+			if (w->mode2d)
+				zf = zoomfactor;
+			else
+				zf = w->screendepth / v->eyedist;
+			v->zoom = zf;
+			v->ix = (int)(zf * (v->xx - ex)) + w->screenwidth / 2;
+			v->iy = -(int)(zf * (v->yy - ey)) + w->screenheight / 2;
 		}
 		v = v->next;
 	}
@@ -1794,6 +1988,7 @@ Winfo *W_Init(int n)
 		w[i].def_fillcolor = 2;
 		w[i].def_linecolor = 0;
 		w[i].def_arrowtype = 0;
+		w[i].mode2d = 0;
 	}
 	return w;
 }
@@ -1972,8 +2167,16 @@ void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
 				dx = w[i].lookp[0] - w[i].eyep[0];
 				dy = w[i].lookp[1] - w[i].eyep[1];
 				dz = w[i].lookp[2] - w[i].eyep[2];
-				deltah = -sin(w[i].accumh);
-				deltab = sin(w[i].accumb);
+				if (w[i].mode2d) {
+					/* tip axes locked; roll (accump) still allowed */
+					w[i].wh = w[i].wb = 0;
+					w[i].accumh = w[i].accumb = 0;
+					deltah = 0;
+					deltab = 0;
+				} else {
+					deltah = -sin(w[i].accumh);
+					deltab = sin(w[i].accumb);
+				}
 				eyex = w[i].e[0] + w[i].h[0] * deltah +
 				       w[i].u[0] * deltab;
 				eyey = w[i].e[1] + w[i].h[1] * deltah +

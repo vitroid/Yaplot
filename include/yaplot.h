@@ -11,6 +11,7 @@ void WindowMotion(Winfo *w, float head, float bank);
 void WindowRoll(Winfo *w, float pitch);
 void W_Sync(Winfo *to, Winfo *from);
 void W_setvectors(Winfo *w);
+void W_ApplyMode2dCamera(Winfo *w);
 Winfo *W_Init(int n);
 void W_LoadGlobalDefaults(Winfo *w);
 void EyeMotion(Winfo *w, float prop);

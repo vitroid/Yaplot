@@ -191,6 +191,8 @@ typedef struct WINFO {
 	int def_fillcolor;
 	int def_linecolor;
 	int def_arrowtype;
+	/* global `mode 2d`: xy-plane view lock + orthographic-like projection */
+	int mode2d;
 			 /*ここまで*/
 } Winfo;
 

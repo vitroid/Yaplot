@@ -110,30 +110,31 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 
 ## Command file format
 
-One line of the command files corresponds to one command. A command consists of a single command character followed by parameters separated by at least one space character, Any parameters are not omittable.
+One line of the command files corresponds to one command. A command consists of a single command character followed by parameters separated by at least one space character.
 
     r {radius}:Specify the radius of circles, rings, and sticks.
-    l {x} {y} {z} {x} {y} {z}:Draw a line.
-    s {x} {y} {z} {x} {y} {z}:Draw a stick. (A styled line.)
-    p {n} {x} {y} {z} {x} {y} {z} {x} {y} {z} ...:Draw a polygon
-    c {x} {y} {z}:Draw a circle.
-    o {x} {y} {z}:Draw a ring sign.
-    3 {x} {y} {z}:Draw a triangle sign.
-    4 {x} {y} {z}:Draw a square sign.
-    5 {x} {y} {z}:Draw a pentagon sign.
-    6 {x} {y} {z}:Draw a hexagon sign.
-    t {x} {y} {z} {text....}:Draw a string. Lines are read up to 64KB. You can use quoted strings: t 0 0 0 "long text with spaces"; inside quotes, \" and \\ are escaped.
+    l {x} {y} {z} {x} {y} {z}:Draw a line. You may omit z (2D shorthand): `l x1 y1 x2 y2` means z=0 on the xy plane.
+    s {x} {y} {z} {x} {y} {z}:Draw a stick. (A styled line.) Same 4-float shorthand as `l`.
+    p {n} {x} {y} {z} ...:Draw a polygon. After `n`, either all vertices are 2 floats `(x y)` with z=0, or all are 3 floats `(x y z)`.
+    c {x} {y} {z}:Draw a circle. `c x y` is allowed (z=0).
+    o {x} {y} {z}:Draw a ring sign. Same 2-float shorthand.
+    3 {x} {y} {z}:Draw a triangle sign. Same 2-float shorthand.
+    4 {x} {y} {z}:Draw a square sign. Same 2-float shorthand.
+    5 {x} {y} {z}:Draw a pentagon sign. Same 2-float shorthand.
+    6 {x} {y} {z}:Draw a hexagon sign. Same 2-float shorthand.
+    t {x} {y} {z} {text....}:Draw a string. Lines are read up to 64KB. You can use quoted strings: t 0 0 0 "long text with spaces"; inside quotes, \" and \\ are escaped. Two-coordinate form `t x y text...` (or `t x y "label"`) sets z=0; if the third token is numeric it is treated as z.
     @ {n}:Specify palette No. (Palette colors are specified in palette file.)
     @ {n} {r} {g} {b}:Specify color of the n'th palette temporarily. R,g, and b are integers between 0 and 255.
     # {comment}:Comment. (Ignored.)
     y {layer}:Change current layer(default layer=1)
     a {arrowtype}:Change current arrow type(default type = 0)
     Empty line:End of a frame.
-    global: Optional block at the start of the file. After a line whose first token is `global`, the following `@` / `r` / `y` / `a` (and long names color/palette/radius/layer/arrow) until the next empty line set defaults for every subsequent frame. Drawing commands in the block are ignored. Leading `#` comments before `global` are allowed.
+    global: Optional block at the start of the file. After a line whose first token is `global`, the following `@` / `r` / `y` / `a` / `mode` (and long names color/palette/radius/layer/arrow) until the next empty line set defaults for every subsequent frame. Drawing commands in the block are ignored. Leading `#` comments before `global` are allowed.
+    mode 2d: Inside the `global` block only. Sets a top-down xy view (eye at (0,0,40), look at origin, +y up), locks pitch/heading (roll, pan/zoom still work), and uses orthographic-like projection. Overrides CLI `-e`/`-l`/`-u` when present in the file.
 
-You can use long command names instead of single letters: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color (or palette), layer, arrow, comment. Example: `line 0 0 0 1 1 1` is the same as `l 0 0 0 1 1 1`.
+You can use long command names instead of single letters: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color (or palette), layer, arrow, comment. Example: `line 0 0 0 1 1 1` is the same as `l 0 0 0 1 1 1`. Example 2D: `line 0 0 1 1` is `l 0 0 0 1 1 0`.
 
-Without a `global` block, size (radius), palette, layer, and arrow must be complete within each frame; status set in one frame is not carried over to another frame. (This allows random access to any frame.) With `global`, those defaults apply at the start of every frame; a frame may still override them locally. Lines ignored inside the `global` block are reported to stderr.
+Without a `global` block, size (radius), palette, layer, and arrow must be complete within each frame; status set in one frame is not carried over to another frame. (This allows random access to any frame.) With `global`, those defaults apply at the start of every frame; a frame may still override them locally. Lines ignored inside the `global` block are reported to stderr. See `test/mode2d.yap` for a 2D sample.
 
 ## Palette file format
 
@@ -233,30 +234,31 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
 
 ## コマンドファイルフォーマット
 
-コマンドファイルの各行が一つのコマンドに対応します。行の最初に 1 文字のコマンド、そのあとにパラメータを列挙して下さい。コマンドと パラメータの間、パラメータとパラメータの間は 1 つ以上の空白で区切っ て下さい。パラメータは省略できません。
+コマンドファイルの各行が一つのコマンドに対応します。行の最初に 1 文字のコマンド、そのあとにパラメータを列挙して下さい。コマンドと パラメータの間、パラメータとパラメータの間は 1 つ以上の空白で区切っ て下さい。
 
     r {radius}:円、棒、環の半径を指定する。
-    l {x} {y} {z} {x} {y} {z}:線を描く。
-    s {x} {y} {z} {x} {y} {z}:棒(太さのある線)を描く。
-    p {n} {x} {y} {z} {x} {y} {z} {x} {y} {z} ...:n角形を描く。
-    c {x} {y} {z}:円を描く。
-    o {x} {y} {z}:環マークを描く。
-    3 {x} {y} {z}:三角形マークを描く。
-    4 {x} {y} {z}:四角形マークを描く。
-    5 {x} {y} {z}:五角形マークを描く。
-    6 {x} {y} {z}:六角形マークを描く。
-    t {x} {y} {z} {text....}:文字列を描く。1行は最大64KBまで。引用符付き t 0 0 0 "空白を含む長い文字列" も使える。\" と \\ はエスケープされる。
+    l {x} {y} {z} {x} {y} {z}:線を描く。z を省略した 2D 省略形 `l x1 y1 x2 y2` も可（xy 平面、z=0）。
+    s {x} {y} {z} {x} {y} {z}:棒(太さのある線)を描く。`l` と同様に 4 引数可。
+    p {n} {x} {y} {z} ...:n角形を描く。各頂点はすべて 2 引数 `(x y)`（z=0）か、すべて 3 引数 `(x y z)`。
+    c {x} {y} {z}:円を描く。`c x y` も可（z=0）。
+    o {x} {y} {z}:環マークを描く。2 引数可。
+    3 {x} {y} {z}:三角形マークを描く。2 引数可。
+    4 {x} {y} {z}:四角形マークを描く。2 引数可。
+    5 {x} {y} {z}:五角形マークを描く。2 引数可。
+    6 {x} {y} {z}:六角形マークを描く。2 引数可。
+    t {x} {y} {z} {text....}:文字列を描く。1行は最大64KBまで。引用符付き t 0 0 0 "空白を含む長い文字列" も使える。\" と \\ はエスケープされる。`t x y text...` / `t x y "label"` は z=0。第3トークンが数値なら z として扱う。
     @ {palette}:パレット番号を指定する。
     @ {palette} {r} {g} {b}:パレット番号の色を変更する。r,g,bはそれぞれ0..255の範囲の整数で指定する。
     # {comment}:コメント(無視されます)
     y {layer}:レイヤを切り替えます(default layer=1)
     a {arrowtype}: Stickの描き方を変更します。(0=通常、1=矢印、2=ダート。Default = 0)
     空行:1フレームの終わりをあらわします。
-    global: ファイル先頭のオプションブロック。先頭トークンが `global` の行のあと、次の空行までの `@` / `r` / `y` / `a`（および color/palette/radius/layer/arrow）が以降の全フレームの初期値になります。ブロック内の描画命令は無視されます。`global` の前の `#` コメントは許可されます。
+    global: ファイル先頭のオプションブロック。先頭トークンが `global` の行のあと、次の空行までの `@` / `r` / `y` / `a` / `mode`（および color/palette/radius/layer/arrow）が以降の全フレームの初期値になります。ブロック内の描画命令は無視されます。`global` の前の `#` コメントは許可されます。
+    mode 2d: `global` ブロック内のみ。xy 平面を真上から見る視点（eye=(0,0,40)、look=原点、+y が上）、ピッチ/ヘディング禁止（ロール・ズームは可）、正射影風の投影。ファイルに書くと CLI の `-e`/`-l`/`-u` より優先。
 
-1文字コマンドの代わりに長い名前も使えます: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color（または palette）, layer, arrow, comment。例: `line 0 0 0 1 1 1` は `l 0 0 0 1 1 1` と同じです。
+1文字コマンドの代わりに長い名前も使えます: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color（または palette）, layer, arrow, comment。例: `line 0 0 0 1 1 1` は `l 0 0 0 1 1 1` と同じです。2D 例: `line 0 0 1 1` は `l 0 0 0 1 1 0` です。
 
-`global` ブロックが無い場合、size(半径)やpaletteやlayerやarrowなどの設定は**各フレームごとに完結**しており、あるフレームでのstatus設定は別のフレームには引き継がれません。(任意のフレームをランダムアクセスできるようにするため) `global` がある場合はその値が各フレーム先頭のデフォルトになり、フレーム内での上書きもできます。global ブロック内で無視された行は stderr に出ます。
+`global` ブロックが無い場合、size(半径)やpaletteやlayerやarrowなどの設定は**各フレームごとに完結**しており、あるフレームでのstatus設定は別のフレームには引き継がれません。(任意のフレームをランダムアクセスできるようにするため) `global` がある場合はその値が各フレーム先頭のデフォルトになり、フレーム内での上書きもできます。global ブロック内で無視された行は stderr に出ます。2D の例は `test/mode2d.yap` を参照。
 
 ## パレットファイルフォーマット
 
