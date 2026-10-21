@@ -1,0 +1,5 @@
+Yaplot 5.1 is out.
+
+New: a leading `global` block lets you set palette (@), radius (r), layer (y), and arrow (a) once for every frame—no more repeating the same setup at the start of each frame. Lines ignored inside the block are reported on stderr.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.1

@@ -17,7 +17,7 @@ LDFLAGS      = $(SDL2_LDFLAGS) $(CAIRO_LDFLAGS) $(PNG_LDFLAGS) -lm
 PKGDATADIR = /opt/homebrew/share/yaplot
 BINDIR     = /opt/homebrew/bin
 
-VERSION = 5.0
+VERSION = 5.1
 
 CFLAGS  = -g -Wall -Werror -Werror=vla -I./include
 CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS)

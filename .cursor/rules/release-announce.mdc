@@ -1,0 +1,14 @@
+---
+description: On each Yaplot release, keep an English X.com announcement under post/x/
+alwaysApply: true
+---
+
+# Release announcements (X.com)
+
+When cutting a versioned release (for example 5.1):
+
+1. Write an **English** announcement suitable for posting on X.com.
+2. Save it as `post/x/{version}.txt` (example: `post/x/5.1.txt`). Use the plain version number without a leading `v`.
+3. Include the GitHub release URL when known (`https://github.com/vitroid/Yaplot/releases/tag/v{version}`).
+4. Keep the text concise enough to post; expand only if needed for clarity.
+5. Commit the announcement file with the release (version bump / tag) so history stays with the project.
