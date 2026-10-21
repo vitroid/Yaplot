@@ -31,6 +31,9 @@ int Reality0(NewOinfo *o, Winfo *w)
 		char ch;
 
 		qq = ((Pinfo **)o->prims->a)[i];
+		/* 1000要素ごとに入力待ちを見て作画を中断（EventLoop側で処理） */
+		if (((i % 1000) == 0) && existevent(NULL))
+			return 1;
 
 		ch = qq->id;
 		if (ch != 't') {

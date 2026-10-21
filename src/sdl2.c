@@ -839,6 +839,11 @@ void W_Init2(Winfo *w, Ginfo *g)
 	}
 }
 
+/*
+ * イベント有無のみ返す。描画中の割り込み判定からも呼ぶ。
+ * ここで handleevent は呼ばない（SDL/GTK 的な再入を避ける）。
+ * 取り出したイベントは saved_event に残し、EventLoop 側で処理する。
+ */
 int existevent(Ginfo *g)
 {
 	(void)g;

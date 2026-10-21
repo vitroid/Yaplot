@@ -29,7 +29,8 @@ int Reality3(NewOinfo *o, Winfo *w)
 		char ch;
 
 		qq = ((Pinfo **)o->prims->a)[i];
-		/*if(((i%1000)==0)&&XPending(g->display))return 1;*/
+		if (((i % 1000) == 0) && existevent(NULL))
+			return 1;
 		if (qq->sortkey < 0)
 			return 0;
 		ch = qq->id;

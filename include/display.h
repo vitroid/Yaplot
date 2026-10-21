@@ -20,6 +20,7 @@ void exposefb(Winfo *w);
 void G_loadpalettes(Ginfo *g);
 void G_Init2(Ginfo *g);
 void W_Init2(Winfo *w, Ginfo *g);
+/* イベント有無。描画中に呼んでもディスパッチはしない（割り込み判定用）。 */
 int existevent(Ginfo *g);
 void handleevent(Ginfo *g, Winfo w[]);
 void G_Init0(int *argc, char **argv[]);

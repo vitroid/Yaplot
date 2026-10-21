@@ -29,6 +29,8 @@ int Reality1(NewOinfo *o, Winfo *w)
 		char ch;
 
 		qq = ((Pinfo **)o->prims->a)[i];
+		if (((i % 1000) == 0) && existevent(NULL))
+			return 1;
 		ch = qq->id;
 		if (ch != 't') {
 			thickness += thickdelta;
