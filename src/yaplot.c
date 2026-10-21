@@ -595,19 +595,22 @@ int eToggleSlicing(Ginfo *g, Winfo w[], int i)
 	return TRUE;
 }
 
-int eToggleSplat(Ginfo *g, Winfo w[], int i)
+int eCycleSplat(Ginfo *g, Winfo w[], int i)
 {
+	/* Same rotation sense as eToggleVerbosity: count down and wrap. */
+	char next = (char)(w[i].splat - 1);
+	if (next < 0)
+		next = 3;
+
 	if (w[i].async) {
-		w[i].splat = !w[i].splat;
-		/* Splat is drawn only in Reality 2–4. */
+		w[i].splat = next;
 		if (w[i].splat && w[i].reality < 2)
 			w[i].reality = 3;
 		w[i].status |= REDRAW;
 	} else {
-		char on = !w[i].splat;
 		for (i = 0; i < g->nwindow; i++) {
-			w[i].splat = on;
-			if (on && w[i].reality < 2)
+			w[i].splat = next;
+			if (next && w[i].reality < 2)
 				w[i].reality = 3;
 			w[i].status |= REDRAW;
 		}
@@ -1704,7 +1707,8 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 			setfgcolor(w, 2);
 		else
 			setfgcolor(w, 0);
-		drawstring2fb(w, 5, base, "Splat (d)", 9);
+		sprintf(num, "Splat %d (d)", w->splat);
+		drawstring2fb(w, 5, base, num, strlen(num));
 		base += 14;
 		setfgcolor(w, 2);
 		sprintf(num, "Screen Depth Ratio %5.2f (* /)", w->depthratio);

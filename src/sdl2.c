@@ -381,8 +381,8 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 			SetLastCommand(0, "v", "toggle verbosity");
 			break;
 		case SDLK_d:
-			(void)eToggleSplat(g, w, i);
-			SetLastCommand(0, "d", "toggle depth splat");
+			(void)eCycleSplat(g, w, i);
+			SetLastCommand(0, "d", "cycle depth splat");
 			break;
 		case SDLK_PAGEUP:
 		case SDLK_p: {
