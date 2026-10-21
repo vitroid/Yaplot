@@ -226,6 +226,40 @@ void exposefb(Winfo *w)
 /* --- Event handling --- */
 
 static int originx, originy;
+static int mouse_dragging;
+
+static void end_left_drag(Ginfo *g, Winfo *w, int i)
+{
+	int j;
+
+	(void)SDL_CaptureMouse(SDL_FALSE);
+	mouse_dragging = 0;
+	if (i >= 0 && w[i].async) {
+		w[i].wp = w[i].wb = w[i].wh = 0;
+		w[i].AbsoluteRotationMode = 0;
+		return;
+	}
+	for (j = 0; j < g->nwindow; j++) {
+		w[j].wp = w[j].wb = w[j].wh = 0;
+		w[j].AbsoluteRotationMode = 0;
+	}
+}
+
+static void begin_left_drag(Ginfo *g, Winfo *w, int i, int x, int y)
+{
+	int j;
+
+	originx = x;
+	originy = y;
+	mouse_dragging = 1;
+	(void)SDL_CaptureMouse(SDL_TRUE);
+	if (w[i].async) {
+		w[i].AbsoluteRotationMode = 1;
+		return;
+	}
+	for (j = 0; j < g->nwindow; j++)
+		w[j].AbsoluteRotationMode = 1;
+}
 
 static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 {
@@ -555,6 +589,12 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 {
 	Winfo *w = w_internal;
 	Ginfo *g = g_internal;
+
+	/* Button released outside the window: motion may arrive without UP. */
+	if (mouse_dragging && !(state & SDL_BUTTON_LMASK)) {
+		end_left_drag(g, w, i);
+		return;
+	}
 	if (state & SDL_BUTTON_LMASK) {
 		if (originx != x || originy != y) {
 			float tick = (SDL_GetModState() & KMOD_SHIFT)
@@ -623,6 +663,11 @@ static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
 	int i = window_id_to_index(g, w, ev->windowID);
 	if (i < 0)
 		return;
+	if (ev->event == SDL_WINDOWEVENT_FOCUS_LOST) {
+		if (mouse_dragging)
+			end_left_drag(g, w, i);
+		return;
+	}
 	if (ev->event == SDL_WINDOWEVENT_RESIZED) {
 		SDL2Context *ctx = (SDL2Context *)w[i].drawarea;
 		if (w[i].surface)
@@ -672,34 +717,17 @@ void handleevent(Ginfo *g, Winfo w[])
 	case SDL_MOUSEBUTTONDOWN:
 		if (e->button.button == SDL_BUTTON_LEFT) {
 			i = window_id_to_index(g, w, e->button.windowID);
-			if (i >= 0) {
-				originx = e->button.x;
-				originy = e->button.y;
-				if (w[i].async)
-					w[i].AbsoluteRotationMode = 1;
-				else {
-					int j;
-					for (j = 0; j < g->nwindow; j++)
-						w[j].AbsoluteRotationMode = 1;
-				}
-			}
+			if (i >= 0)
+				begin_left_drag(g, w, i, e->button.x,
+						e->button.y);
 		}
 		break;
 	case SDL_MOUSEBUTTONUP:
 		if (e->button.button == SDL_BUTTON_LEFT) {
 			i = window_id_to_index(g, w, e->button.windowID);
-			if (i >= 0) {
-				if (w[i].async) {
-					w[i].wp = w[i].wb = w[i].wh = 0;
-					w[i].AbsoluteRotationMode = 0;
-				} else {
-					int j;
-					for (j = 0; j < g->nwindow; j++) {
-						w[j].wp = w[j].wb = w[j].wh = 0;
-						w[j].AbsoluteRotationMode = 0;
-					}
-				}
-			}
+			if (i < 0)
+				i = focused_window_index(g, w);
+			end_left_drag(g, w, i);
 		}
 		break;
 	case SDL_MOUSEMOTION:
