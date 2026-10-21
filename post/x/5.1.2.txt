@@ -1,0 +1,5 @@
+Yaplot 5.1.2 (bugfix).
+
+Fixed a long-standing typo: TRUE was defined as 0, so filled circles, polygons, and sticks in Reality 2–4 were drawn as outlines only.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.1.2

@@ -2,10 +2,10 @@
 # Documentation: https://docs.brew.sh/Formula-Cookbook
 #                https://rubydoc.brew.sh/Formula
 class Yaplot < Formula
-  desc "Yet another plotter in 3D - easy 3D modeller and animator with trackpad gesture support"
+  desc "Yet another plotter in 3D - easy 3D modeller and animator"
   homepage "https://github.com/vitroid/Yaplot"
-  url "https://github.com/vitroid/Yaplot/archive/v5.1.tar.gz"
-  sha256 "76f1da6b37c96ecd8cff1cb32ff24c56a41c4a41dde622b2a6f9ecca9f67ad0f"
+  url "https://github.com/vitroid/Yaplot/archive/v5.1.2.tar.gz"
+  sha256 "53349f08385759b664a50d24de51dbacac601aab0319346ab470c45454939395"
   license "MIT"
 
   depends_on "pkg-config" => :build

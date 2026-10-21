@@ -226,6 +226,40 @@ void exposefb(Winfo *w)
 /* --- Event handling --- */
 
 static int originx, originy;
+static int mouse_dragging;
+
+static void end_left_drag(Ginfo *g, Winfo *w, int i)
+{
+	int j;
+
+	(void)SDL_CaptureMouse(SDL_FALSE);
+	mouse_dragging = 0;
+	if (i >= 0 && w[i].async) {
+		w[i].wp = w[i].wb = w[i].wh = 0;
+		w[i].AbsoluteRotationMode = 0;
+		return;
+	}
+	for (j = 0; j < g->nwindow; j++) {
+		w[j].wp = w[j].wb = w[j].wh = 0;
+		w[j].AbsoluteRotationMode = 0;
+	}
+}
+
+static void begin_left_drag(Ginfo *g, Winfo *w, int i, int x, int y)
+{
+	int j;
+
+	originx = x;
+	originy = y;
+	mouse_dragging = 1;
+	(void)SDL_CaptureMouse(SDL_TRUE);
+	if (w[i].async) {
+		w[i].AbsoluteRotationMode = 1;
+		return;
+	}
+	for (j = 0; j < g->nwindow; j++)
+		w[j].AbsoluteRotationMode = 1;
+}
 
 static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 {
@@ -555,6 +589,12 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 {
 	Winfo *w = w_internal;
 	Ginfo *g = g_internal;
+
+	/* Button released outside the window: motion may arrive without UP. */
+	if (mouse_dragging && !(state & SDL_BUTTON_LMASK)) {
+		end_left_drag(g, w, i);
+		return;
+	}
 	if (state & SDL_BUTTON_LMASK) {
 		/* mode 2d: drag is heading/banking — skip (roll via trackpad OK) */
 		if (w[i].mode2d)
@@ -578,33 +618,43 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 	}
 }
 
-static void handle_mousewheel(int i, int y)
+/*
+ * Do not map the mouse wheel to FOV. macOS trackpad inertia keeps sending
+ * SDL_MOUSEWHEEL after fingers lift, so the view would keep changing.
+ * Use "[" / "]" instead.
+ */
+static void handle_mousewheel(int i, float y)
 {
-	if (y != 0) {
-		int fov_change = (y > 0) ? 1 : -1;
-		eWiden(g_internal, w_internal, i, fov_change);
-	}
+	(void)i;
+	(void)y;
 }
 
-/* Pinch scale / rotate. dDist>0 = fingers apart; SDL dTheta is CCW-positive. */
-static void handle_multigesture(int i, float dTheta, float dDist)
+/* Toggles / digits must not auto-repeat; motion and FOV keys may. */
+static int key_allows_repeat(SDL_Keycode key)
 {
-	Winfo *w = w_internal;
-	Ginfo *g = g_internal;
-	const float zoom_k = 3.0f;
-
-	if (dDist != 0.0f)
-		(void)eZoomFactor(g, w, i, expf(zoom_k * dDist));
-
-	if (dTheta != 0.0f) {
-		float pitch = -dTheta; /* object-clockwise positive */
-		if (w[i].async)
-			WindowRoll(&w[i], pitch);
-		else {
-			int j;
-			for (j = 0; j < g->nwindow; j++)
-				WindowRoll(&w[j], pitch);
-		}
+	switch (key) {
+	case SDLK_LEFTBRACKET:
+	case SDLK_RIGHTBRACKET:
+	case SDLK_LEFT:
+	case SDLK_RIGHT:
+	case SDLK_UP:
+	case SDLK_DOWN:
+	case SDLK_h:
+	case SDLK_j:
+	case SDLK_k:
+	case SDLK_l:
+	case SDLK_ASTERISK:
+	case SDLK_KP_MULTIPLY:
+	case SDLK_SLASH:
+	case SDLK_KP_DIVIDE:
+	case SDLK_n:
+	case SDLK_p:
+	case SDLK_PAGEUP:
+	case SDLK_PAGEDOWN:
+	case SDLK_8:
+		return 1;
+	default:
+		return 0;
 	}
 }
 
@@ -626,6 +676,11 @@ static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
 	int i = window_id_to_index(g, w, ev->windowID);
 	if (i < 0)
 		return;
+	if (ev->event == SDL_WINDOWEVENT_FOCUS_LOST) {
+		if (mouse_dragging)
+			end_left_drag(g, w, i);
+		return;
+	}
 	if (ev->event == SDL_WINDOWEVENT_RESIZED) {
 		SDL2Context *ctx = (SDL2Context *)w[i].drawarea;
 		if (w[i].surface)
@@ -669,40 +724,25 @@ void handleevent(Ginfo *g, Winfo w[])
 		break;
 	case SDL_KEYDOWN:
 		i = window_id_to_index(g, w, e->key.windowID);
-		if (i >= 0 && !e->key.repeat)
+		if (i >= 0 &&
+		    (!e->key.repeat ||
+		     key_allows_repeat(e->key.keysym.sym)))
 			handle_key(i, e->key.keysym.sym, e->key.keysym.mod);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 		if (e->button.button == SDL_BUTTON_LEFT) {
 			i = window_id_to_index(g, w, e->button.windowID);
-			if (i >= 0) {
-				originx = e->button.x;
-				originy = e->button.y;
-				if (w[i].async)
-					w[i].AbsoluteRotationMode = 1;
-				else {
-					int j;
-					for (j = 0; j < g->nwindow; j++)
-						w[j].AbsoluteRotationMode = 1;
-				}
-			}
+			if (i >= 0)
+				begin_left_drag(g, w, i, e->button.x,
+						e->button.y);
 		}
 		break;
 	case SDL_MOUSEBUTTONUP:
 		if (e->button.button == SDL_BUTTON_LEFT) {
 			i = window_id_to_index(g, w, e->button.windowID);
-			if (i >= 0) {
-				if (w[i].async) {
-					w[i].wp = w[i].wb = w[i].wh = 0;
-					w[i].AbsoluteRotationMode = 0;
-				} else {
-					int j;
-					for (j = 0; j < g->nwindow; j++) {
-						w[j].wp = w[j].wb = w[j].wh = 0;
-						w[j].AbsoluteRotationMode = 0;
-					}
-				}
-			}
+			if (i < 0)
+				i = focused_window_index(g, w);
+			end_left_drag(g, w, i);
 		}
 		break;
 	case SDL_MOUSEMOTION:
@@ -714,11 +754,13 @@ void handleevent(Ginfo *g, Winfo w[])
 	case SDL_MOUSEWHEEL:
 		i = window_id_to_index(g, w, e->wheel.windowID);
 		if (i >= 0)
-			handle_mousewheel(i, e->wheel.y);
+			handle_mousewheel(i, e->wheel.preciseY);
 		break;
 	case SDL_MULTIGESTURE:
-		i = focused_window_index(g, w);
-		handle_multigesture(i, e->mgesture.dTheta, e->mgesture.dDist);
+		/* Disabled: two-finger pinch/roll fights trackpad click-drag. */
+		break;
+	case SDL_FINGERUP:
+	case SDL_FINGERDOWN:
 		break;
 	case SDL_WINDOWEVENT:
 		handle_window_event(g, w, &e->window);
@@ -735,8 +777,9 @@ void G_Init0(int *argc, char **argv[])
 {
 	(void)argc;
 	(void)argv;
-	/* Help synthesize touch events so SDL_MULTIGESTURE can fire */
-	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "1");
+	/* Keep mouse and touch separate; multigesture (pinch/roll) is off. */
+	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
+	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
 		exit(1);
