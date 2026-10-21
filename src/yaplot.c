@@ -599,11 +599,16 @@ int eToggleSplat(Ginfo *g, Winfo w[], int i)
 {
 	if (w[i].async) {
 		w[i].splat = !w[i].splat;
+		/* Splat is drawn only in Reality 2–4. */
+		if (w[i].splat && w[i].reality < 2)
+			w[i].reality = 3;
 		w[i].status |= REDRAW;
 	} else {
 		char on = !w[i].splat;
 		for (i = 0; i < g->nwindow; i++) {
 			w[i].splat = on;
+			if (on && w[i].reality < 2)
+				w[i].reality = 3;
 			w[i].status |= REDRAW;
 		}
 	}

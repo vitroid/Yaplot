@@ -6,27 +6,26 @@
 /* Tunable depth-splat parameters */
 #define SPLAT_DEPTH_FACTOR 1.0f
 #define SPLAT_RADIUS_FACTOR 2.0f
-#define SPLAT_POLY_SCALE 1.2f
-#define SPLAT_R 0.4f
-#define SPLAT_G 0.4f
-#define SPLAT_B 0.4f
-#define SPLAT_A 0.15f
+/* Shadow: palette 1 (background) at 50% via settpcolor(). */
 
 typedef struct {
 	Pinfo *p;
-	float sortkey_s;
-} SplatItem;
+	float sortkey;
+	char is_splat;
+} PaintItem;
 
-static int splat_compar(const void *a, const void *b)
+static int paint_compar(const void *a, const void *b)
 {
-	float ka = ((const SplatItem *)a)->sortkey_s;
-	float kb = ((const SplatItem *)b)->sortkey_s;
+	float ka = ((const PaintItem *)a)->sortkey;
+	float kb = ((const PaintItem *)b)->sortkey;
 	/* far → near (larger eyedist first) */
 	if (ka > kb)
 		return -1;
 	if (ka < kb)
 		return 1;
-	return 0;
+	/* At equal depth, paint splat before solid (shadow behind). */
+	return (int)((const PaintItem *)b)->is_splat -
+	       (int)((const PaintItem *)a)->is_splat;
 }
 
 static int is_splattable(char id)
@@ -55,6 +54,41 @@ static void project_xy(Winfo *w, float xx, float yy, float zoom, float ex,
 	*iy = -(int)(zoom * (yy - ey)) + w->screenheight / 2;
 }
 
+static float circle_splat_key(Pinfo *qq)
+{
+	return qq->vertex[0]->eyedist + SPLAT_DEPTH_FACTOR * qq->r;
+}
+
+static float poly_splat_key(Pinfo *qq, float ez)
+{
+	int n = qq->nvertex - 1;
+	int i;
+	float cx = 0, cy = 0, cz = 0;
+	float sum2 = 0;
+	float r;
+
+	if (n < 3)
+		return -1.0f;
+	for (i = 0; i < n; i++) {
+		Vertex *v = qq->vertex[i];
+		cx += v->xx;
+		cy += v->yy;
+		cz += v->zz;
+	}
+	cx /= n;
+	cy /= n;
+	cz /= n;
+	for (i = 0; i < n; i++) {
+		Vertex *v = qq->vertex[i];
+		float dx = v->xx - cx;
+		float dy = v->yy - cy;
+		float dz = v->zz - cz;
+		sum2 += dx * dx + dy * dy + dz * dz;
+	}
+	r = sqrtf(sum2 / n);
+	return (cz - ez) + SPLAT_DEPTH_FACTOR * r;
+}
+
 static void draw_circle_splat(Winfo *w, Pinfo *qq, float ex, float ey)
 {
 	Vertex *v = qq->vertex[0];
@@ -70,7 +104,13 @@ static void draw_circle_splat(Winfo *w, Pinfo *qq, float ex, float ey)
 	rr = (int)(zoom_s * SPLAT_RADIUS_FACTOR * r);
 	if (rr < 1)
 		rr = 1;
-	drawcircle2fb(w, ix, iy, rr, 1);
+	drawcircle2fb(w, ix, iy, rr, TRUE);
+}
+
+static void draw_ngon_splat(Winfo *w, Pinfo *qq, float ex, float ey)
+{
+	/* Same push as circle; use screen disk for markers 3–6. */
+	draw_circle_splat(w, qq, ex, ey);
 }
 
 static void draw_poly_splat(Winfo *w, Pinfo *qq, float ex, float ey, float ez)
@@ -80,20 +120,27 @@ static void draw_poly_splat(Winfo *w, Pinfo *qq, float ex, float ey, float ez)
 	float cx = 0, cy = 0, cz = 0;
 	float sum2 = 0;
 	float r, eyedist_c, eyedist_s, zoom_s;
+	float scx = 0, scy = 0;
+	int ix, iy;
 	ivector2 *poly;
 
 	if (n < 3)
 		return;
 
+	/* Eye-space centroid + RMS size (for depth push). */
 	for (i = 0; i < n; i++) {
 		Vertex *v = qq->vertex[i];
 		cx += v->xx;
 		cy += v->yy;
 		cz += v->zz;
+		scx += (float)qq->points[i].x;
+		scy += (float)qq->points[i].y;
 	}
 	cx /= n;
 	cy /= n;
 	cz /= n;
+	scx /= n;
+	scy /= n;
 
 	for (i = 0; i < n; i++) {
 		Vertex *v = qq->vertex[i];
@@ -108,100 +155,85 @@ static void draw_poly_splat(Winfo *w, Pinfo *qq, float ex, float ey, float ez)
 	if (eyedist_s <= 0)
 		return;
 	zoom_s = w->screendepth / eyedist_s;
+	project_xy(w, cx, cy, zoom_s, ex, ey, &ix, &iy);
 
+	/*
+	 * Expand in *screen* space about the solid centroid by
+	 * SPLAT_RADIUS_FACTOR, then recenter on the depth-pushed projection.
+	 * Eye-space 1.2× was cancelled by perspective shrink and looked
+	 * almost the same size as the body.
+	 */
 	poly = malloc((size_t)n * sizeof(ivector2));
 	if (poly == NULL)
 		return;
 	for (i = 0; i < n; i++) {
-		Vertex *v = qq->vertex[i];
-		float sx = cx + SPLAT_POLY_SCALE * (v->xx - cx);
-		float sy = cy + SPLAT_POLY_SCALE * (v->yy - cy);
-		project_xy(w, sx, sy, zoom_s, ex, ey, &poly[i].x, &poly[i].y);
+		float ox = (float)qq->points[i].x - scx;
+		float oy = (float)qq->points[i].y - scy;
+		poly[i].x = ix + (int)(SPLAT_RADIUS_FACTOR * ox);
+		poly[i].y = iy + (int)(SPLAT_RADIUS_FACTOR * oy);
 	}
-	drawpoly2fb(w, poly, n, 1);
+	drawpoly2fb(w, poly, n, TRUE);
 	free(poly);
 }
 
-void draw_all_splats(Winfo *w, NewOinfo *o)
+void paint_with_splats(Winfo *w, NewOinfo *o, SplatSolidFn draw_solid)
 {
-	int i, ns;
+	int i, n;
 	float ex, ey, ez;
-	SplatItem *items;
+	PaintItem *items;
 
 	if (w->nrealize == 0)
 		return;
 
-	items = malloc((size_t)w->nrealize * sizeof(SplatItem));
+	items = malloc((size_t)w->nrealize * 2 * sizeof(PaintItem));
 	if (items == NULL)
 		return;
 
 	eye_basis_exyz(w, &ex, &ey, &ez);
-	ns = 0;
+	n = 0;
 	for (i = 0; i < w->nrealize; i++) {
 		Pinfo *qq = ((Pinfo **)o->prims->a)[i];
-		float sortkey_s;
+		float sk;
 
-		if (!(qq->layermask & w->layermask))
-			continue;
 		if (qq->sortkey < 0)
-			continue;
-		if (!is_splattable(qq->id))
-			continue;
-
-		if (qq->id == 'p') {
-			int n = qq->nvertex - 1;
-			int j;
-			float cx = 0, cy = 0, cz = 0;
-			float sum2 = 0;
-			float r, eyedist_c;
-
-			if (n < 3)
-				continue;
-			for (j = 0; j < n; j++) {
-				Vertex *v = qq->vertex[j];
-				cx += v->xx;
-				cy += v->yy;
-				cz += v->zz;
+			break;
+		if (is_splattable(qq->id)) {
+			if (qq->id == 'p')
+				sk = poly_splat_key(qq, ez);
+			else
+				sk = circle_splat_key(qq);
+			if (sk > 0) {
+				items[n].p = qq;
+				items[n].sortkey = sk;
+				items[n].is_splat = 1;
+				n++;
 			}
-			cx /= n;
-			cy /= n;
-			cz /= n;
-			for (j = 0; j < n; j++) {
-				Vertex *v = qq->vertex[j];
-				float dx = v->xx - cx;
-				float dy = v->yy - cy;
-				float dz = v->zz - cz;
-				sum2 += dx * dx + dy * dy + dz * dz;
-			}
-			r = sqrtf(sum2 / n);
-			eyedist_c = cz - ez;
-			sortkey_s = eyedist_c + SPLAT_DEPTH_FACTOR * r;
-		} else {
-			/* circle or n-gon marker */
-			sortkey_s = qq->vertex[0]->eyedist +
-				    SPLAT_DEPTH_FACTOR * qq->r;
 		}
-		if (sortkey_s <= 0)
-			continue;
-		items[ns].p = qq;
-		items[ns].sortkey_s = sortkey_s;
-		ns++;
+		items[n].p = qq;
+		items[n].sortkey = qq->sortkey;
+		items[n].is_splat = 0;
+		n++;
 	}
 
-	if (ns == 0) {
-		free(items);
-		return;
-	}
+	qsort(items, (size_t)n, sizeof(PaintItem), paint_compar);
 
-	qsort(items, (size_t)ns, sizeof(SplatItem), splat_compar);
-	setrgba(w, SPLAT_R, SPLAT_G, SPLAT_B, SPLAT_A);
-
-	for (i = 0; i < ns; i++) {
+	for (i = 0; i < n; i++) {
 		Pinfo *qq = items[i].p;
-		if (qq->id == 'p')
-			draw_poly_splat(w, qq, ex, ey, ez);
-		else
-			draw_circle_splat(w, qq, ex, ey);
+		if (((i % 1000) == 0) && existevent(NULL)) {
+			free(items);
+			return;
+		}
+		if (items[i].is_splat) {
+			settpcolor(w, 1);
+			if (qq->id == 'p')
+				draw_poly_splat(w, qq, ex, ey, ez);
+			else if (qq->id >= '3' && qq->id <= '6')
+				draw_ngon_splat(w, qq, ex, ey);
+			else
+				draw_circle_splat(w, qq, ex, ey);
+		} else {
+			draw_solid(w, qq);
+		}
 	}
 
 	free(items);
