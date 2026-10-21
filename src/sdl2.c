@@ -227,8 +227,6 @@ void exposefb(Winfo *w)
 
 static int originx, originy;
 static int mouse_dragging;
-/* Set while a 2+ finger gesture is active; blocks click-drag until fingers up. */
-static int multitouch_active;
 
 static void end_left_drag(Ginfo *g, Winfo *w, int i)
 {
@@ -251,8 +249,6 @@ static void begin_left_drag(Ginfo *g, Winfo *w, int i, int x, int y)
 {
 	int j;
 
-	if (multitouch_active)
-		return;
 	originx = x;
 	originy = y;
 	mouse_dragging = 1;
@@ -263,31 +259,6 @@ static void begin_left_drag(Ginfo *g, Winfo *w, int i, int x, int y)
 	}
 	for (j = 0; j < g->nwindow; j++)
 		w[j].AbsoluteRotationMode = 1;
-}
-
-static int touch_finger_count(void)
-{
-	int n = 0;
-	int d, nd = SDL_GetNumTouchDevices();
-
-	for (d = 0; d < nd; d++) {
-		SDL_TouchID tid = SDL_GetTouchDevice(d);
-		int nf = SDL_GetNumTouchFingers(tid);
-		if (nf > 0)
-			n += nf;
-	}
-	return n;
-}
-
-static void update_multitouch_active(Ginfo *g, Winfo *w, int i)
-{
-	if (touch_finger_count() < 2) {
-		multitouch_active = 0;
-		return;
-	}
-	multitouch_active = 1;
-	if (mouse_dragging)
-		end_left_drag(g, w, i);
 }
 
 static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
@@ -619,8 +590,6 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 	Winfo *w = w_internal;
 	Ginfo *g = g_internal;
 
-	if (multitouch_active)
-		return;
 	/* Button released outside the window: motion may arrive without UP. */
 	if (mouse_dragging && !(state & SDL_BUTTON_LMASK)) {
 		end_left_drag(g, w, i);
@@ -651,34 +620,6 @@ static void handle_mousewheel(int i, int y)
 	if (y != 0) {
 		int fov_change = (y > 0) ? 1 : -1;
 		eWiden(g_internal, w_internal, i, fov_change);
-	}
-}
-
-/* Pinch scale / rotate. dDist>0 = fingers apart; SDL dTheta is CCW-positive. */
-static void handle_multigesture(int i, float dTheta, float dDist, int numFingers)
-{
-	Winfo *w = w_internal;
-	Ginfo *g = g_internal;
-	const float zoom_k = 3.0f;
-
-	if (numFingers >= 2) {
-		multitouch_active = 1;
-		if (mouse_dragging)
-			end_left_drag(g, w, i);
-	}
-
-	if (dDist != 0.0f)
-		(void)eZoomFactor(g, w, i, expf(zoom_k * dDist));
-
-	if (dTheta != 0.0f) {
-		float pitch = -dTheta; /* object-clockwise positive */
-		if (w[i].async)
-			WindowRoll(&w[i], pitch);
-		else {
-			int j;
-			for (j = 0; j < g->nwindow; j++)
-				WindowRoll(&w[j], pitch);
-		}
 	}
 }
 
@@ -765,9 +706,6 @@ void handleevent(Ginfo *g, Winfo w[])
 			if (i < 0)
 				i = focused_window_index(g, w);
 			end_left_drag(g, w, i);
-			/* A real mouse click ends any lingering multitouch lock. */
-			if (touch_finger_count() < 2)
-				multitouch_active = 0;
 		}
 		break;
 	case SDL_MOUSEMOTION:
@@ -782,14 +720,10 @@ void handleevent(Ginfo *g, Winfo w[])
 			handle_mousewheel(i, e->wheel.y);
 		break;
 	case SDL_MULTIGESTURE:
-		i = focused_window_index(g, w);
-		handle_multigesture(i, e->mgesture.dTheta, e->mgesture.dDist,
-				   (int)e->mgesture.numFingers);
+		/* Disabled: two-finger pinch/roll fights trackpad click-drag. */
 		break;
 	case SDL_FINGERUP:
 	case SDL_FINGERDOWN:
-		i = focused_window_index(g, w);
-		update_multitouch_active(g, w, i);
 		break;
 	case SDL_WINDOWEVENT:
 		handle_window_event(g, w, &e->window);
@@ -806,12 +740,8 @@ void G_Init0(int *argc, char **argv[])
 {
 	(void)argc;
 	(void)argv;
-	/*
-	 * Mouse→touch so trackpad pinch can emit SDL_MULTIGESTURE.
-	 * Do not also synthesize mouse from touch: that dual mapping leaves
-	 * AbsoluteRotationMode stuck after two-finger gestures on macOS.
-	 */
-	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "1");
+	/* Keep mouse and touch separate; multigesture (pinch/roll) is off. */
+	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
