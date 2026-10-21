@@ -615,11 +615,23 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 	}
 }
 
-static void handle_mousewheel(int i, int y)
+/* Trackpads emit many fine wheel events; accumulate before one FOV step. */
+static float wheel_accum;
+
+static void handle_mousewheel(int i, float y)
 {
-	if (y != 0) {
-		int fov_change = (y > 0) ? 1 : -1;
-		eWiden(g_internal, w_internal, i, fov_change);
+	const float threshold = 4.0f;
+
+	if (y == 0.0f)
+		return;
+	wheel_accum += y;
+	while (wheel_accum >= threshold) {
+		eWiden(g_internal, w_internal, i, 1);
+		wheel_accum -= threshold;
+	}
+	while (wheel_accum <= -threshold) {
+		eWiden(g_internal, w_internal, i, -1);
+		wheel_accum += threshold;
 	}
 }
 
@@ -717,7 +729,7 @@ void handleevent(Ginfo *g, Winfo w[])
 	case SDL_MOUSEWHEEL:
 		i = window_id_to_index(g, w, e->wheel.windowID);
 		if (i >= 0)
-			handle_mousewheel(i, e->wheel.y);
+			handle_mousewheel(i, e->wheel.preciseY);
 		break;
 	case SDL_MULTIGESTURE:
 		/* Disabled: two-finger pinch/roll fights trackpad click-drag. */
