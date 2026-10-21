@@ -377,8 +377,17 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 			break;
 #endif
 		case SDLK_v:
-			(void)eToggleVerbosity(g, w, i);
-			SetLastCommand(0, "v", "toggle verbosity");
+			if (prefix > 0) {
+				g->verbose = (prefix > MAXVERBOSE) ? MAXVERBOSE
+								   : prefix;
+				for (int wi = 0; wi < g->nwindow; wi++)
+					w[wi].status |= REDRAW;
+				SetLastCommand(g->verbose, "v",
+					       "verbosity %d");
+			} else {
+				(void)eToggleVerbosity(g, w, i);
+				SetLastCommand(0, "v", "toggle verbosity");
+			}
 			break;
 		case SDLK_d:
 			(void)eCycleSplat(g, w, i);

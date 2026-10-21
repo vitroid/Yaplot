@@ -356,7 +356,11 @@ int eBanking(Ginfo *g, Winfo w[], int i, int prefix, int fine)
 				i);
 	} else {
 		for (i = 0; i < g->nwindow; i++) {
-			w[i].wb += prefix;
+			if (fine) {
+				w[i].wb += prefix * 0.1;
+			} else {
+				w[i].wb += prefix;
+			}
 			w[i].status |= REDRAW;
 			if (debug)
 				fprintf(stderr,
@@ -398,7 +402,11 @@ int eHeading(Ginfo *g, Winfo w[], int i, int prefix, int fine)
 				i);
 	} else {
 		for (i = 0; i < g->nwindow; i++) {
-			w[i].wh += prefix;
+			if (fine) {
+				w[i].wh += prefix * 0.1;
+			} else {
+				w[i].wh += prefix;
+			}
 			w[i].status |= REDRAW;
 			if (debug)
 				fprintf(stderr,
@@ -964,7 +972,68 @@ static void trim_line_copy(char *dst, size_t dstlen, const char *src)
 	dst[n] = '\0';
 }
 
-void W_LoadGlobalDefaults(Winfo *w)
+static void print_global_message(const char *rest)
+{
+	char buf[YAP_LINE_MAX];
+
+	if (!rest) {
+		fprintf(stderr, "\n");
+		return;
+	}
+	if (*rest == '"') {
+		size_t qlen = 0;
+		const char *p;
+		for (p = rest + 1; *p != '\0' && *p != '"'; p++) {
+			if (*p == '\\' && p[1] != '\0') {
+				p++;
+				if (qlen + 1 < sizeof(buf))
+					buf[qlen++] = *p;
+			} else if (qlen + 1 < sizeof(buf)) {
+				buf[qlen++] = *p;
+			}
+		}
+		buf[qlen] = '\0';
+	} else {
+		trim_line_copy(buf, sizeof(buf), rest);
+	}
+	fprintf(stderr, "%s\n", buf);
+}
+
+/* mode: 0 = hide, 1 = show, 2 = layers (show only listed) */
+static void apply_global_layers(Winfo *w, const char *rest, int mode)
+{
+	const char *p = rest;
+	char *endp;
+	long lnum;
+	int any = 0;
+
+	if (!p)
+		return;
+	if (mode == 2)
+		w->layermask = 0;
+	while (*p) {
+		while (*p == ' ' || *p == '\t' || *p == ',')
+			p++;
+		if (*p == '\0' || *p == '\n' || *p == '\r')
+			break;
+		lnum = strtol(p, &endp, 10);
+		if (endp == p)
+			break;
+		if (lnum >= 1 && lnum <= MAXLAYER) {
+			int bit = 1 << ((int)lnum - 1);
+			if (mode == 0)
+				w->layermask &= ~bit;
+			else
+				w->layermask |= bit;
+			any = 1;
+		}
+		p = endp;
+	}
+	if (mode == 2 && !any)
+		w->layermask = (1 << MAXLAYER) - 1;
+}
+
+void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 {
 	char readstr[YAP_LINE_MAX];
 	char *string, *token, *rest, *p;
@@ -1013,6 +1082,8 @@ void W_LoadGlobalDefaults(Winfo *w)
 	}
 
 	while (fgets(readstr, YAP_LINE_MAX, w->inputfile) != NULL) {
+		int is_reality = 0, is_fov = 0, is_verbose = 0, is_message = 0;
+		int is_rotation = 0, is_fps = 0, is_thick = 0, layer_mode = -1;
 		string = skipspaces(readstr);
 		if (*string == '\n' || *string == '\0')
 			break;
@@ -1024,11 +1095,84 @@ void W_LoadGlobalDefaults(Winfo *w)
 		saved = (unsigned char)*p;
 		*p = '\0';
 		token = string;
-		rest = skipspaces(p + 1);
+		rest = (saved != '\0') ? skipspaces(p + 1) : p;
+		if (strcmp(token, "reality") == 0)
+			is_reality = 1;
+		else if (strcmp(token, "fov") == 0)
+			is_fov = 1;
+		else if (strcmp(token, "verbose") == 0)
+			is_verbose = 1;
+		else if (strcmp(token, "rotation") == 0 ||
+			 strcmp(token, "rotate") == 0)
+			is_rotation = 1;
+		else if (strcmp(token, "fps") == 0 ||
+			 strcmp(token, "autoplay") == 0)
+			is_fps = 1;
+		else if (strcmp(token, "thickness") == 0 ||
+			 strcmp(token, "thick") == 0)
+			is_thick = 1;
+		else if (strcmp(token, "hide") == 0)
+			layer_mode = 0;
+		else if (strcmp(token, "show") == 0)
+			layer_mode = 1;
+		else if (strcmp(token, "layers") == 0)
+			layer_mode = 2;
+		else if (strcmp(token, "message") == 0 ||
+			 strcmp(token, "msg") == 0 ||
+			 strcmp(token, "echo") == 0)
+			is_message = 1;
 		ch = resolve_command(token);
 		*p = (char)saved;
 
-		if (ch == 'r') {
+		if (is_reality) {
+			int rval = 0;
+			if (sscanf(rest, "%d", &rval) == 1) {
+				if (rval < 0)
+					rval = 0;
+				if (rval > MAXREALITY)
+					rval = MAXREALITY;
+				w->reality = (char)rval;
+			}
+		} else if (is_fov) {
+			float deg = 45.0f;
+			if (sscanf(rest, "%f", &deg) == 1 && deg > 0.1f &&
+			    deg < 179.9f) {
+				w->fov = 1.0f / (float)tan(deg * PI / 360.0);
+			}
+		} else if (is_verbose) {
+			int vval = 2;
+			if (g && sscanf(rest, "%d", &vval) == 1) {
+				if (vval < 0)
+					vval = 0;
+				if (vval > MAXVERBOSE)
+					vval = MAXVERBOSE;
+				g->verbose = vval;
+			}
+		} else if (is_rotation) {
+			float wh = 0.0f, wb = 0.0f, wp = 0.0f;
+			int nrot = sscanf(rest, "%f %f %f", &wh, &wb, &wp);
+			if (nrot >= 1)
+				w->wh = wh;
+			if (nrot >= 2)
+				w->wb = wb;
+			if (nrot >= 3)
+				w->wp = wp;
+		} else if (is_fps) {
+			int df = 0;
+			if (sscanf(rest, "%d", &df) == 1)
+				w->df = df;
+		} else if (is_thick) {
+			int tval = 2;
+			if (sscanf(rest, "%d", &tval) == 1) {
+				if (tval < 0)
+					tval = 0;
+				w->thick = tval;
+			}
+		} else if (layer_mode >= 0) {
+			apply_global_layers(w, rest, layer_mode);
+		} else if (is_message) {
+			print_global_message(rest);
+		} else if (ch == 'r') {
 			sscanf(rest, "%f", &w->def_radius);
 		} else if (ch == '@') {
 			int red, green, blue, narg, linecolor = 0;
@@ -1817,6 +1961,12 @@ Winfo *W_Init(int n)
 		w[i].up[1] = Upy;
 		w[i].up[2] = Upz;
 		w[i].depthratio = 1.0;
+		w[i].fov = 1.0 / tan(45.0 * PI / 360.0);
+		w[i].reality = 0;
+		w[i].wp = w[i].wb = w[i].wh = 0.0f;
+		w[i].df = 0;
+		w[i].thick = 2;
+		w[i].layermask = 0x3fffffff; /*30layers*/
 		w[i].screenwidth = DEFAULTX;
 		w[i].screenheight = DEFAULTY;
 		w[i].async = 0;
@@ -1891,16 +2041,9 @@ void W_InitActionVarsOne(Winfo *w, int cachesize)
 	W_Cache(w);
 	w->status = REDRAW;
 	w->accump = w->accumh = w->accumb = 0;
-	w->wp = w->wb = w->wh = 0;
 	w->AbsoluteRotationMode = 0;
 	w->currentframe = 0;
 	w->realcurrent = 0;
-	w->df = 0;
-	w->fov = 1.0 / tan(45.0 * PI / 360.0);
-	w->reality = 0;
-	w->splat = 0;
-	w->thick = 2;
-	w->layermask = 0x3fffffff; /*12layers*/
 	W_setvectors(w);
 	W_resetcenter(w);
 }
@@ -1966,8 +2109,8 @@ void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
 							    stderr,
 							    "REDRAW because "
 							    "angular velocity "
-							    "is nonzero: %d %d "
-							    "%d [window %d]\n",
+							    "is nonzero: %f %f "
+							    "%f [window %d]\n",
 							    w[i].wp, w[i].wh,
 							    w[i].wb, i);
 
@@ -2110,7 +2253,7 @@ int main(int argc, char *argv[])
 	{
 		int i;
 		for (i = 0; i < g->nwindow; i++)
-			W_LoadGlobalDefaults(&w[i]);
+			W_LoadGlobalDefaults(&w[i], g);
 	}
 	/*load the first frame*/
 	W_InitActionVars(g, w, a->cachesize);
