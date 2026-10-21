@@ -185,6 +185,12 @@ typedef struct WINFO {
 	/*user clipping vector*/
 	int slice;
 	float slicev[4]; // [:3] : orientation unit vector; [3]:depth
+	/* global ブロック由来のフレーム共通デフォルト */
+	float def_radius;
+	int def_layer;
+	int def_fillcolor;
+	int def_linecolor;
+	int def_arrowtype;
 			 /*ここまで*/
 } Winfo;
 

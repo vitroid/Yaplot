@@ -129,10 +129,11 @@ One line of the command files corresponds to one command. A command consists of 
     y {layer}:Change current layer(default layer=1)
     a {arrowtype}:Change current arrow type(default type = 0)
     Empty line:End of a frame.
+    global: Optional block at the start of the file. After a line whose first token is `global`, the following `@` / `r` / `y` / `a` (and long names color/palette/radius/layer/arrow) until the next empty line set defaults for every subsequent frame. Drawing commands in the block are ignored. Leading `#` comments before `global` are allowed.
 
 You can use long command names instead of single letters: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color (or palette), layer, arrow, comment. Example: `line 0 0 0 1 1 1` is the same as `l 0 0 0 1 1 1`.
 
-Settings such as size (radius), palette, and layer must be complete within each frame; status set in one frame is not carried over to another frame. (This allows random access to any frame.)
+Without a `global` block, size (radius), palette, layer, and arrow must be complete within each frame; status set in one frame is not carried over to another frame. (This allows random access to any frame.) With `global`, those defaults apply at the start of every frame; a frame may still override them locally. Lines ignored inside the `global` block are reported to stderr.
 
 ## Palette file format
 
@@ -251,10 +252,11 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
     y {layer}:レイヤを切り替えます(default layer=1)
     a {arrowtype}: Stickの描き方を変更します。(0=通常、1=矢印、2=ダート。Default = 0)
     空行:1フレームの終わりをあらわします。
+    global: ファイル先頭のオプションブロック。先頭トークンが `global` の行のあと、次の空行までの `@` / `r` / `y` / `a`（および color/palette/radius/layer/arrow）が以降の全フレームの初期値になります。ブロック内の描画命令は無視されます。`global` の前の `#` コメントは許可されます。
 
 1文字コマンドの代わりに長い名前も使えます: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color（または palette）, layer, arrow, comment。例: `line 0 0 0 1 1 1` は `l 0 0 0 1 1 1` と同じです。
 
-size(半径)やpaletteやlayerなどの設定は**各フレームごとに完結**しており、あるフレームでのstatus設定は別のフレームには引き継がれません。(任意のフレームをランダムアクセスできるようにするため)
+`global` ブロックが無い場合、size(半径)やpaletteやlayerやarrowなどの設定は**各フレームごとに完結**しており、あるフレームでのstatus設定は別のフレームには引き継がれません。(任意のフレームをランダムアクセスできるようにするため) `global` がある場合はその値が各フレーム先頭のデフォルトになり、フレーム内での上書きもできます。global ブロック内で無視された行は stderr に出ます。
 
 ## パレットファイルフォーマット
 

@@ -166,12 +166,13 @@ t -10 0  -5 t {x} {y} {z} {text....} Draw a string
 t -10 0  -6 @ {palette} Change the current palette
 t -10 0  -7 y {layer} Change the current layer
 t -10 0  -8 # {comment} Comment(ignored)
-t -10 0  -9 NULL line: End of a frame
+t -10 0  -9 Empty line: End of a frame
+t -10 0 -10 global ... (empty): optional file-head defaults for @ r y a
 @ 3
-t -10 0 -10 Press "g" to the first page.
-t -10 0 -11 Press "n" to next page.
-t -10 0 -12 Press "p" to previous page.
-t -10 0 -13 Press TAB to reset rotations.
+t -10 0 -11 Press "g" to the first page.
+t -10 0 -12 Press "n" to next page.
+t -10 0 -13 Press "p" to previous page.
+t -10 0 -14 Press TAB to reset rotations.
 
 @ 2
 t -10 0  12 5. Command line usage

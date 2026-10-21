@@ -927,6 +927,113 @@ static int resolve_command(const char *token)
 	return 0;
 }
 
+static void trim_line_copy(char *dst, size_t dstlen, const char *src)
+{
+	size_t n = 0;
+
+	while (src[n] && src[n] != '\n' && src[n] != '\r' && n + 1 < dstlen)
+		n++;
+	while (n > 0 && (src[n - 1] == ' ' || src[n - 1] == '\t'))
+		n--;
+	memcpy(dst, src, n);
+	dst[n] = '\0';
+}
+
+void W_LoadGlobalDefaults(Winfo *w)
+{
+	char readstr[YAP_LINE_MAX];
+	char *string, *token, *rest, *p;
+	char snippet[256];
+	long int *pos;
+	int ch, saved;
+	int found_global = 0;
+
+	w->def_radius = 1;
+	w->def_layer = 1;
+	w->def_fillcolor = 2;
+	w->def_linecolor = 0;
+	w->def_arrowtype = 0;
+
+	if (!w->inputfile)
+		return;
+
+	while (fgets(readstr, YAP_LINE_MAX, w->inputfile) != NULL) {
+		string = skipspaces(readstr);
+		if (*string == '\n' || *string == '\0') {
+			/* 先頭空行 → global なし（従来どおり空フレーム0） */
+			fseek(w->inputfile, 0, SEEK_SET);
+			return;
+		}
+		if (*string == '#')
+			continue;
+		p = string;
+		while (*p && *p != ' ' && *p != '\t' && *p != '\n')
+			p++;
+		saved = (unsigned char)*p;
+		*p = '\0';
+		token = string;
+		if (strcmp(token, "global") == 0) {
+			found_global = 1;
+			*p = (char)saved;
+			break;
+		}
+		*p = (char)saved;
+		/* global 以外 → 巻き戻して通常パース */
+		fseek(w->inputfile, 0, SEEK_SET);
+		return;
+	}
+	if (!found_global) {
+		fseek(w->inputfile, 0, SEEK_SET);
+		return;
+	}
+
+	while (fgets(readstr, YAP_LINE_MAX, w->inputfile) != NULL) {
+		string = skipspaces(readstr);
+		if (*string == '\n' || *string == '\0')
+			break;
+		if (*string == '#')
+			continue;
+		p = string;
+		while (*p && *p != ' ' && *p != '\t' && *p != '\n')
+			p++;
+		saved = (unsigned char)*p;
+		*p = '\0';
+		token = string;
+		rest = skipspaces(p + 1);
+		ch = resolve_command(token);
+		*p = (char)saved;
+
+		if (ch == 'r') {
+			sscanf(rest, "%f", &w->def_radius);
+		} else if (ch == '@') {
+			int red, green, blue, narg, linecolor = 0;
+			narg = sscanf(rest, "%d %d %d %d", &linecolor, &red,
+				      &green, &blue);
+			if (narg == 4)
+				overridepalette(w, linecolor, red, green,
+						 blue);
+			else if (narg >= 1 && linecolor > w->lastColor)
+				linecolor = w->lastColor;
+			w->def_linecolor = linecolor;
+			w->def_fillcolor = linecolor;
+		} else if (ch == 'y') {
+			sscanf(rest, "%d", &w->def_layer);
+			if (w->def_layer > MAXLAYER)
+				w->def_layer = MAXLAYER;
+			if (w->def_layer < 1)
+				w->def_layer = 1;
+		} else if (ch == 'a') {
+			sscanf(rest, "%d", &w->def_arrowtype);
+		} else {
+			trim_line_copy(snippet, sizeof(snippet), string);
+			fprintf(stderr, "global ignored: %s\n", snippet);
+		}
+	}
+
+	pos = varray_ptr(w->framepos, 0);
+	*pos = ftell(w->inputfile);
+}
+
 void W_Seek(Winfo *w)
 {
 	long int *pos;
@@ -1114,15 +1221,16 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 	o = calloc(1, sizeof(NewOinfo));
 	o->prims = varray_init(defaultsize, sizeof(Pinfo *), (intptr_t)NULL);
 	o->vertex = NULL;
-	currentradius = 1;
-	currentlayer = 1;
-	currentarrowtype = 0;
-	currentlayermask = 1; /*==2**(currentlayer-1)*/
-	/*
-    fillcolor = 2*(16+1);
-    */
-	fillcolor = 2;
-	linecolor = 0;
+	currentradius = w->def_radius;
+	currentlayer = w->def_layer;
+	currentarrowtype = w->def_arrowtype;
+	if (currentlayer < 1)
+		currentlayer = 1;
+	if (currentlayer > MAXLAYER)
+		currentlayer = MAXLAYER;
+	currentlayermask = 1 << (currentlayer - 1);
+	fillcolor = w->def_fillcolor;
+	linecolor = w->def_linecolor;
 
 	nel = 0;
 
@@ -1681,6 +1789,11 @@ Winfo *W_Init(int n)
 		w[i].async = 0;
 		w[i].RecordMode = 0;
 		w[i].slice = FALSE;
+		w[i].def_radius = 1;
+		w[i].def_layer = 1;
+		w[i].def_fillcolor = 2;
+		w[i].def_linecolor = 0;
+		w[i].def_arrowtype = 0;
 	}
 	return w;
 }
@@ -1959,6 +2072,11 @@ int main(int argc, char *argv[])
 	w = GetOptions(argc, argv, a, g);
 	G_Init2(g);
 	W_Init2(w, g);
+	{
+		int i;
+		for (i = 0; i < g->nwindow; i++)
+			W_LoadGlobalDefaults(&w[i]);
+	}
 	/*load the first frame*/
 	W_InitActionVars(g, w, a->cachesize);
 

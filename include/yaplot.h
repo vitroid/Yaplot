@@ -12,6 +12,7 @@ void WindowRoll(Winfo *w, float pitch);
 void W_Sync(Winfo *to, Winfo *from);
 void W_setvectors(Winfo *w);
 Winfo *W_Init(int n);
+void W_LoadGlobalDefaults(Winfo *w);
 void EyeMotion(Winfo *w, float prop);
 #ifndef HAVE_POWIF
 float powi(float x, int n);
