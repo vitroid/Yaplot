@@ -163,6 +163,11 @@ void settpcolor(Winfo *w, int palette)
 	    (float)w->colortable[palette].blue / 65536.0, 0.5);
 }
 
+void setrgba(Winfo *w, float r, float g, float b, float a)
+{
+	cairo_set_source_rgba(w->cr, r, g, b, a);
+}
+
 void overridepalette(Winfo *w, int palette, int red, int green, int blue)
 {
 	w->colortable[palette].red = (unsigned short)(red << 8);
@@ -340,6 +345,10 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 		case SDLK_v:
 			(void)eToggleVerbosity(g, w, i);
 			SetLastCommand(0, "v", "toggle verbosity");
+			break;
+		case SDLK_d:
+			(void)eToggleSplat(g, w, i);
+			SetLastCommand(0, "d", "toggle depth splat");
 			break;
 		case SDLK_PAGEUP:
 		case SDLK_p: {

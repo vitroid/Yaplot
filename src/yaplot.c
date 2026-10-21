@@ -207,6 +207,7 @@
 #include "varray.h"
 #include <ctype.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -594,6 +595,21 @@ int eToggleSlicing(Ginfo *g, Winfo w[], int i)
 	return TRUE;
 }
 
+int eToggleSplat(Ginfo *g, Winfo w[], int i)
+{
+	if (w[i].async) {
+		w[i].splat = !w[i].splat;
+		w[i].status |= REDRAW;
+	} else {
+		char on = !w[i].splat;
+		for (i = 0; i < g->nwindow; i++) {
+			w[i].splat = on;
+			w[i].status |= REDRAW;
+		}
+	}
+	return TRUE;
+}
+
 int eSliceMove(Ginfo *g, Winfo w[], int i, float delta)
 {
 	if (w[i].slice) {
@@ -754,6 +770,7 @@ void W_Sync(Winfo *to, Winfo *from)
 	to->df = from->df;
 	to->realcurrent = from->realcurrent;
 	to->reality = from->reality;
+	to->splat = from->splat;
 	to->eyep[0] = from->eyep[0];
 	to->eyep[1] = from->eyep[1];
 	to->eyep[2] = from->eyep[2];
@@ -1678,6 +1695,13 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 		sprintf(num, "Reality %d (+ -)", w->reality);
 		drawstring2fb(w, 5, base, num, strlen(num));
 		base += 14;
+		if (w->splat)
+			setfgcolor(w, 2);
+		else
+			setfgcolor(w, 0);
+		drawstring2fb(w, 5, base, "Splat (d)", 9);
+		base += 14;
+		setfgcolor(w, 2);
 		sprintf(num, "Screen Depth Ratio %5.2f (* /)", w->depthratio);
 		drawstring2fb(w, 5, base, num, strlen(num));
 		base += 14;
@@ -1789,6 +1813,7 @@ Winfo *W_Init(int n)
 		w[i].async = 0;
 		w[i].RecordMode = 0;
 		w[i].slice = FALSE;
+		w[i].splat = 0;
 		w[i].def_radius = 1;
 		w[i].def_layer = 1;
 		w[i].def_fillcolor = 2;
@@ -1864,6 +1889,7 @@ void W_InitActionVarsOne(Winfo *w, int cachesize)
 	w->df = 0;
 	w->fov = 1.0 / tan(45.0 * PI / 360.0);
 	w->reality = 0;
+	w->splat = 0;
 	w->thick = 2;
 	w->layermask = 0x3fffffff; /*12layers*/
 	W_setvectors(w);

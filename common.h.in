@@ -158,6 +158,7 @@ typedef struct WINFO {
 	int df;
 	float realcurrent;
 	char reality;
+	char splat; /* depth-cue drop shadow (key d), Reality 2–4 */
 	float eyep[3], lookp[3], up[3];
 	float e[3], u[3], h[3];
 	float fov;

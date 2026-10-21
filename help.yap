@@ -49,11 +49,12 @@ t -10 0 -6 F1..F8                Toggle layers
 t -10 0 -7 SPACE                 Stop all motion.
 t -10 0 -8 "+" and "-"           Change quality of drawing
 t -10 0 -9 Insert and Delete     Control the line thickness
-t -10 0 -10 "q" or Break          Quit
+t -10 0 -10 "d"                  Toggle depth splat / drop shadow
+t -10 0 -11 "q" or Break          Quit
 #t -10 0 -6 (10-key pad is also available if configured.)
 @ 3
-t -10 0 -11 Press "n" to next page.
-t -10 0 -12 Press "p" to previous page.
+t -10 0 -12 Press "n" to next page.
+t -10 0 -13 Press "p" to previous page.
 
 @ 2
 t -10 0 10 2.2 Key assignment 2/2

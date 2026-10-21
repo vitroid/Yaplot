@@ -1,5 +1,6 @@
 #include "common.h"
 #include "gui.h"
+#include "splat.h"
 #include <math.h>
 
 extern int debug;
@@ -19,6 +20,9 @@ int Reality2(NewOinfo *o, Winfo *w)
 	}
 	if (w->nrealize == 0)
 		return 0;
+
+	if (w->splat)
+		draw_all_splats(w, o);
 
 	thickness = 0.5;
 	thickdelta =
