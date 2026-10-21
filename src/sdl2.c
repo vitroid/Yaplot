@@ -615,23 +615,51 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 	}
 }
 
-/* Trackpads emit many fine wheel events; accumulate before one FOV step. */
-static float wheel_accum;
+/*
+ * Trackpads flood wheel events. Cap to roughly one eWiden per key-repeat
+ * interval so sensitivity matches "[" / "]".
+ */
+static Uint32 last_wheel_ms;
 
 static void handle_mousewheel(int i, float y)
 {
-	const float threshold = 4.0f;
+	Uint32 now;
 
 	if (y == 0.0f)
 		return;
-	wheel_accum += y;
-	while (wheel_accum >= threshold) {
-		eWiden(g_internal, w_internal, i, 1);
-		wheel_accum -= threshold;
-	}
-	while (wheel_accum <= -threshold) {
-		eWiden(g_internal, w_internal, i, -1);
-		wheel_accum += threshold;
+	now = SDL_GetTicks();
+	if (last_wheel_ms != 0 && (now - last_wheel_ms) < 100)
+		return;
+	last_wheel_ms = now;
+	eWiden(g_internal, w_internal, i, (y > 0.0f) ? 1 : -1);
+}
+
+/* Toggles / digits must not auto-repeat; motion and FOV keys may. */
+static int key_allows_repeat(SDL_Keycode key)
+{
+	switch (key) {
+	case SDLK_LEFTBRACKET:
+	case SDLK_RIGHTBRACKET:
+	case SDLK_LEFT:
+	case SDLK_RIGHT:
+	case SDLK_UP:
+	case SDLK_DOWN:
+	case SDLK_h:
+	case SDLK_j:
+	case SDLK_k:
+	case SDLK_l:
+	case SDLK_ASTERISK:
+	case SDLK_KP_MULTIPLY:
+	case SDLK_SLASH:
+	case SDLK_KP_DIVIDE:
+	case SDLK_n:
+	case SDLK_p:
+	case SDLK_PAGEUP:
+	case SDLK_PAGEDOWN:
+	case SDLK_8:
+		return 1;
+	default:
+		return 0;
 	}
 }
 
@@ -701,7 +729,9 @@ void handleevent(Ginfo *g, Winfo w[])
 		break;
 	case SDL_KEYDOWN:
 		i = window_id_to_index(g, w, e->key.windowID);
-		if (i >= 0 && !e->key.repeat)
+		if (i >= 0 &&
+		    (!e->key.repeat ||
+		     key_allows_repeat(e->key.keysym.sym)))
 			handle_key(i, e->key.keysym.sym, e->key.keysym.mod);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
