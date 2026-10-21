@@ -16,7 +16,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#ifndef __EMSCRIPTEN__
 #include <cairo.h>
+#endif
 #ifdef win32
 #define M_PI 3.1415926535897932384L
 #define rint(x) floor((x) + 0.5)
@@ -178,8 +180,10 @@ typedef struct WINFO {
 	int lastColor;
 	/*表示バックエンド用ハンドル（中身はバックエンド実装のみが知る）*/
 	void *window, *drawarea;
+#ifndef __EMSCRIPTEN__
 	cairo_surface_t *surface;
 	cairo_t *cr;
+#endif
 	YapColor colortable[256];
 	// GdkColormap *colormap;
 	/*user clipping vector*/

@@ -5,14 +5,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 #include <unistd.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#else
+#include <sys/time.h>
+#endif
 
 extern int debug;
 extern float Eyex, Eyey, Eyez;
 extern float Lookx, Looky, Lookz;
 extern float Upx, Upy, Upz;
 
+#ifdef __EMSCRIPTEN__
+static double timer_origin_ms;
+
+void resettimer()
+{
+	timer_origin_ms = emscripten_get_now();
+}
+
+/* usec timer */
+int deltatime2()
+{
+	double now = emscripten_get_now();
+	int delta = (int)((now - timer_origin_ms) * 1000.0);
+	timer_origin_ms = now;
+	return delta;
+}
+#else
 struct itimerval now;
 
 void resettimer()
@@ -37,40 +58,61 @@ int deltatime2()
 	now = now2;
 	return delta;
 }
+#endif
 
 FILE *FindPalette(char *filename)
 {
-	char *env;
-	char palettefile[1024];
 	FILE *file;
 	if (debug)
 		fprintf(stderr, "FindPalette0::\n");
 
-	file = fopen(filename, "r");
-	if (file != NULL)
-		return file;
-
-	file = fopen("yaplot.col", "r");
-	if (file != NULL)
-		return file;
-
-	env = getenv("YAPLOTCOL");
-	if (env != NULL) {
-		file = fopen(env, "r");
+	if (filename != NULL) {
+		file = fopen(filename, "r");
 		if (file != NULL)
 			return file;
 	}
 
-	strcpy(palettefile, getenv("HOME"));
-	strcat(palettefile, "/yaplot.col");
-	file = fopen(palettefile, "r");
+#ifdef __EMSCRIPTEN__
+	/* Preloaded system palette first under WASM. */
+	file = fopen(DEFAULTPALETTE, "r");
 	if (file != NULL)
 		return file;
-
-	file = fopen(DEFAULTPALETTE, "r");
-	if (debug)
-		fprintf(stderr, "Opening %s\n", DEFAULTPALETTE);
+	file = fopen("yaplot.col", "r");
+	if (file != NULL)
+		return file;
+	file = fopen("/yaplot.col", "r");
 	return file;
+#else
+	{
+		char *env;
+		char palettefile[1024];
+
+		file = fopen("yaplot.col", "r");
+		if (file != NULL)
+			return file;
+
+		env = getenv("YAPLOTCOL");
+		if (env != NULL) {
+			file = fopen(env, "r");
+			if (file != NULL)
+				return file;
+		}
+
+		env = getenv("HOME");
+		if (env != NULL) {
+			strcpy(palettefile, env);
+			strcat(palettefile, "/yaplot.col");
+			file = fopen(palettefile, "r");
+			if (file != NULL)
+				return file;
+		}
+
+		file = fopen(DEFAULTPALETTE, "r");
+		if (debug)
+			fprintf(stderr, "Opening %s\n", DEFAULTPALETTE);
+		return file;
+	}
+#endif
 }
 
 Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
@@ -79,7 +121,10 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 	int errflg;
 	extern char *optarg;
 	extern int optind, optopt;
-	int i, nstdin;
+	int i;
+#ifndef __EMSCRIPTEN__
+	int nstdin;
+#endif
 	char *b, *palfile = NULL, c;
 	errflg = 0;
 
@@ -152,15 +197,32 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 
 	} else {
 		g->nwindow = argc - optind;
+#ifdef __EMSCRIPTEN__
+		/* Browser MVP: single canvas only. */
+		if (g->nwindow > 1) {
+			fprintf(stderr,
+				"WASM build: using only the first input file "
+				"(multi-window not supported).\n");
+			g->nwindow = 1;
+		}
+#endif
 		w = W_Init(g->nwindow);
 		for (i = 0; i < g->nwindow; i++) {
 			strcpy(w[i].inputfilename, argv[i + optind]);
 		}
 	}
 	strcpy(g->commandname, argv[0]);
+#ifndef __EMSCRIPTEN__
 	nstdin = 0;
+#endif
 	for (i = 0; i < g->nwindow; i++) {
 		if (strcmp(w[i].inputfilename, "-") == 0) {
+#ifdef __EMSCRIPTEN__
+			fprintf(stderr,
+				"%s : stdin (-) is not supported under WASM.\n",
+				g->commandname);
+			exit(-1);
+#else
 			w[i].inputfile = stdin;
 			nstdin++;
 			if (nstdin > 1) {
@@ -170,6 +232,7 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 					g->commandname);
 				exit(-1);
 			}
+#endif
 		} else if ((w[i].inputfile = fopen(w[i].inputfilename, "r")) ==
 			   NULL) {
 			fprintf(stderr, "%s : Cannot find file : %s\n",
@@ -182,6 +245,12 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 
 int ePushView(Ginfo *g, Winfo w[], int i)
 {
+#ifdef __EMSCRIPTEN__
+	(void)g;
+	(void)w;
+	(void)i;
+	return FALSE;
+#else
 	FILE *file = fopen(VIEWFILE, "a+");
 	char buf[1000];
 	if (NULL == file) {
@@ -197,10 +266,17 @@ int ePushView(Ginfo *g, Winfo w[], int i)
 	fputs(buf, stdout);
 	fclose(file);
 	return TRUE;
+#endif
 }
 
 int ePopView(Ginfo *g, Winfo w[], int i)
 {
+#ifdef __EMSCRIPTEN__
+	(void)g;
+	(void)w;
+	(void)i;
+	return FALSE;
+#else
 	long pos1 = -1, pos2 = 0;
 	char buf[1024];
 	FILE *file = fopen(VIEWFILE, "r+");
@@ -224,4 +300,5 @@ int ePopView(Ginfo *g, Winfo w[], int i)
 		return TRUE;
 	}
 	return FALSE;
+#endif
 }

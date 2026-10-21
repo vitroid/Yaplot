@@ -211,6 +211,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 vector2 polygon[6][4];
 float ddelta;
 /*struct itimerval deb0,deb1;*/
@@ -534,7 +537,18 @@ int eStopMotion(Ginfo *g, Winfo w[], int i)
 	return TRUE;
 }
 
-int eQuit(Ginfo *g, Winfo w[], int i) { exit(0); }
+int eQuit(Ginfo *g, Winfo w[], int i)
+{
+	(void)g;
+	(void)w;
+	(void)i;
+#ifdef __EMSCRIPTEN__
+	emscripten_cancel_main_loop();
+	return TRUE;
+#else
+	exit(0);
+#endif
+}
 
 int eStartRecording(Ginfo *g, Winfo w[], int mode, int fps)
 {
@@ -1742,7 +1756,12 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 
 int Redraw(NewOinfo *o, Winfo *w, float framerate, int verbose)
 {
+	/* ソート前後でも入力があれば中断（長いソートで固まらないように） */
+	if (existevent(NULL))
+		return 1;
 	quick_sort(o->prims->a, w->nrealize);
+	if (existevent(NULL))
+		return 1;
 	clearfb(w);
 	if (Realize(o, w))
 		return 1;
@@ -1879,161 +1898,180 @@ void W_InitActionVars(Ginfo *g, Winfo w[], int cachesize)
 	}
 }
 
-void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
+static Ainfo *event_a;
+static Ginfo *event_g;
+static Winfo *event_w;
+static int event_stopped = 1;
+
+/* One EventLoop iteration (shared by desktop busy-loop and emscripten RAF). */
+static void EventLoopOnce(void)
 {
-	/*data read*/
+	Ainfo *a = event_a;
+	Ginfo *g = event_g;
+	Winfo *w = event_w;
 	int i;
-	int stopped;
+	int stopped = event_stopped;
+	float delta = 0.000001 * deltatime2();
+	(void)a;
 
-	resettimer();
+	if (stopped) {
+		delta = 0;
+	}
+	if (debug) {
+		fprintf(stderr, "Refreshed in %f sec.\n", delta);
+	}
 	stopped = 1;
-	while (1) {
-		float delta = 0.000001 * deltatime2();
-		if (stopped) {
-			delta = 0;
-		}
-		if (debug) {
-			fprintf(stderr, "Refreshed in %f sec.\n", delta);
-		}
-		stopped = 1;
-		/*イベントが無いときは自動処理*/
-		/*もし動画表示中なら、先へすすめる。*/
-		for (i = 0; i < g->nwindow; i++) {
-			if (w[i].RecordMode) {
-				w[i].realcurrent++;
-				stopped = 0;
-			} else {
-				if (w[i].df != 0) {
-					/*o->nextframe += o->df;*/
-					w[i].realcurrent += w[i].df * delta;
-					if (debug) {
-						fprintf(
-						    stderr,
-						    "Animate Realcurrnt:%f.\n",
-						    w[i].realcurrent);
-					}
-				}
-				/*もしAbsoluteRotationModeでなければ、自動回転もありう
-				 */
-				/*る。*/
-				if (w[i].AbsoluteRotationMode == 0) {
-					if ((w[i].wp != 0) || (w[i].wh != 0) ||
-					    (w[i].wb != 0)) {
-						w[i].accump +=
-						    w[i].wp * delta * 0.2;
-						w[i].accumh +=
-						    w[i].wh * delta * 0.2;
-						w[i].accumb +=
-						    w[i].wb * delta * 0.2;
-						w[i].status |= REDRAW;
-						if (debug)
-							fprintf(
-							    stderr,
-							    "REDRAW because "
-							    "angular velocity "
-							    "is nonzero: %d %d "
-							    "%d [window %d]\n",
-							    w[i].wp, w[i].wh,
-							    w[i].wb, i);
-
-						stopped = 0;
-					}
-					if (w[i].df != 0) {
-						stopped = 0;
-					}
-				}
-			}
-		}
-		if (stopped)
-			goto wait;
-		while (existevent(g)) {
-		wait:
-			handleevent(g, w);
-		}
-		for (i = 0; i < g->nwindow; i++) {
-			int nextframe;
-			nextframe = w[i].realcurrent;
-			if (w[i].currentframe != nextframe) {
-				w[i].currentframe = nextframe;
-				W_Cache(&w[i]);
-				w[i].status |= REDRAW;
-				if (debug)
+	/*イベントが無いときは自動処理*/
+	/*もし動画表示中なら、先へすすめる。*/
+	for (i = 0; i < g->nwindow; i++) {
+		if (w[i].RecordMode) {
+			w[i].realcurrent++;
+			stopped = 0;
+		} else {
+			if (w[i].df != 0) {
+				/*o->nextframe += o->df;*/
+				w[i].realcurrent += w[i].df * delta;
+				if (debug) {
 					fprintf(stderr,
-						"REDRAW for progress in time "
-						"[Window %d]\n",
-						i);
-			}
-			if (!w[i].AbsoluteRotationMode) {
-				float deltah, deltab;
-				float eyex, eyey, eyez, eyed;
-				float dx, dy, dz;
-				/*lookpを中心にeyepを回転させる場合は*/
-				/*horizontal rotation*/
-				dx = w[i].lookp[0] - w[i].eyep[0];
-				dy = w[i].lookp[1] - w[i].eyep[1];
-				dz = w[i].lookp[2] - w[i].eyep[2];
-				deltah = -sin(w[i].accumh);
-				deltab = sin(w[i].accumb);
-				eyex = w[i].e[0] + w[i].h[0] * deltah +
-				       w[i].u[0] * deltab;
-				eyey = w[i].e[1] + w[i].h[1] * deltah +
-				       w[i].u[1] * deltab;
-				eyez = w[i].e[2] + w[i].h[2] * deltah +
-				       w[i].u[2] * deltab;
-				eyed = sqrt(
-				    (dx * dx + dy * dy + dz * dz) /
-				    (eyex * eyex + eyey * eyey + eyez * eyez));
-				eyex *= eyed;
-				eyey *= eyed;
-				eyez *= eyed;
-				w[i].eyep[0] = w[i].lookp[0] - eyex;
-				w[i].eyep[1] = w[i].lookp[1] - eyey;
-				w[i].eyep[2] = w[i].lookp[2] - eyez;
-				/*視線まわりロール（wp/accump）。角速度は維持*/
-				if (w[i].accump != 0) {
-					float c = cos(w[i].accump);
-					float s = sin(w[i].accump);
-					float hx = w[i].h[0], hy = w[i].h[1],
-					      hz = w[i].h[2];
-					float ux = w[i].u[0], uy = w[i].u[1],
-					      uz = w[i].u[2];
-					w[i].h[0] = hx * c - ux * s;
-					w[i].h[1] = hy * c - uy * s;
-					w[i].h[2] = hz * c - uz * s;
-					w[i].u[0] = hx * s + ux * c;
-					w[i].u[1] = hy * s + uy * c;
-					w[i].u[2] = hz * s + uz * c;
-					w[i].up[0] = w[i].u[0];
-					w[i].up[1] = w[i].u[1];
-					w[i].up[2] = w[i].u[2];
+						"Animate Realcurrnt:%f.\n",
+						w[i].realcurrent);
 				}
-				w[i].accump = w[i].accumh = w[i].accumb = 0;
-				/*end of addition*/
 			}
-			/*status |= REDRAW;*/
-			W_setvectors(&w[i]);
-			if (w[i].status & REDRAW) {
-				RotateAllPrims(g, &w[i]);
-				if (Redraw(*w[i].oo, &w[i], 1.0 / delta,
-					   g->verbose)) {
+			/*もしAbsoluteRotationModeでなければ、自動回転もありう
+			 */
+			/*る。*/
+			if (w[i].AbsoluteRotationMode == 0) {
+				if ((w[i].wp != 0) || (w[i].wh != 0) ||
+				    (w[i].wb != 0)) {
+					w[i].accump += w[i].wp * delta * 0.2;
+					w[i].accumh += w[i].wh * delta * 0.2;
+					w[i].accumb += w[i].wb * delta * 0.2;
+					w[i].status |= REDRAW;
 					if (debug)
 						fprintf(stderr,
-							"interrupted\n");
-					break; /*interrupted*/
+							"REDRAW because "
+							"angular velocity "
+							"is nonzero: %d %d "
+							"%d [window %d]\n",
+							w[i].wp, w[i].wh,
+							w[i].wb, i);
+
+					stopped = 0;
 				}
-				/*バッファの中身がなくなるまで待つ*/
-				/*syncはいつも0.04秒ぐらいしかかかっていない。*/
-				if (w[i].RecordMode) {
-					W_SaveSnapShot(&w[i], i);
+				if (w[i].df != 0) {
+					stopped = 0;
 				}
-				w[i].status &= ~REDRAW;
-				if (debug)
-					fprintf(stderr,
-						"REDRAW is unset [Window %d]\n",
-						i);
 			}
 		}
 	}
+#ifdef __EMSCRIPTEN__
+	/* Browser: never busy-wait; process queued events once per frame. */
+	while (existevent(g))
+		handleevent(g, w);
+#else
+	if (stopped)
+		goto wait;
+	while (existevent(g)) {
+	wait:
+		handleevent(g, w);
+	}
+#endif
+	for (i = 0; i < g->nwindow; i++) {
+		int nextframe;
+		nextframe = w[i].realcurrent;
+		if (w[i].currentframe != nextframe) {
+			w[i].currentframe = nextframe;
+			W_Cache(&w[i]);
+			w[i].status |= REDRAW;
+			if (debug)
+				fprintf(stderr,
+					"REDRAW for progress in time "
+					"[Window %d]\n",
+					i);
+		}
+		if (!w[i].AbsoluteRotationMode) {
+			float deltah, deltab;
+			float eyex, eyey, eyez, eyed;
+			float dx, dy, dz;
+			/*lookpを中心にeyepを回転させる場合は*/
+			/*horizontal rotation*/
+			dx = w[i].lookp[0] - w[i].eyep[0];
+			dy = w[i].lookp[1] - w[i].eyep[1];
+			dz = w[i].lookp[2] - w[i].eyep[2];
+			deltah = -sin(w[i].accumh);
+			deltab = sin(w[i].accumb);
+			eyex = w[i].e[0] + w[i].h[0] * deltah +
+			       w[i].u[0] * deltab;
+			eyey = w[i].e[1] + w[i].h[1] * deltah +
+			       w[i].u[1] * deltab;
+			eyez = w[i].e[2] + w[i].h[2] * deltah +
+			       w[i].u[2] * deltab;
+			eyed = sqrt((dx * dx + dy * dy + dz * dz) /
+				    (eyex * eyex + eyey * eyey + eyez * eyez));
+			eyex *= eyed;
+			eyey *= eyed;
+			eyez *= eyed;
+			w[i].eyep[0] = w[i].lookp[0] - eyex;
+			w[i].eyep[1] = w[i].lookp[1] - eyey;
+			w[i].eyep[2] = w[i].lookp[2] - eyez;
+			/*視線まわりロール（wp/accump）。角速度は維持*/
+			if (w[i].accump != 0) {
+				float c = cos(w[i].accump);
+				float s = sin(w[i].accump);
+				float hx = w[i].h[0], hy = w[i].h[1],
+				      hz = w[i].h[2];
+				float ux = w[i].u[0], uy = w[i].u[1],
+				      uz = w[i].u[2];
+				w[i].h[0] = hx * c - ux * s;
+				w[i].h[1] = hy * c - uy * s;
+				w[i].h[2] = hz * c - uz * s;
+				w[i].u[0] = hx * s + ux * c;
+				w[i].u[1] = hy * s + uy * c;
+				w[i].u[2] = hz * s + uz * c;
+				w[i].up[0] = w[i].u[0];
+				w[i].up[1] = w[i].u[1];
+				w[i].up[2] = w[i].u[2];
+			}
+			w[i].accump = w[i].accumh = w[i].accumb = 0;
+			/*end of addition*/
+		}
+		/*status |= REDRAW;*/
+		W_setvectors(&w[i]);
+		if (w[i].status & REDRAW) {
+			float framerate = (delta > 1e-9f) ? (1.0f / delta) : 0.0f;
+			RotateAllPrims(g, &w[i]);
+			if (Redraw(*w[i].oo, &w[i], framerate, g->verbose)) {
+				if (debug)
+					fprintf(stderr, "interrupted\n");
+				break; /*interrupted*/
+			}
+			/*バッファの中身がなくなるまで待つ*/
+			/*syncはいつも0.04秒ぐらいしかかかっていない。*/
+			if (w[i].RecordMode) {
+				W_SaveSnapShot(&w[i], i);
+			}
+			w[i].status &= ~REDRAW;
+			if (debug)
+				fprintf(stderr,
+					"REDRAW is unset [Window %d]\n", i);
+		}
+	}
+	event_stopped = stopped;
+}
+
+void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
+{
+	event_a = a;
+	event_g = g;
+	event_w = w;
+	event_stopped = 1;
+	resettimer();
+#ifdef __EMSCRIPTEN__
+	emscripten_set_main_loop(EventLoopOnce, 0, 1);
+#else
+	while (1)
+		EventLoopOnce();
+#endif
 }
 
 void polygon_Init()
@@ -2067,18 +2105,24 @@ int main(int argc, char *argv[])
 	Ginfo *g = G_Init();
 	Ainfo *a = A_Init();
 	Winfo *w;
+	int i;
+
+	fprintf(stderr, "yaplot main: argc=%d\n", argc);
+	for (i = 0; i < argc; i++)
+		fprintf(stderr, "  argv[%d]=%s\n", i, argv[i] ? argv[i] : "(null)");
 
 	polygon_Init();
 	w = GetOptions(argc, argv, a, g);
+	fprintf(stderr, "yaplot main: nwindow=%d file=%s\n", g->nwindow,
+		w[0].inputfilename);
 	G_Init2(g);
+	fprintf(stderr, "yaplot main: palette colors=%d\n", g->numColors);
 	W_Init2(w, g);
-	{
-		int i;
-		for (i = 0; i < g->nwindow; i++)
-			W_LoadGlobalDefaults(&w[i]);
-	}
+	for (i = 0; i < g->nwindow; i++)
+		W_LoadGlobalDefaults(&w[i]);
 	/*load the first frame*/
 	W_InitActionVars(g, w, a->cachesize);
+	fprintf(stderr, "yaplot main: entering EventLoop\n");
 
 	EventLoop(a, g, w);
 	return (0);

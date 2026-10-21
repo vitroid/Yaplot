@@ -8,3 +8,9 @@ wa.*
 xi.*
 *.png
 docs/
+web/yaplot.js
+web/yaplot.wasm
+web/yaplot.data
+web/yaplot.html
+.emsdk/
+

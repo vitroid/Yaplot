@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yaplot (WASM)</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #111;
+      color: #ddd;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+    #wrap {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    header {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      background: #1a1a1a;
+    }
+    #canvas {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #000;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <header>
+      Yaplot WASM MVP — drag to rotate, n/p frames, */ zoom. Click canvas for keyboard focus.
+    </header>
+    <canvas id="canvas" tabindex="0"></canvas>
+  </div>
+  <script>
+    var Module = {
+      /* emscripten prepends thisProgram; pass input file(s) only */
+      arguments: ['/global.yap'],
+      canvas: (function () {
+        return document.getElementById('canvas');
+      })(),
+      print: function (text) { console.log(text); },
+      printErr: function (text) { console.error(text); },
+      onRuntimeInitialized: function () {
+        document.getElementById('canvas').focus();
+      }
+    };
+  </script>
+  <script src="yaplot.js"></script>
+</body>
+</html>
