@@ -27,7 +27,7 @@
 #ifndef TRUE
 #define TRUE 0
 #endif
-#define VERSION "5.1"
+#define VERSION "5.1.1"
 
 typedef struct _Vertex {
 	struct _Vertex *next;
