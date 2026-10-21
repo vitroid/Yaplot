@@ -616,22 +616,14 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 }
 
 /*
- * Trackpads flood wheel events. Cap to roughly one eWiden per key-repeat
- * interval so sensitivity matches "[" / "]".
+ * Do not map the mouse wheel to FOV. macOS trackpad inertia keeps sending
+ * SDL_MOUSEWHEEL after fingers lift, so the view would keep changing.
+ * Use "[" / "]" instead.
  */
-static Uint32 last_wheel_ms;
-
 static void handle_mousewheel(int i, float y)
 {
-	Uint32 now;
-
-	if (y == 0.0f)
-		return;
-	now = SDL_GetTicks();
-	if (last_wheel_ms != 0 && (now - last_wheel_ms) < 100)
-		return;
-	last_wheel_ms = now;
-	eWiden(g_internal, w_internal, i, (y > 0.0f) ? 1 : -1);
+	(void)i;
+	(void)y;
 }
 
 /* Toggles / digits must not auto-repeat; motion and FOV keys may. */
