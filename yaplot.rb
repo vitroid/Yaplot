@@ -4,7 +4,7 @@
 class Yaplot < Formula
   desc "Yet another plotter in 3D - easy 3D modeller and animator"
   homepage "https://github.com/vitroid/Yaplot"
-  url "https://github.com/vitroid/Yaplot/archive/v5.5.tar.gz"
+  url "https://github.com/vitroid/Yaplot/archive/v5.6.tar.gz"
   sha256 "c0278ab1741faa65101ba1d9c442ba4829d64df2c5aea085297b328bf5f6e32a"
   license "MIT"
 

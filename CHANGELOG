@@ -1,3 +1,7 @@
+2026-10 / Version 5.6
+	レイヤに名前を付けられる。`y {n} {name}`（第2引数。@ の追加引数と同じ）、または `layername {n} {name}`（名前のみ）
+	verbose 1 では、そのフレームに物体があるレイヤだけを番号と名前で表示（表示中は白、非表示は黒）
+
 2026-10 / Version 5.5
 	WebAssembly 版（Emscripten + Canvas 2D）を GitHub Pages で公開
 	（https://vitroid.github.io/Yaplot/）

@@ -154,7 +154,7 @@ One line of the command files corresponds to one command. A command consists of 
     @ {n}:Specify palette No. (Palette colors are specified in palette file.)
     @ {n} {r} {g} {b}:Specify color of the n'th palette temporarily. R,g, and b are integers between 0 and 255.
     # {comment}:Comment. (Ignored.)
-    y {layer}:Change current layer(default layer=1)
+    y {layer} [{name}]:Change current layer (default layer=1). A second argument, like the extra arguments of @, sets that layer's label (`"..."` allowed). `layername {n} {name}` sets the label only. At verbosity 1 the screen lists layers that contain objects in the current frame, as `n name` (white when shown, black when hidden).
     a {arrowtype}:Change current arrow type(default type = 0)
     Empty line:End of a frame.
     global: Optional block at the start of the file. After a line whose first token is `global`, the following `@` / `r` / `y` / `a` (and long names color/palette/radius/layer/arrow) until the next empty line set defaults for every subsequent frame. In addition, UI defaults can be set: `reality {0..4}` (initial rendering quality), `splat {0..3}` (depth-splat shadow level, Reality 2..4), `fov {degrees}` (camera field of view, default 45), `verbose {0..3}` (on-screen info verbosity), `thickness {n}` / `thick {n}` (line width gradation, default 2), `rotation {wh} [{wb} [{wp}]]` / `rotate ...` (initial auto-rotation speeds for heading, banking, roll), `fps {df}` / `autoplay {df}` (initial animation speed in frames/sec), `hide {l1} ...` / `show {l1} ...` / `layers {l1} ...` (initial layer visibility), and `message {text}` (or `msg` / `echo`; quoted `"..."` supported) to print a line to stderr on load. Drawing commands in the block are ignored. Leading `#` comments before `global` are allowed.
@@ -299,7 +299,7 @@ yaplot にはレイヤの概念があります。標準ではレイヤは 1 か�
     @ {palette}:パレット番号を指定する。
     @ {palette} {r} {g} {b}:パレット番号の色を変更する。r,g,bはそれぞれ0..255の範囲の整数で指定する。
     # {comment}:コメント(無視されます)
-    y {layer}:レイヤを切り替えます(default layer=1)
+    y {layer} [{name}]:レイヤを切り替えます(default layer=1)。第2引数があると、@ の追加引数と同じく、そのレイヤの名前になります（`"..."` 可）。`layername {n} {name}` は名前だけを設定します。verbose 1 では、そのフレームに物体があるレイヤだけを `n name` で表示し、表示中は白、非表示は黒です。
     a {arrowtype}: Stickの描き方を変更します。(0=通常、1=矢印、2=ダート。Default = 0)
     空行:1フレームの終わりをあらわします。
     global: ファイル先頭のオプションブロック。先頭トークンが `global` の行のあと、次の空行までの `@` / `r` / `y` / `a`（および color/palette/radius/layer/arrow）が以降の全フレームの初期値になります。また UI の初期状態として、`reality {0..4}`（表示品位）、`splat {0..3}`（奥行きスプラット影レベル、Reality 2〜4）、`fov {degrees}`（カメラ画角・度数法、既定45）、`verbose {0..3}`（画面ステータス表示の詳細度）、`thickness {n}` / `thick {n}`（線幅変化の度合、既定2）、`rotation {wh} [{wb} [{wp}]]` / `rotate ...`（横・縦・ロールの自動回転速度）、`fps {df}` / `autoplay {df}`（自動アニメーション速度・秒間フレーム数）、`hide {l1} ...` / `show {l1} ...` / `layers {l1} ...`（レイヤの初期表示・非表示）、および `message {text}`（`msg` / `echo` も可。`"..."` 引用符対応、読み込み時に stderr へ出力）を指定できます。ブロック内の描画命令は無視されます。`global` の前の `#` コメントは許可されます。

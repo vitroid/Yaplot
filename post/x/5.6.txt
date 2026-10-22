@@ -1,0 +1,3 @@
+Yaplot 5.6: name your layers. `y 1 wood` (or `layername 1 wood`) labels a layer, and verbosity 1 lists only the layers that contain something in the current frame.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.6

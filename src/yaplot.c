@@ -1142,6 +1142,71 @@ static void apply_global_layers(Winfo *w, const char *rest, int mode)
 		w->layermask = (1 << MAXLAYER) - 1;
 }
 
+/* 第2引数があればレイヤ名にする。無ければ既存の名前を残す。引用符可。 */
+static void copy_layer_label(char *dst, const char *name)
+{
+	size_t len = 0;
+
+	while (*name == ' ' || *name == '\t')
+		name++;
+	if (*name == '\0' || *name == '\n' || *name == '\r')
+		return;
+	if (*name == '"') {
+		const char *p;
+
+		for (p = name + 1; *p != '\0' && *p != '"' &&
+				   len + 1 < LAYERNAME_LEN;
+		     p++) {
+			if (*p == '\\' && p[1] != '\0')
+				p++;
+			dst[len++] = *p;
+		}
+	} else {
+		while (*name && *name != '\n' && *name != '\r' &&
+		       len + 1 < LAYERNAME_LEN)
+			dst[len++] = *name++;
+		while (len > 0 &&
+		       (dst[len - 1] == ' ' || dst[len - 1] == '\t'))
+			len--;
+	}
+	dst[len] = '\0';
+}
+
+/* y / layer。番号でカレントレイヤを替え、第2引数があればそのレイヤの名前にする */
+static void apply_y(Winfo *w, const char *rest, int *layer)
+{
+	int n = 0;
+	const char *p;
+
+	if (!rest || sscanf(rest, "%d", &n) != 1)
+		return;
+	if (n > MAXLAYER)
+		n = MAXLAYER;
+	if (n < 1)
+		n = 1;
+	*layer = n;
+	p = rest;
+	while (*p && *p != ' ' && *p != '\t' && *p != '\n')
+		p++;
+	copy_layer_label(w->layername[n - 1], p);
+}
+
+/* layername。名前だけを設定し、カレントレイヤは変えない */
+static void apply_layer_name(Winfo *w, const char *rest)
+{
+	int n = 0;
+	const char *p;
+
+	if (!rest || sscanf(rest, "%d", &n) != 1 || n < 1 || n > MAXLAYER) {
+		fprintf(stderr, "layername ignored\n");
+		return;
+	}
+	p = rest;
+	while (*p && *p != ' ' && *p != '\t' && *p != '\n')
+		p++;
+	copy_layer_label(w->layername[n - 1], p);
+}
+
 void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 {
 	char readstr[YAP_LINE_MAX];
@@ -1153,6 +1218,7 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 
 	w->def_radius = 1;
 	w->def_layer = 1;
+	memset(w->layername, 0, sizeof(w->layername));
 	w->def_fillcolor = 2;
 	w->def_linecolor = 0;
 	w->def_arrowtype = 0;
@@ -1193,6 +1259,7 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 	while (fgets(readstr, YAP_LINE_MAX, w->inputfile) != NULL) {
 		int is_reality = 0, is_fov = 0, is_verbose = 0, is_message = 0;
 		int is_rotation = 0, is_fps = 0, is_thick = 0, is_splat = 0;
+		int is_layername = 0;
 		int layer_mode = -1;
 		string = skipspaces(readstr);
 		if (*string == '\n' || *string == '\0')
@@ -1234,6 +1301,8 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 			layer_mode = 1;
 		else if (strcmp(token, "layers") == 0)
 			layer_mode = 2;
+		else if (strcmp(token, "layername") == 0)
+			is_layername = 1;
 		else if (strcmp(token, "message") == 0 ||
 			 strcmp(token, "msg") == 0 ||
 			 strcmp(token, "echo") == 0)
@@ -1298,6 +1367,8 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 			}
 		} else if (layer_mode >= 0) {
 			apply_global_layers(w, rest, layer_mode);
+		} else if (is_layername) {
+			apply_layer_name(w, rest);
 		} else if (is_message) {
 			print_global_message(rest);
 		} else if (ch == 'r') {
@@ -1314,11 +1385,7 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 			w->def_linecolor = linecolor;
 			w->def_fillcolor = linecolor;
 		} else if (ch == 'y') {
-			sscanf(rest, "%d", &w->def_layer);
-			if (w->def_layer > MAXLAYER)
-				w->def_layer = MAXLAYER;
-			if (w->def_layer < 1)
-				w->def_layer = 1;
+			apply_y(w, rest, &w->def_layer);
 		} else if (ch == 'a') {
 			sscanf(rest, "%d", &w->def_arrowtype);
 		} else {
@@ -1559,6 +1626,11 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 		token = string;
 		rest = skipspaces(p + 1);
 		ch = resolve_command(token);
+		if (strcmp(token, "layername") == 0) {
+			*p = (char)saved;
+			apply_layer_name(w, rest);
+			continue;
+		}
 		*p = (char)saved;
 		if (ch == 0)
 			continue;
@@ -1710,10 +1782,7 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 			/*puts(string);*/
 			break;
 		case 'y':
-			sscanf(rest, "%d", &currentlayer);
-			if (currentlayer > MAXLAYER) {
-				currentlayer = MAXLAYER;
-			}
+			apply_y(w, rest, &currentlayer);
 			currentlayermask = 1 << (currentlayer - 1);
 			break;
 		default:
@@ -1954,6 +2023,47 @@ void quick_sort(Pinfo **a, int n)
 
 int number = 0;
 
+/* 現在のフレームにプリミティブがあるレイヤのビット */
+static int occupied_layers(Winfo *w)
+{
+	NewOinfo *o;
+	int i, mask = 0;
+
+	if (!w->oo || !*w->oo || !(*w->oo)->prims)
+		return 0;
+	o = *w->oo;
+	for (i = 0; i < o->prims->n; i++) {
+		Pinfo **q = varray_ptr(o->prims, i);
+		if (*q)
+			mask |= (*q)->layermask;
+	}
+	return mask;
+}
+
+/* 物体のあるレイヤだけ、番号と名前を描く。表示中は白、非表示は黒 */
+static void draw_occupied_layers(Winfo *w, int *base)
+{
+	char num[256];
+	int occupied = occupied_layers(w);
+	int i;
+
+	for (i = 1; i <= MAXLAYER; i++) {
+		if (!(occupied & (1 << (i - 1))))
+			continue;
+		if (w->layermask & (1 << (i - 1)))
+			setfgcolor(w, 2);
+		else
+			setfgcolor(w, 0);
+		if (w->layername[i - 1][0])
+			snprintf(num, sizeof(num), "%d %s", i,
+				 w->layername[i - 1]);
+		else
+			snprintf(num, sizeof(num), "%d", i);
+		drawstring2fb(w, 5, *base, num, (int)strlen(num));
+		*base += 14;
+	}
+}
+
 void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 {
 	char num[256];
@@ -1963,6 +2073,8 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 	if (verbose == 1) {
 		sprintf(num, "%d", w->currentframe);
 		drawstring2fb(w, 5, base, num, strlen(num));
+		base += 14;
+		draw_occupied_layers(w, &base);
 	}
 	if (verbose >= 2) { // initial verbosity
 		if (debug) {
@@ -2020,7 +2132,11 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 				setfgcolor(w, 2);
 			else
 				setfgcolor(w, 0);
-			sprintf(num, "Layer %d (F%d)", i, i);
+			if (w->layername[i - 1][0])
+				snprintf(num, sizeof(num), "Layer %d %s (F%d)", i,
+					 w->layername[i - 1], i);
+			else
+				snprintf(num, sizeof(num), "Layer %d (F%d)", i, i);
 			drawstring2fb(w, 5, base, num, strlen(num));
 			base += 14;
 		}

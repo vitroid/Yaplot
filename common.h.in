@@ -79,6 +79,8 @@ typedef struct {
 #define BUFFER1 15
 #define MAXREALITY 4
 #define MAXLAYER 30
+/* y の第2引数、または layername で付けるレイヤ名（終端 NUL を含む） */
+#define LAYERNAME_LEN 48
 #define MAXVERBOSE 3
 #define HASHSIZE 24000007
 #define LASTFRAME 999999
@@ -195,6 +197,8 @@ typedef struct WINFO {
 	/* global ブロック由来のフレーム共通デフォルト */
 	float def_radius;
 	int def_layer;
+	/* レイヤ名。添字はレイヤ番号 - 1。空文字は名前なし */
+	char layername[MAXLAYER][LAYERNAME_LEN];
 	int def_fillcolor;
 	int def_linecolor;
 	int def_arrowtype;
