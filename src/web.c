@@ -1071,6 +1071,13 @@ EM_JS(void, install_gesture_listeners, (void), {
 	var canvas = Module['canvas'];
 	canvas.style.touchAction = 'none';
 
+	/* mousedown is preventDefault'ed, so claim keyboard focus explicitly
+	   (needed when embedded in an iframe, e.g. a notebook output) */
+	canvas.addEventListener('pointerdown', function() {
+		window.focus();
+		canvas.focus({preventScroll : true});
+	});
+
 	/* Safari: trackpad pinch/rotate (cumulative scale, degrees cw) */
 	var gs = {scale : 1, rot : 0};
 	canvas.addEventListener('gesturestart', function(ev) {
