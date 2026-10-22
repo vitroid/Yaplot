@@ -7,6 +7,8 @@ mukaibara.py
 wa.*
 xi.*
 *.png
+yaplot*_*.pdf
 docs/
 CS1.yap
 __pycache__
+YKD.yap
