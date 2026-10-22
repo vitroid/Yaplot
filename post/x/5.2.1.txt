@@ -1,0 +1,3 @@
+Yaplot 5.2.1: macOS trackpad gestures are back. Pinch zoom, rotate-to-roll, and two-finger FOV scroll now use AppKit event phases—so inertia no longer runs away, and pinch/roll no longer sticks to later mouse drags. Other platforms keep mouse-wheel FOV + keys.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.2.1
