@@ -42,7 +42,8 @@
   <script>
     var Module = {
       /* emscripten prepends thisProgram; pass input file(s) only */
-      arguments: ['/global.yap'],
+      /* ?file=/help.yap selects a preloaded file */
+      arguments: [new URLSearchParams(location.search).get('file') || '/global.yap'],
       canvas: (function () {
         return document.getElementById('canvas');
       })(),

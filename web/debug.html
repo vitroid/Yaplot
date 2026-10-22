@@ -30,7 +30,7 @@
       log('UNHANDLED', e.reason);
     });
     var Module = {
-      arguments: ['/global.yap'],
+      arguments: [new URLSearchParams(location.search).get('file') || '/global.yap'],
       canvas: document.getElementById('canvas'),
       print: function (t) { log('OUT', t); },
       printErr: function (t) { log('ERR', t); },
