@@ -446,10 +446,6 @@ static void handle_key(int i, int key, int modstatus)
 		SetLastCommand(0, "[ key",
 			       modstatus ? "shift slice left" : "widen out");
 		break;
-	case 'r':
-		(void)eStartRecording(g, w, 1, 1);
-		SetLastCommand(0, "r", "start recording");
-		break;
 	case 'u':
 		(void)ePushView(g, w, i);
 		SetLastCommand(0, "u", "push view");
