@@ -117,6 +117,8 @@ typedef struct OINFO
 typedef struct OINFO {
 	varray *prims;	/*Set of primitives*/
 	Vertex *vertex; /*Chain of vertice*/
+	void **svgs;	/*SVG overlays of this frame (svg_open handles)*/
+	int nsvg;
 } NewOinfo;
 
 /*アニメーションの情報*/
@@ -192,6 +194,9 @@ typedef struct WINFO {
 	int def_fillcolor;
 	int def_linecolor;
 	int def_arrowtype;
+	/* global ブロック由来の全フレーム共通 SVG オーバーレイ */
+	void **svg_global;
+	int nsvg_global;
 			 /*ここまで*/
 } Winfo;
 

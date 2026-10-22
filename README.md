@@ -22,11 +22,11 @@ See https://github.com/vitroid/homebrew-yaplot .
 
 ### General install procedure
 
-Yaplot requires gtk+3 and pkg-config.
+Yaplot requires SDL2, Cairo, libpng, librsvg, and pkg-config.
 
 If you are using Mac, install them via [HomeBrew](https://brew.sh) package manager.
 
-            prompt% brew install pkg-config gtk+3
+            prompt% brew install pkg-config sdl2 cairo libpng librsvg
 
 Then, compile it.
 
@@ -137,6 +137,16 @@ You can use long command names instead of single letters: line, stick, polygon, 
 
 Without a `global` block, size (radius), palette, layer, and arrow must be complete within each frame; status set in one frame is not carried over to another frame. (This allows random access to any frame.) With `global`, those defaults apply at the start of every frame; a frame may still override them locally. Lines ignored inside the `global` block are reported to stderr.
 
+### SVG overlay (2D HUD)
+
+You can overlay 2D information fixed to the screen (plots, legends, color bars, captions) on top of the 3D view by writing SVG directly in the command file. A line whose first non-space character is `<` starts an SVG block, which continues up to the line containing `</svg>`. Inside the block, empty lines do not end the frame and there is no line-length limit, so the output of matplotlib (`savefig(..., format="svg", transparent=True)`), gnuplot, Inkscape, etc. can be pasted as is, including the `<?xml ...?>` header.
+
+- An SVG block inside the `global` block is shown in every frame; one inside a frame is shown only in that frame. Several blocks may be written; they are drawn in order.
+- Each SVG is fitted to the whole window according to its `viewBox` and `preserveAspectRatio` (default: keep the aspect ratio and center). Use a transparent background, or the 3D view will be hidden.
+- Drawing order: 3D view, global SVG, frame SVG, status text.
+
+See `test/svg_overlay.yap` for an example.
+
 ## Palette file format
 
 Each line of the palette file specifies the Red, Green and Blue intensity of the pallete. First line describes the color for palette 0. As the palettes 0 to 2 are reserved for system color (Black, Gray, and White), you should not modify them.
@@ -158,9 +168,9 @@ yaplot の画像は、本格的なプレゼンテーションに使用できる�
 
 ## インストール
 
-現在、yaplot は gtk を使って書かれています。インストールする前にあらかじめ GTK をインストールしておいて下さい。Mac OS では、[HomeBrew](https://brew.sh)をおすすめします。
+現在、yaplot は SDL2 と Cairo を使って書かれています。インストールする前にあらかじめ SDL2、Cairo、libpng、librsvg、pkg-config をインストールしておいて下さい。Mac OS では、[HomeBrew](https://brew.sh)をおすすめします。
 
-            prompt% brew install gtk+ pkg-config
+            prompt% brew install pkg-config sdl2 cairo libpng librsvg
 
 ソースコードを展開して下さい。make でコンパイルができます。(automake はあまりに複雑なのでやめます。)
 
@@ -259,6 +269,16 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
 1文字コマンドの代わりに長い名前も使えます: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color（または palette）, layer, arrow, comment。例: `line 0 0 0 1 1 1` は `l 0 0 0 1 1 1` と同じです。
 
 `global` ブロックが無い場合、size(半径)やpaletteやlayerやarrowなどの設定は**各フレームごとに完結**しており、あるフレームでのstatus設定は別のフレームには引き継がれません。(任意のフレームをランダムアクセスできるようにするため) `global` がある場合はその値が各フレーム先頭のデフォルトになり、フレーム内での上書きもできます。global ブロック内で無視された行は stderr に出ます。
+
+### SVG オーバーレイ（2D HUD）
+
+コマンドファイルの中に SVG を直接書くと、3D 描画の上に画面に固定された 2D 情報（グラフ、凡例、カラーバー、キャプションなど）を重ねられます。行頭（空白を除く）が `<` の行から、`</svg>` を含む行までが 1 つの SVG ブロックです。ブロック内では空行でフレームが終わらず、行の長さ制限もないので、matplotlib（`savefig(..., format="svg", transparent=True)`）、gnuplot、Inkscape などの出力を `<?xml ...?>` 行ごとそのまま貼り付けられます。
+
+- `global` ブロック内の SVG は全フレームに、フレーム内の SVG はそのフレームだけに表示されます。複数書いた場合は書いた順に重ねます。
+- 各 SVG は `viewBox` と `preserveAspectRatio`（既定は縦横比を保って中央）に従ってウィンドウ全体に合わせて描画されます。背景は透明にして下さい（不透明だと 3D 描画が隠れます）。
+- 描画順は 3D 描画、global の SVG、フレームの SVG、ステータス表示の順です。
+
+例は `test/svg_overlay.yap` を参照して下さい。
 
 ## パレットファイルフォーマット
 

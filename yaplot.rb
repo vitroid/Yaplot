@@ -12,6 +12,7 @@ class Yaplot < Formula
   depends_on "sdl2"
   depends_on "cairo"
   depends_on "libpng"
+  depends_on "librsvg"
 
   def install
     system "make", "PKGDATADIR=#{share}/yaplot", "BINDIR=#{bin}"

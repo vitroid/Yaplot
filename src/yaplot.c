@@ -960,6 +960,53 @@ static int resolve_command(const char *token)
 	return 0;
 }
 
+/*
+ * SVG ブロック: 行頭が '<' の行から "</svg>" を含む行まで。
+ * first は既に読み込んだ最初の行。ブロック内では空行も行長制限も無視する。
+ * 戻り値は malloc した NUL 終端文字列（長さは *lenp）。
+ */
+static char *read_svg_block(FILE *file, const char *first, size_t *lenp)
+{
+	char chunk[YAP_LINE_MAX];
+	const char *src = first;
+	char *buf = NULL;
+	size_t len = 0, cap = 0;
+
+	for (;;) {
+		size_t n = strlen(src);
+		size_t from = (len > 5) ? len - 5 : 0;
+		if (len + n + 1 > cap) {
+			cap = (len + n + 1) * 2;
+			buf = realloc(buf, cap);
+		}
+		memcpy(buf + len, src, n + 1);
+		len += n;
+		if (strstr(buf + from, "</svg>"))
+			break;
+		if (fgets(chunk, sizeof(chunk), file) == NULL) {
+			fprintf(stderr, "svg: missing </svg> before end of file\n");
+			break;
+		}
+		src = chunk;
+	}
+	*lenp = len;
+	return buf;
+}
+
+static void append_svg_block(FILE *file, const char *first, void ***list,
+			     int *n)
+{
+	size_t len;
+	char *text = read_svg_block(file, first, &len);
+	void *svg = svg_open(text, len);
+
+	free(text);
+	if (!svg)
+		return;
+	*list = realloc(*list, (*n + 1) * sizeof(void *));
+	(*list)[(*n)++] = svg;
+}
+
 static void trim_line_copy(char *dst, size_t dstlen, const char *src)
 {
 	size_t n = 0;
@@ -1090,6 +1137,11 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 			break;
 		if (*string == '#')
 			continue;
+		if (*string == '<') {
+			append_svg_block(w->inputfile, string, &w->svg_global,
+					 &w->nsvg_global);
+			continue;
+		}
 		p = string;
 		while (*p && *p != ' ' && *p != '\t' && *p != '\n')
 			p++;
@@ -1268,6 +1320,11 @@ void W_Seek(Winfo *w)
 					return;
 				}
 				string = skipspaces(readstr);
+				if (*string == '<') {
+					size_t len;
+					free(read_svg_block(w->inputfile,
+							    string, &len));
+				}
 			} while (*string != '\n'); /*空行になるまくりかえす。*/
 			i++;
 			pos = varray_ptr(w->framepos, i);
@@ -1292,6 +1349,7 @@ void O_Done(void *oo)
 	Pinfo **p;
 	Vertex *v, *next;
 	NewOinfo *o = (NewOinfo *)oo;
+	int i;
 
 	if (o == NULL)
 		return;
@@ -1306,6 +1364,9 @@ void O_Done(void *oo)
 		free(*p);
 	}
 	free(o->prims->a);
+	for (i = 0; i < o->nsvg; i++)
+		svg_close(o->svgs[i]);
+	free(o->svgs);
 	free(o);
 }
 
@@ -1424,6 +1485,10 @@ NewOinfo *O_Load(int defaultsize, FILE *file, Winfo *w)
 		string = skipspaces(readstr);
 		if (*string == '\n' || *string == '\0')
 			break;
+		if (*string == '<') {
+			append_svg_block(file, string, &o->svgs, &o->nsvg);
+			continue;
+		}
 		p = string;
 		while (*p && *p != ' ' && *p != '\t' && *p != '\n')
 			p++;
@@ -1933,10 +1998,16 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 
 int Redraw(NewOinfo *o, Winfo *w, float framerate, int verbose)
 {
+	int i;
+
 	quick_sort(o->prims->a, w->nrealize);
 	clearfb(w);
 	if (Realize(o, w))
 		return 1;
+	for (i = 0; i < w->nsvg_global; i++)
+		drawsvg2fb(w, w->svg_global[i]);
+	for (i = 0; i < o->nsvg; i++)
+		drawsvg2fb(w, o->svgs[i]);
 	InsertFrameInfo(w, framerate, verbose);
 	exposefb(w);
 	return 0;

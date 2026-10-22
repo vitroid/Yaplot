@@ -28,5 +28,9 @@ void overridepalette(Winfo *w, int palette, int red, int green, int blue);
 void W_SaveSnapShot(Winfo *w, int i);
 void W_StartRecording(Winfo *w, int mode, int windowid, int fps);
 void W_StopRecording(Winfo *w);
+/* SVG オーバーレイ（画面座標、ウィンドウ全体をビューポートとする） */
+void *svg_open(const char *data, size_t len);
+void svg_close(void *svg);
+void drawsvg2fb(Winfo *w, void *svg);
 
 #endif

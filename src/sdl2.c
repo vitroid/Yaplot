@@ -7,6 +7,7 @@
 #include "os.h"
 #include "yaplot.h"
 #include <cairo.h>
+#include <librsvg/rsvg.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,6 +206,81 @@ void clearfb(Winfo *w)
 {
 	setfgcolor(w, 1);
 	cairo_paint(w->cr);
+}
+
+/* --- SVG overlay (librsvg) --- */
+
+typedef struct {
+	RsvgHandle *handle;
+	cairo_surface_t *image; /* rasterized at width x height */
+	int width, height;
+} SvgOverlay;
+
+void *svg_open(const char *data, size_t len)
+{
+	GError *err = NULL;
+	RsvgHandle *handle;
+	SvgOverlay *s;
+
+	handle = rsvg_handle_new_from_data((const guint8 *)data, len, &err);
+	if (!handle) {
+		fprintf(stderr, "svg ignored: %s\n",
+			err ? err->message : "parse error");
+		if (err)
+			g_error_free(err);
+		return NULL;
+	}
+	s = calloc(1, sizeof(SvgOverlay));
+	s->handle = handle;
+	return s;
+}
+
+void svg_close(void *svg)
+{
+	SvgOverlay *s = (SvgOverlay *)svg;
+	if (!s)
+		return;
+	if (s->image)
+		cairo_surface_destroy(s->image);
+	g_object_unref(s->handle);
+	free(s);
+}
+
+void drawsvg2fb(Winfo *w, void *svg)
+{
+	SvgOverlay *s = (SvgOverlay *)svg;
+	if (!s)
+		return;
+	if (!s->image || s->width != w->screenwidth ||
+	    s->height != w->screenheight) {
+		RsvgRectangle viewport;
+		GError *err = NULL;
+		cairo_t *cr;
+
+		if (s->image)
+			cairo_surface_destroy(s->image);
+		s->width = w->screenwidth;
+		s->height = w->screenheight;
+		s->image = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+						      s->width, s->height);
+		cr = cairo_create(s->image);
+		viewport.x = 0;
+		viewport.y = 0;
+		viewport.width = s->width;
+		viewport.height = s->height;
+		if (!rsvg_handle_render_document(s->handle, cr, &viewport,
+						 &err)) {
+			fprintf(stderr, "svg render failed: %s\n",
+				err ? err->message : "unknown error");
+			if (err)
+				g_error_free(err);
+		}
+		cairo_destroy(cr);
+	}
+	cairo_save(w->cr);
+	cairo_set_source_surface(w->cr, s->image, 0, 0);
+	cairo_paint(w->cr);
+	cairo_restore(w->cr);
 }
 
 static void present_window(Winfo *w)

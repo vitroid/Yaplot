@@ -8,7 +8,9 @@ SDL2_LDFLAGS = $(shell $(PKG_CONFIG) sdl2 --libs)
 CAIRO_CFLAGS = $(shell $(PKG_CONFIG) cairo --cflags)
 CAIRO_LDFLAGS = $(shell $(PKG_CONFIG) cairo --libs)
 PNG_LDFLAGS  = $(shell $(PKG_CONFIG) libpng --libs)
-LDFLAGS      = $(SDL2_LDFLAGS) $(CAIRO_LDFLAGS) $(PNG_LDFLAGS) -lm
+RSVG_CFLAGS  = $(shell $(PKG_CONFIG) librsvg-2.0 --cflags)
+RSVG_LDFLAGS = $(shell $(PKG_CONFIG) librsvg-2.0 --libs)
+LDFLAGS      = $(SDL2_LDFLAGS) $(CAIRO_LDFLAGS) $(PNG_LDFLAGS) $(RSVG_LDFLAGS) -lm
 
 PKGDATADIR = /opt/homebrew/share/yaplot
 BINDIR     = /opt/homebrew/bin
@@ -16,7 +18,7 @@ BINDIR     = /opt/homebrew/bin
 VERSION = 5.3
 
 CFLAGS  = -g -Wall -Werror -Werror=vla -I./include
-CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS)
+CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS) $(RSVG_CFLAGS)
 CFLAGS += -DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
 
 UNAME_S := $(shell uname -s)
