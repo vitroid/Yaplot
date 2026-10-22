@@ -960,32 +960,80 @@ static int resolve_command(const char *token)
 	return 0;
 }
 
+static void trim_line_copy(char *dst, size_t dstlen, const char *src);
+
+/* <svg ...> と </svg> を数える。タグが行（fgets の断片）をまたいでもよい */
+static void svg_scan_tags(const char *buf, size_t len, size_t *scanned,
+			  int *depth, int *opened)
+{
+	size_t p;
+
+	for (p = *scanned; p + 6 <= len; p++) {
+		if (buf[p] != '<')
+			continue;
+		if (strncmp(buf + p, "</svg>", 6) == 0) {
+			(*depth)--;
+		} else if (strncmp(buf + p, "<svg", 4) == 0 &&
+			   strchr(" \t\r\n>", buf[p + 4])) {
+			(*depth)++;
+			*opened = 1;
+		}
+	}
+	*scanned = p;
+}
+
 /*
- * SVG ブロック: 行頭が '<' の行から "</svg>" を含む行まで。
+ * SVG ブロック: 行頭が '<' の行から、最外側の <svg> を閉じる </svg> まで。
  * first は既に読み込んだ最初の行。ブロック内では空行も行長制限も無視する。
- * 戻り値は malloc した NUL 終端文字列（長さは *lenp）。
+ * <svg が現れる前に空行に達したら SVG ではないとみなし、最初の行だけを
+ * 読み捨てて直後に戻る（単独の <!-- --> 行などが後続を飲み込まないように）。
+ * 戻り値は malloc した NUL 終端文字列（長さは *lenp、SVG でなければ 0）。
+ * quiet なら警告を出さない（フレーム位置の走査用。読み込み時に出る）。
  */
-static char *read_svg_block(FILE *file, const char *first, size_t *lenp)
+static char *read_svg_block(FILE *file, const char *first, size_t *lenp,
+			    int quiet)
 {
 	char chunk[YAP_LINE_MAX];
 	const char *src = first;
 	char *buf = NULL;
-	size_t len = 0, cap = 0;
+	size_t len = 0, cap = 0, scanned = 0;
+	int depth = 0, opened = 0;
+	long start = ftell(file);
 
 	for (;;) {
 		size_t n = strlen(src);
-		size_t from = (len > 5) ? len - 5 : 0;
 		if (len + n + 1 > cap) {
 			cap = (len + n + 1) * 2;
 			buf = realloc(buf, cap);
 		}
 		memcpy(buf + len, src, n + 1);
 		len += n;
-		if (strstr(buf + from, "</svg>"))
+		svg_scan_tags(buf, len, &scanned, &depth, &opened);
+		if (opened && depth <= 0)
 			break;
 		if (fgets(chunk, sizeof(chunk), file) == NULL) {
-			fprintf(stderr, "svg: missing </svg> before end of file\n");
-			break;
+			if (opened) {
+				if (!quiet)
+					fprintf(stderr, "svg: missing </svg> "
+							"before end of file\n");
+				break;
+			}
+			chunk[0] = '\0';
+		}
+		if (!opened) {
+			char *s = skipspaces(chunk);
+			if (*s == '\n' || *s == '\0') {
+				fseek(file, start, SEEK_SET);
+				if (!quiet) {
+					trim_line_copy(chunk, 256, buf);
+					fprintf(stderr,
+						"ignored (no <svg> element): %s\n",
+						chunk);
+				}
+				buf[0] = '\0';
+				len = 0;
+				break;
+			}
 		}
 		src = chunk;
 	}
@@ -997,8 +1045,8 @@ static void append_svg_block(FILE *file, const char *first, void ***list,
 			     int *n)
 {
 	size_t len;
-	char *text = read_svg_block(file, first, &len);
-	void *svg = svg_open(text, len);
+	char *text = read_svg_block(file, first, &len, 0);
+	void *svg = (len > 0) ? svg_open(text, len) : NULL;
 
 	free(text);
 	if (!svg)
@@ -1323,7 +1371,7 @@ void W_Seek(Winfo *w)
 				if (*string == '<') {
 					size_t len;
 					free(read_svg_block(w->inputfile,
-							    string, &len));
+							    string, &len, 1));
 				}
 			} while (*string != '\n'); /*空行になるまくりかえす。*/
 			i++;

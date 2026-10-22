@@ -144,6 +144,7 @@ You can overlay 2D information fixed to the screen (plots, legends, color bars, 
 - An SVG block inside the `global` block is shown in every frame; one inside a frame is shown only in that frame. Several blocks may be written; they are drawn in order.
 - Each SVG is fitted to the whole window according to its `viewBox` and `preserveAspectRatio` (default: keep the aspect ratio and center). Use a transparent background, or the 3D view will be hidden.
 - Drawing order: 3D view, global SVG, frame SVG, status text.
+- Inside an SVG block, lines are passed to the SVG parser as they are: `#` does not start a comment there (CSS rules such as `#id { ... }` are common), so use `<!-- ... -->`. The block ends at the `</svg>` that closes the outermost `<svg>`, so nested `<svg>` elements are fine. A line starting with `<` that is not followed by an `<svg>` element before the end of the frame (e.g. a lone `<!-- note -->`) is ignored with a warning.
 
 See `test/svg_overlay.yap` for an example.
 
@@ -277,6 +278,7 @@ yaplot にはレイヤの概念があります。標準ではレイヤは 1 か�
 - `global` ブロック内の SVG は全フレームに、フレーム内の SVG はそのフレームだけに表示されます。複数書いた場合は書いた順に重ねます。
 - 各 SVG は `viewBox` と `preserveAspectRatio`（既定は縦横比を保って中央）に従ってウィンドウ全体に合わせて描画されます。背景は透明にして下さい（不透明だと 3D 描画が隠れます）。
 - 描画順は 3D 描画、global の SVG、フレームの SVG、ステータス表示の順です。
+- SVG ブロック内の行はそのまま SVG として解釈されます。ブロック内では `#` はコメントになりません（`#id { ... }` のような CSS 規則がよく使われるため）。コメントには `<!-- ... -->` を使って下さい。ブロックは最も外側の `<svg>` を閉じる `</svg>` で終わるので、入れ子の `<svg>` も使えます。`<` で始まっていても、フレームの終わりまでに `<svg>` 要素が現れない行（単独の `<!-- メモ -->` など）は警告を出して無視します。
 
 例は `test/svg_overlay.yap` を参照して下さい。
 
