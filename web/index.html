@@ -43,7 +43,7 @@
     var Module = {
       /* emscripten prepends thisProgram; pass input file(s) only */
       /* ?file=/help.yap selects a preloaded file */
-      arguments: [new URLSearchParams(location.search).get('file') || '/global.yap'],
+      arguments: [new URLSearchParams(location.search).get('file') || '/help.yap'],
       canvas: (function () {
         return document.getElementById('canvas');
       })(),
