@@ -5,12 +5,17 @@
   - [x] A8円マスクのLRUキャッシュと2px半径量子化により、512×512・1,846 objects・splat 3で約7 fpsから約39 fpsへ高速化
   - [x] 描画割り込み時の未完成フレーム表示、受動的マウス移動による割り込み、ドラッグ中の停止・更新不良を修正
   - [ ] 将来は `SDL_RenderGeometry` 等で円、stick、polygon、line、textをGPU描画し、splatと本体の深度順を維持する
-- [ ] WebAssemblyモード（`wasm` ブランチに WIP 保存・一旦中断）
+- [x] WebAssemblyモード（`wasm` ブランチに WIP 保存・一旦中断）
   - [x] Emscripten + Canvas 2D (`src/web.c`) 足場
-  - [ ] ブラウザで gray100 背景すら出ない問題の切り分け
-  - [ ] Colabへの組みこみ
+  - [x] ブラウザで gray100 背景すら出ない問題の切り分け
+  - [x] Colabへの組みこみ
+  - [ ] Web 版の出力機能（現状 `q` / `r` / `R` は無視）
+    - [ ] `r`: キャンバスを PNG スナップショットとしてダウンロード（PDF は外部ライブラリが必要）
+    - [ ] `R`: `canvas.captureStream()` + `MediaRecorder` で WebM 録画（開始/停止トグル。実時間録画なので一定 fps は保証できない）
+    - [ ] 録画モード中の全フレームを PNG 連番にして zip でダウンロードする案
+    - [ ] Colab の出力 iframe からダウンロードできるか要確認
 - [x] 二本指操作の再構築（5.2.1: AppKit phase でピンチ／ロール／FOV）
 - [x] SVG オーバーレイ（5.4: `.yap` に SVG を直接書いて 2D HUD を重ねる。`mode 2d` 案は破棄）
   - [x] スナップショット `r` を PDF 化（3D はビットマップ、SVG とステータス表示はベクタ）
-  - [ ] WebAssembly 版では SVG を画像としてデコードして Canvas に描く（非同期デコードに対応）
+  - [x] WebAssembly 版では SVG を画像としてデコードして Canvas に描く（非同期デコードに対応）
   - [ ] 全要素をベクタで書き出す SVG エクスポート（必要になったら別キーで）

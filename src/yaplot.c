@@ -2470,22 +2470,14 @@ int main(int argc, char *argv[])
 	Winfo *w;
 	int i;
 
-	fprintf(stderr, "yaplot main: argc=%d\n", argc);
-	for (i = 0; i < argc; i++)
-		fprintf(stderr, "  argv[%d]=%s\n", i, argv[i] ? argv[i] : "(null)");
-
 	polygon_Init();
 	w = GetOptions(argc, argv, a, g);
-	fprintf(stderr, "yaplot main: nwindow=%d file=%s\n", g->nwindow,
-		w[0].inputfilename);
 	G_Init2(g);
-	fprintf(stderr, "yaplot main: palette colors=%d\n", g->numColors);
 	W_Init2(w, g);
 	for (i = 0; i < g->nwindow; i++)
 		W_LoadGlobalDefaults(&w[i], g);
 	/*load the first frame*/
 	W_InitActionVars(g, w, a->cachesize);
-	fprintf(stderr, "yaplot main: entering EventLoop\n");
 
 	EventLoop(a, g, w);
 	return (0);

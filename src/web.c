@@ -1149,9 +1149,6 @@ void W_Init2(Winfo *w, Ginfo *g)
 	g_internal = g;
 	w_internal = w;
 
-	fprintf(stderr, "W_Init2: begin nwindow=%d numColors=%d\n", g->nwindow,
-		g->numColors);
-
 	EM_ASM({
 		var canvas = document.getElementById('canvas');
 		if (!canvas) {
@@ -1204,10 +1201,7 @@ void W_Init2(Winfo *w, Ginfo *g)
 		w[i].window = NULL;
 		w[i].drawarea = NULL;
 		w[i].status |= REDRAW;
-		/* Prove the 2D context works: fill palette index 1 (gray100). */
 		clearfb(&w[i]);
-		fprintf(stderr, "W_Init2: canvas %d %dx%d cleared\n", i,
-			w[i].screenwidth, w[i].screenheight);
 	}
 }
 

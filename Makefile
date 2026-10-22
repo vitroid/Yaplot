@@ -16,7 +16,7 @@ PKGDATADIR = $(BREW_PREFIX)/share/yaplot
 BINDIR     = $(BREW_PREFIX)/bin
 FFMPEG_BINDIR = $(BREW_PREFIX)/bin
 
-VERSION = 5.4.1
+VERSION = 5.5
 
 CFLAGS  = -g -Wall -Werror -Werror=vla -I./include
 CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS) $(RSVG_CFLAGS)

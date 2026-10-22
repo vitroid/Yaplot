@@ -27,6 +27,25 @@ The Homebrew formula lives in this repository.
 (`brew trust` is needed only on Homebrew versions that refuse untrusted taps.)
 If you have tapped the old `vitroid/homebrew-yaplot`, run `brew untap vitroid/yaplot` first.
 
+### Web browser and Google Colab
+
+A WebAssembly build runs in the browser at <https://vitroid.github.io/Yaplot/> (no installation). Drop a `.yap` file onto the page to view it.
+
+In Jupyter or Google Colab, drawings made with [yaplotlib](https://github.com/vitroid/yaplotlib) can be shown inline:
+
+            !pip install -q --force-reinstall --no-deps git+https://github.com/vitroid/yaplotlib.git
+            !wget -q -N https://vitroid.github.io/Yaplot/yaplot_view.py
+            from yaplotlib import Yaplot
+            from yaplot_view import show
+
+            y = Yaplot()
+            y.Points([(0, 0, 0), (1, 0, 0), (0, 1, 0)], color=2, size=0.3)
+            show(y)                   # or show(path="movie.yap")
+
+Click the viewer to give it keyboard focus. The keys are the same as the desktop version, except that "q", "r", and "R" do nothing in the browser.
+
+To build it yourself, install [Emscripten](https://emscripten.org) and run `make wasm`; the files are written to `web/`.
+
 ### General install procedure
 
 Yaplot requires SDL2, Cairo, libpng, librsvg, and pkg-config.
@@ -184,6 +203,8 @@ Mac では Homebrew で入れられます（formula はこのリポジトリに�
 
 （`brew trust` は、信頼していない tap を拒否する新しい Homebrew でのみ必要です。）
 以前の `vitroid/homebrew-yaplot` を tap している場合は、先に `brew untap vitroid/yaplot` して下さい。
+
+ブラウザ版（WebAssembly）は <https://vitroid.github.io/Yaplot/> でインストールなしに使えます。`.yap` ファイルをページにドロップすると表示されます。Jupyter や Google Colab では、[yaplotlib](https://github.com/vitroid/yaplotlib) で作った図を `web/yaplot_view.py` の `show()` でセル内に表示できます（使い方は英語版の "Web browser and Google Colab" を参照）。ビューアをクリックするとキー操作を受け付けます。キー操作はデスクトップ版と同じですが、ブラウザでは "q"、"r"、"R" は効きません。自分でビルドする場合は [Emscripten](https://emscripten.org) を入れて `make wasm` を実行すると `web/` に出力されます。
 
 ソースからビルドする場合：現在、yaplot は SDL2 と Cairo を使って書かれています。インストールする前にあらかじめ SDL2、Cairo、libpng、librsvg、pkg-config をインストールしておいて下さい。Mac OS では、[HomeBrew](https://brew.sh)をおすすめします。
 

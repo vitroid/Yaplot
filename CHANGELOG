@@ -1,3 +1,10 @@
+2026-10 / Version 5.5
+	WebAssembly 版（Emscripten + Canvas 2D）を GitHub Pages で公開
+	（https://vitroid.github.io/Yaplot/）
+	Jupyter / Google Colab から web/yaplot_view.py の show() で yaplotlib の図を表示
+	ブラウザ版: .yap のドラッグ＆ドロップで差し替え、ピンチ／二本指回転、SVG オーバーレイ、
+	splat（円マスクは使わず単純な円）。q / r / R は無効
+
 2026-10 / Version 5.4.1
 	Homebrew formula を本体リポジトリで配布（homebrew-yaplot は廃止）
 	ffmpeg のパスを BINDIR ではなく BREW_PREFIX から決める（Homebrew 版で R が動かなかった）

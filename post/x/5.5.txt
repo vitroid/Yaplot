@@ -1,0 +1,5 @@
+Yaplot 5.5 runs in the browser. The WebAssembly build is live at https://vitroid.github.io/Yaplot/ — drop a .yap file to view it, no install needed.
+
+It also works inline in Jupyter / Google Colab: build a scene with yaplotlib and call show(). Same keys as the desktop version, plus pinch zoom and drag-and-drop.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.5
