@@ -29,6 +29,22 @@ message "  + / - and d         : Reality (0..4) and depth splat shadow (0..3)"
 message "  [ / ] and * / /     : Field of view & zoom"
 message "  v (or 0v..3v)       : Set on-screen info verbosity"
 message "  q                   : Quit"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<rect x="292.0" y="368.0" width="212.0" height="136.0" rx="6" fill="white" fill-opacity="0.7" stroke="rgb(90,110,130)" stroke-width="0.8"/>
+<line x1="328.0" y1="484.0" x2="494.0" y2="484.0" stroke="rgb(170,170,170)" stroke-width="0.5"/>
+<text x="324.0" y="487.0" font-size="9" text-anchor="end" fill="rgb(60,60,60)">1</text>
+<line x1="328.0" y1="453.3" x2="494.0" y2="453.3" stroke="rgb(170,170,170)" stroke-width="0.5"/>
+<text x="324.0" y="456.3" font-size="9" text-anchor="end" fill="rgb(60,60,60)">10</text>
+<line x1="328.0" y1="422.7" x2="494.0" y2="422.7" stroke="rgb(170,170,170)" stroke-width="0.5"/>
+<text x="324.0" y="425.7" font-size="9" text-anchor="end" fill="rgb(60,60,60)">100</text>
+<line x1="328.0" y1="392.0" x2="494.0" y2="392.0" stroke="rgb(170,170,170)" stroke-width="0.5"/>
+<text x="324.0" y="395.0" font-size="9" text-anchor="end" fill="rgb(60,60,60)">1000</text>
+<polyline points="328.0,392.0 328.0,484.0 494.0,484.0" fill="none" stroke="rgb(60,60,60)" stroke-width="0.8"/>
+<text x="411.0" y="498.0" font-size="9" text-anchor="middle" fill="rgb(60,60,60)">time</text>
+<polyline points="329.2,484.0 330.4,484.0 331.6,474.8 332.8,474.8 334.0,474.8 335.2,474.8 336.4,465.5 337.6,465.5 338.7,454.7 339.9,454.7 341.1,448.9 342.3,448.9 343.5,448.9 344.7,447.1 345.9,444.8 347.1,442.2 348.3,441.1 349.5,440.1 350.7,437.8 351.9,434.2 353.1,433.0 354.3,432.4 355.5,430.6 356.7,428.8 357.9,426.7 359.1,425.6 360.2,424.7 361.4,423.1 362.6,420.8 363.8,419.8 365.0,418.9 366.2,418.0 367.4,416.7 368.6,415.1 369.8,413.8 371.0,413.1 372.2,412.3 373.4,411.6 374.6,410.5 375.8,409.5 377.0,408.8 378.2,408.0 379.4,407.5 380.5,406.8 381.7,406.2 382.9,405.6 384.1,405.1 385.3,404.5 386.5,404.2 387.7,403.7 388.9,403.3 390.1,403.0 391.3,402.6 392.5,402.3 393.7,402.1 394.9,401.9 396.1,401.7 397.3,401.4 398.5,401.2 399.7,401.1 400.8,401.0 402.0,401.0 403.2,400.9 404.4,400.7 405.6,400.6 406.8,400.6 408.0,400.6 409.2,400.6 410.4,400.6 411.6,400.5 412.8,400.5 414.0,400.5 415.2,400.5 416.4,400.5 417.6,400.5 418.8,400.5 420.0,400.5 421.2,400.5 422.3,400.5 423.5,400.5 424.7,400.5 425.9,400.5 427.1,400.5 428.3,400.5 429.5,400.5 430.7,400.5 431.9,400.5 433.1,400.5 434.3,400.5 435.5,400.5 436.7,400.5 437.9,400.5 439.1,400.5 440.3,400.5 441.5,400.5 442.6,400.5 443.8,400.5 445.0,400.5 446.2,400.5 447.4,400.5 448.6,400.5 449.8,400.5 451.0,400.5 452.2,400.5 453.4,400.5 454.6,400.5 455.8,400.5 457.0,400.5 458.2,400.5 459.4,400.5 460.6,400.5 461.8,400.5 462.9,400.5 464.1,400.5 465.3,400.5 466.5,400.5 467.7,400.5 468.9,400.5 470.1,400.5 471.3,400.5 472.5,400.5 473.7,400.5 474.9,400.5 476.1,400.5 477.3,400.5 478.5,400.5 479.7,400.5 480.9,400.5 482.1,400.5 483.3,400.5 484.4,400.5 485.6,400.5 486.8,400.5 488.0,400.5 489.2,400.5 490.4,400.5 491.6,400.5 492.8,400.5 494.0,400.5" fill="none" stroke="rgb(120,80,45)" stroke-width="1.5"/>
+<polyline points="329.2,474.8 330.4,474.8 331.6,465.5 332.8,465.5 334.0,460.1 335.2,460.1 336.4,453.3 337.6,454.7 338.7,454.7 339.9,454.7 341.1,446.3 342.3,445.5 343.5,444.8 344.7,442.2 345.9,440.1 347.1,436.6 348.3,434.5 349.5,433.0 350.7,430.9 351.9,426.7 353.1,426.0 354.3,424.8 355.5,422.8 356.7,420.7 357.9,418.4 359.1,417.7 360.2,416.5 361.4,415.0 362.6,412.3 363.8,411.6 365.0,410.5 366.2,409.6 367.4,408.3 368.6,406.8 369.8,405.5 371.0,404.7 372.2,403.8 373.4,402.8 374.6,401.7 375.8,401.2 377.0,400.5 378.2,399.5 379.4,398.7 380.5,398.0 381.7,397.3 382.9,397.1 384.1,396.7 385.3,395.8 386.5,395.4 387.7,394.8 388.9,394.5 390.1,394.3 391.3,394.0 392.5,393.5 393.7,393.3 394.9,393.2 396.1,393.0 397.3,392.8 398.5,392.7 399.7,392.6 400.8,392.6 402.0,392.6 403.2,392.5 404.4,392.5 405.6,392.5 406.8,392.6 408.0,392.6 409.2,392.5 410.4,392.6 411.6,392.6 412.8,393.0 414.0,393.1 415.2,393.0 416.4,393.0 417.6,393.0 418.8,393.1 420.0,393.3 421.2,393.5 422.3,393.4 423.5,393.4 424.7,393.4 425.9,393.5 427.1,393.6 428.3,393.6 429.5,393.6 430.7,393.6 431.9,393.7 433.1,393.7 434.3,393.7 435.5,393.7 436.7,393.7 437.9,393.7 439.1,393.7 440.3,393.7 441.5,393.7 442.6,393.7 443.8,393.7 445.0,393.7 446.2,393.7 447.4,393.7 448.6,393.7 449.8,393.7 451.0,393.7 452.2,393.7 453.4,393.7 454.6,393.7 455.8,393.7 457.0,393.7 458.2,393.7 459.4,393.7 460.6,393.7 461.8,393.7 462.9,393.7 464.1,393.7 465.3,393.7 466.5,393.7 467.7,393.7 468.9,393.7 470.1,393.7 471.3,393.7 472.5,393.7 473.7,393.7 474.9,393.7 476.1,393.7 477.3,393.7 478.5,393.7 479.7,393.7 480.9,393.7 482.1,393.7 483.3,393.7 484.4,393.7 485.6,393.7 486.8,393.7 488.0,393.7 489.2,393.7 490.4,393.7 491.6,393.7 492.8,393.7 494.0,393.7" fill="none" stroke="rgb(40,140,55)" stroke-width="1.5"/>
+<polyline points="404.4,458.1 405.6,448.9 406.8,434.5 408.0,428.2 409.2,425.0 410.4,423.5 411.6,422.0 412.8,419.2 414.0,417.2 415.2,414.6 416.4,412.7 417.6,410.7 418.8,409.0 420.0,407.6 421.2,406.7 422.3,405.9 423.5,405.0 424.7,404.1 425.9,403.2 427.1,401.9 428.3,401.8 429.5,401.8 430.7,401.8 431.9,401.7 433.1,401.6 434.3,401.6 435.5,401.6 436.7,401.6 437.9,401.6 439.1,401.6 440.3,401.6 441.5,401.6 442.6,401.6 443.8,401.6 445.0,401.7 446.2,401.9 447.4,402.1 448.6,402.2 449.8,402.5 451.0,402.6 452.2,403.0 453.4,403.0 454.6,403.1 455.8,403.4 457.0,403.6 458.2,403.7 459.4,404.1 460.6,404.4 461.8,404.5 462.9,404.8 464.1,405.2 465.3,405.5 466.5,405.7 467.7,405.7 468.9,405.8 470.1,406.0 471.3,406.1 472.5,406.1 473.7,406.1 474.9,406.1 476.1,406.1 477.3,406.1 478.5,406.1 479.7,406.1 480.9,406.1 482.1,406.1 483.3,406.1 484.4,406.1 485.6,406.1 486.8,406.1 488.0,406.1 489.2,406.1 490.4,406.1 491.6,406.1 492.8,406.1 494.0,406.1" fill="none" stroke="rgb(225,95,145)" stroke-width="1.5"/>
+</svg>
 
 y 1
 @ 9
@@ -96,6 +112,15 @@ p 4 -0.000 -6.400 -11.750 -0.000 -9.500 -11.750 3.635 -8.777 -11.750 2.449 -5.91
 p 4 2.449 -5.913 -11.750 3.635 -8.777 -11.750 6.718 -6.718 -11.750 4.525 -4.525 -11.750
 p 4 4.525 -4.525 -11.750 6.718 -6.718 -11.750 8.777 -3.635 -11.750 5.913 -2.449 -11.750
 p 4 5.913 -2.449 -11.750 8.777 -3.635 -11.750 9.500 -0.000 -11.750 6.400 -0.000 -11.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="328.0" y1="392.0" x2="328.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 0</text>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 0</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -172,6 +197,17 @@ c 0.048 -0.239 -9.954
 @ 6
 r 0.24
 c -0.209 0.224 -9.973
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="329.2" y1="392.0" x2="329.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="329.2" cy="484.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 1</text>
+<circle cx="329.2" cy="474.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 2</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -248,6 +284,17 @@ c 0.058 -0.243 -8.571
 @ 6
 r 0.40
 c -0.253 0.318 -8.594
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="330.4" y1="392.0" x2="330.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="330.4" cy="484.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 1</text>
+<circle cx="330.4" cy="474.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 2</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -329,6 +376,17 @@ r 0.08
 c 0.146 0.029 -8.034
 r 0.40
 c -0.253 0.343 -7.971
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="331.6" y1="392.0" x2="331.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="331.6" cy="474.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 2</text>
+<circle cx="331.6" cy="465.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 4</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -410,6 +468,17 @@ r 0.16
 c 0.241 0.008 -7.400
 r 0.32
 c -0.253 0.343 -7.971
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="332.8" y1="392.0" x2="332.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="332.8" cy="474.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 2</text>
+<circle cx="332.8" cy="465.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 4</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -496,6 +565,17 @@ r 0.24
 c -0.253 0.343 -7.971
 r 0.40
 c 0.360 0.003 -6.246
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="334.0" y1="392.0" x2="334.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="334.0" cy="474.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 2</text>
+<circle cx="334.0" cy="460.1" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 6</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -582,6 +662,17 @@ r 0.16
 c 0.270 0.464 -7.996
 r 0.40
 c 0.395 0.033 -5.403
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="335.2" y1="392.0" x2="335.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="335.2" cy="474.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 2</text>
+<circle cx="335.2" cy="460.1" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 6</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -674,6 +765,17 @@ r 0.24
 c 0.270 0.464 -7.996
 r 0.40
 c 0.399 0.036 -5.304
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="336.4" y1="392.0" x2="336.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="336.4" cy="465.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 4</text>
+<circle cx="336.4" cy="453.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 10</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -764,6 +866,17 @@ c 0.270 0.464 -7.996
 r 0.32
 c -0.030 0.800 -4.792
 c -0.144 0.105 -4.294
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="337.6" y1="392.0" x2="337.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="337.6" cy="465.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 4</text>
+<circle cx="337.6" cy="454.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 9</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -862,6 +975,17 @@ c 0.270 0.464 -7.996
 r 0.40
 c -0.427 1.346 -4.341
 c -0.141 0.083 -3.323
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="338.7" y1="392.0" x2="338.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="338.7" cy="454.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 9</text>
+<circle cx="338.7" cy="454.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 9</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -958,6 +1082,17 @@ r 0.40
 c -0.770 1.776 -4.002
 c -0.122 0.078 -2.836
 c 0.270 0.464 -7.996
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="339.9" y1="392.0" x2="339.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="339.9" cy="454.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 9</text>
+<circle cx="339.9" cy="454.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 9</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -1071,6 +1206,17 @@ c -0.122 0.078 -2.834
 r 0.40
 c -0.869 1.900 -3.905
 c 0.270 0.464 -7.996
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="341.1" y1="392.0" x2="341.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="341.1" cy="448.9" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 14</text>
+<circle cx="341.1" cy="446.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 17</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -1183,6 +1329,17 @@ c 0.114 -0.722 -2.697
 c -0.041 0.392 -1.667
 r 0.40
 c 0.270 0.464 -7.996
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="342.3" y1="392.0" x2="342.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="342.3" cy="448.9" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 14</text>
+<circle cx="342.3" cy="445.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 18</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -1297,6 +1454,17 @@ c 0.053 -1.325 -2.352
 c 0.906 1.044 -2.554
 c -0.058 0.387 -0.870
 c 0.270 0.464 -7.996
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="343.5" y1="392.0" x2="343.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="343.5" cy="448.9" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 14</text>
+<circle cx="343.5" cy="444.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 19</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -1417,6 +1585,17 @@ c -0.060 0.382 -0.586
 c 0.270 0.464 -7.996
 r 0.48
 c -1.432 2.478 -2.822
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="344.7" y1="392.0" x2="344.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="344.7" cy="447.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 16</text>
+<circle cx="344.7" cy="442.2" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 23</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -1547,6 +1726,17 @@ c 1.464 1.625 -2.062
 c 0.270 0.464 -7.996
 r 0.48
 c -1.574 2.607 -2.391
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="345.9" y1="392.0" x2="345.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="345.9" cy="444.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 19</text>
+<circle cx="345.9" cy="440.1" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 27</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -1691,6 +1881,17 @@ c -0.121 -0.009 0.617
 c 0.270 0.464 -7.996
 r 0.48
 c -1.635 2.662 -2.208
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="347.1" y1="392.0" x2="347.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="347.1" cy="442.2" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 23</text>
+<circle cx="347.1" cy="436.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 35</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -1843,6 +2044,17 @@ c -1.255 -0.051 -0.194
 c 1.054 -0.124 0.066
 c -0.138 0.004 1.292
 c 0.270 0.464 -7.996
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="348.3" y1="392.0" x2="348.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="348.3" cy="441.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 25</text>
+<circle cx="348.3" cy="434.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 41</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -2002,6 +2214,17 @@ r 0.48
 c -2.460 4.053 -2.863
 c 0.216 -2.212 -0.611
 c 1.716 1.974 -0.999
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="349.5" y1="392.0" x2="349.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="349.5" cy="440.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 27</text>
+<circle cx="349.5" cy="433.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 46</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -2175,6 +2398,17 @@ c -2.184 2.417 -1.146
 c -2.562 4.490 -2.738
 c 0.212 -2.303 -0.241
 c 1.885 2.069 -0.597
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="350.7" y1="392.0" x2="350.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="350.7" cy="437.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 32</text>
+<circle cx="350.7" cy="430.9" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 54</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -2379,6 +2613,17 @@ c -2.558 3.409 -1.870
 c -2.294 2.572 -0.733
 c -2.634 4.803 -2.648
 c 1.999 2.133 -0.327
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="351.9" y1="392.0" x2="351.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="351.9" cy="434.2" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 42</text>
+<circle cx="351.9" cy="426.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 74</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -2591,6 +2836,17 @@ c -2.775 3.635 -1.719
 c -2.364 2.669 -0.473
 c -1.778 -0.470 0.971
 c -1.200 1.497 -3.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="353.1" y1="392.0" x2="353.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="353.1" cy="433.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 46</text>
+<circle cx="353.1" cy="426.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 78</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -2813,6 +3069,17 @@ c -0.243 -3.894 -0.235
 c -1.880 -0.533 1.409
 c 1.402 -0.644 1.461
 c -1.200 1.497 -3.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="354.3" y1="392.0" x2="354.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="354.3" cy="432.4" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 48</text>
+<circle cx="354.3" cy="424.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 85</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -3057,6 +3324,17 @@ c 3.030 3.053 -0.114
 c -1.960 -0.583 1.756
 c 1.514 -0.706 1.856
 c -1.200 1.497 -3.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="355.5" y1="392.0" x2="355.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="355.5" cy="430.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 55</text>
+<circle cx="355.5" cy="422.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 99</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -3325,6 +3603,17 @@ c 3.340 3.260 -0.015
 c -1.993 -0.604 1.898
 c 1.590 -0.748 2.126
 c -1.200 1.497 -3.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="356.7" y1="392.0" x2="356.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="356.7" cy="428.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 63</text>
+<circle cx="356.7" cy="420.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 116</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -3628,6 +3917,17 @@ c 2.606 2.660 0.527
 c 2.219 2.215 1.108
 c 3.525 3.384 0.044
 c -1.200 1.497 -3.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="357.9" y1="392.0" x2="357.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="357.9" cy="426.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 74</text>
+<circle cx="357.9" cy="418.4" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 138</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -3944,6 +4244,17 @@ c -1.364 -0.673 3.306
 c 1.370 1.230 3.884
 c -1.711 0.528 3.334
 c -1.200 1.497 -3.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="359.1" y1="392.0" x2="359.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="359.1" cy="425.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 80</text>
+<circle cx="359.1" cy="417.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 145</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -4280,6 +4591,17 @@ c 1.360 1.383 4.186
 c -1.883 0.451 3.657
 c 0.387 -0.833 4.081
 c -1.200 1.497 -3.750
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="360.2" y1="392.0" x2="360.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="360.2" cy="424.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 86</text>
+<circle cx="360.2" cy="416.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 159</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -4646,6 +4968,17 @@ c 0.484 -0.806 4.387
 c -1.200 1.497 -3.750
 c -2.704 3.074 -0.811
 c -0.140 0.530 1.455
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="361.4" y1="392.0" x2="361.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="361.4" cy="423.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 97</text>
+<circle cx="361.4" cy="415.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 178</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -5073,6 +5406,17 @@ c -2.514 3.790 -1.011
 c -0.140 0.530 1.455
 r 0.56
 c -2.704 3.074 -0.811
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="362.6" y1="392.0" x2="362.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="362.6" cy="420.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 115</text>
+<circle cx="362.6" cy="412.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 218</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -5521,6 +5865,17 @@ c -0.140 0.530 1.455
 r 0.56
 c -2.514 3.790 -1.011
 c -2.704 3.074 -0.811
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="363.8" y1="392.0" x2="363.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="363.8" cy="419.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 124</text>
+<circle cx="363.8" cy="411.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 230</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -5997,6 +6352,17 @@ c -0.140 0.530 1.455
 r 0.64
 c -2.514 3.790 -1.011
 c -2.704 3.074 -0.811
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="365.0" y1="392.0" x2="365.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="365.0" cy="418.9" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 133</text>
+<circle cx="365.0" cy="410.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 249</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -6499,6 +6865,17 @@ c -0.140 0.530 1.455
 r 0.64
 c -2.514 3.790 -1.011
 c -2.704 3.074 -0.811
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="366.2" y1="392.0" x2="366.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="366.2" cy="418.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 142</text>
+<circle cx="366.2" cy="409.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 266</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -7043,6 +7420,17 @@ c -0.423 -1.885 1.405
 r 0.64
 c -2.514 3.790 -1.011
 c -2.704 3.074 -0.811
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="367.4" y1="392.0" x2="367.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="367.4" cy="416.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 156</text>
+<circle cx="367.4" cy="408.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 293</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -7646,6 +8034,17 @@ c -0.423 -1.885 1.405
 r 0.64
 c -2.514 3.790 -1.011
 c -2.704 3.074 -0.811
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="368.6" y1="392.0" x2="368.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="368.6" cy="415.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 177</text>
+<circle cx="368.6" cy="406.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 330</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -8299,6 +8698,17 @@ r 0.64
 c -2.514 3.790 -1.011
 c -2.704 3.074 -0.811
 c -0.423 -1.885 1.405
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="369.8" y1="392.0" x2="369.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="369.8" cy="413.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 194</text>
+<circle cx="369.8" cy="405.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 362</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -8988,6 +9398,17 @@ c -2.704 3.074 -0.811
 c -0.423 -1.885 1.405
 c 3.003 3.090 -0.025
 c 2.764 2.428 0.858
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="371.0" y1="392.0" x2="371.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="371.0" cy="413.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 205</text>
+<circle cx="371.0" cy="404.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 386</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -9715,6 +10136,17 @@ c -2.704 3.074 -0.811
 c -0.423 -1.885 1.405
 c 3.003 3.090 -0.025
 c 2.764 2.428 0.858
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="372.2" y1="392.0" x2="372.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="372.2" cy="412.3" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 217</text>
+<circle cx="372.2" cy="403.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 413</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -10485,6 +10917,17 @@ c -3.156 2.116 0.508
 c -0.423 -1.885 1.405
 c 3.003 3.090 -0.025
 c 2.764 2.428 0.858
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="373.4" y1="392.0" x2="373.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="373.4" cy="411.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 230</text>
+<circle cx="373.4" cy="402.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 443</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -11315,6 +11758,17 @@ c -3.156 2.116 0.508
 c -0.423 -1.885 1.405
 c 3.003 3.090 -0.025
 c 2.764 2.428 0.858
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="374.6" y1="392.0" x2="374.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="374.6" cy="410.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 250</text>
+<circle cx="374.6" cy="401.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 482</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -12183,6 +12637,17 @@ c 3.003 3.090 -0.025
 c 2.764 2.428 0.858
 c -1.629 -0.813 3.195
 c 1.592 -1.615 3.261
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="375.8" y1="392.0" x2="375.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="375.8" cy="409.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 268</text>
+<circle cx="375.8" cy="401.2" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 503</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -13093,6 +13558,17 @@ c 2.764 2.428 0.858
 c 3.743 4.242 0.796
 c -1.629 -0.813 3.195
 c 1.592 -1.615 3.261
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="377.0" y1="392.0" x2="377.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="377.0" cy="408.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 283</text>
+<circle cx="377.0" cy="400.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 530</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -14058,6 +14534,17 @@ c 3.743 4.242 0.796
 c -1.629 -0.813 3.195
 c 2.672 -1.358 3.322
 c 1.592 -1.615 3.261
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="378.2" y1="392.0" x2="378.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="378.2" cy="408.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 300</text>
+<circle cx="378.2" cy="399.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 568</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -15074,6 +15561,17 @@ c 3.743 4.242 0.796
 c -1.629 -0.813 3.195
 c 2.672 -1.358 3.322
 c 1.592 -1.615 3.261
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="379.4" y1="392.0" x2="379.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="379.4" cy="407.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 312</text>
+<circle cx="379.4" cy="398.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 606</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -16140,6 +16638,17 @@ c -1.629 -0.813 3.195
 c 2.672 -1.358 3.322
 c 1.592 -1.615 3.261
 c 0.210 3.251 4.755
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="380.5" y1="392.0" x2="380.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="380.5" cy="406.8" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 330</text>
+<circle cx="380.5" cy="398.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 638</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -17253,6 +17762,17 @@ c -1.859 -0.428 5.387
 c 1.997 1.501 5.350
 c -2.248 -0.196 5.056
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="381.7" y1="392.0" x2="381.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="381.7" cy="406.2" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 345</text>
+<circle cx="381.7" cy="397.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 670</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -18396,6 +18916,17 @@ c -1.859 -0.428 5.387
 c 1.997 1.501 5.350
 c -2.248 -0.196 5.056
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="382.9" y1="392.0" x2="382.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="382.9" cy="405.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 361</text>
+<circle cx="382.9" cy="397.1" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 684</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -19571,6 +20102,17 @@ c -1.859 -0.428 5.387
 c 1.997 1.501 5.350
 c -2.248 -0.196 5.056
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="384.1" y1="392.0" x2="384.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="384.1" cy="405.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 374</text>
+<circle cx="384.1" cy="396.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 704</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -20807,6 +21349,17 @@ c -1.859 -0.428 5.387
 c 1.997 1.501 5.350
 c -2.248 -0.196 5.056
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="385.3" y1="392.0" x2="385.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="385.3" cy="404.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 390</text>
+<circle cx="385.3" cy="395.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 749</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -22079,6 +22632,17 @@ c 3.329 0.288 6.514
 c 4.007 0.606 5.895
 c -2.248 -0.196 5.056
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="386.5" y1="392.0" x2="386.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="386.5" cy="404.2" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 400</text>
+<circle cx="386.5" cy="395.4" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 775</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -23401,6 +23965,17 @@ c 4.007 0.606 5.895
 c -2.248 -0.196 5.056
 c -2.704 0.659 6.374
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="387.7" y1="392.0" x2="387.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="387.7" cy="403.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 416</text>
+<circle cx="387.7" cy="394.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 809</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -24752,6 +25327,17 @@ c -2.360 -0.700 5.907
 c -2.704 0.659 6.374
 c -2.231 2.781 5.867
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="388.9" y1="392.0" x2="388.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="388.9" cy="403.3" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 427</text>
+<circle cx="388.9" cy="394.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 827</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -26128,6 +26714,17 @@ c -2.360 -0.700 5.907
 c -2.704 0.659 6.374
 c -2.231 2.781 5.867
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="390.1" y1="392.0" x2="390.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="390.1" cy="403.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 438</text>
+<circle cx="390.1" cy="394.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 841</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -27536,6 +28133,17 @@ c -2.360 -0.700 5.907
 c -2.704 0.659 6.374
 c -2.231 2.781 5.867
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="391.3" y1="392.0" x2="391.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="391.3" cy="402.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 450</text>
+<circle cx="391.3" cy="394.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 861</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -28988,6 +29596,17 @@ c -2.360 -0.700 5.907
 c -2.704 0.659 6.374
 c -2.231 2.781 5.867
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="392.5" y1="392.0" x2="392.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="392.5" cy="402.3" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 462</text>
+<circle cx="392.5" cy="393.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 893</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -30460,6 +31079,17 @@ c -2.704 0.659 6.374
 c -2.231 2.781 5.867
 c -3.810 2.240 6.608
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="393.7" y1="392.0" x2="393.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="393.7" cy="402.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 468</text>
+<circle cx="393.7" cy="393.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 907</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -31944,6 +32574,17 @@ c -1.668 4.392 5.572
 c -1.776 3.830 6.647
 c -3.810 2.240 6.608
 c 1.268 -0.188 5.474
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="394.9" y1="392.0" x2="394.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="394.9" cy="401.9" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 476</text>
+<circle cx="394.9" cy="393.2" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 911</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -33451,6 +34092,17 @@ c -3.810 2.240 6.608
 c 1.268 -0.188 5.474
 c 1.623 -2.168 7.591
 c 2.236 -2.628 7.241
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="396.1" y1="392.0" x2="396.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="396.1" cy="401.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 483</text>
+<circle cx="396.1" cy="393.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 927</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -34980,6 +35632,17 @@ c 1.196 -0.597 7.780
 c -0.679 -3.279 7.614
 c 1.623 -2.168 7.591
 c 2.236 -2.628 7.241
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="397.3" y1="392.0" x2="397.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="397.3" cy="401.4" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 493</text>
+<circle cx="397.3" cy="392.8" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 939</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -36528,6 +37191,17 @@ c 1.196 -0.597 7.780
 c -0.679 -3.279 7.614
 c 1.623 -2.168 7.591
 c 2.236 -2.628 7.241
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="398.5" y1="392.0" x2="398.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="398.5" cy="401.2" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 500</text>
+<circle cx="398.5" cy="392.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 951</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -38087,6 +38761,17 @@ c 1.196 -0.597 7.780
 c -0.679 -3.279 7.614
 c 1.623 -2.168 7.591
 c 2.236 -2.628 7.241
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="399.7" y1="392.0" x2="399.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="399.7" cy="401.1" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 505</text>
+<circle cx="399.7" cy="392.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 957</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -39651,6 +40336,17 @@ c -0.679 -3.279 7.614
 c 1.623 -2.168 7.591
 c 2.236 -2.628 7.241
 c 0.769 -1.410 8.525
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="400.8" y1="392.0" x2="400.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="400.8" cy="401.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 508</text>
+<circle cx="400.8" cy="392.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 959</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -41211,6 +41907,17 @@ c 2.236 -2.628 7.241
 c 2.680 -3.690 7.712
 c 1.041 -2.682 8.660
 c 0.769 -1.410 8.525
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="402.0" y1="392.0" x2="402.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="402.0" cy="401.0" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 508</text>
+<circle cx="402.0" cy="392.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 955</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -42786,6 +43493,17 @@ c 2.236 -2.628 7.241
 c 2.680 -3.690 7.712
 c 1.041 -2.682 8.660
 c 0.769 -1.410 8.525
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="403.2" y1="392.0" x2="403.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="403.2" cy="400.9" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 514</text>
+<circle cx="403.2" cy="392.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 964</text>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 0</text>
+</svg>
 
 y 1
 @ 9
@@ -44381,6 +45099,18 @@ c 2.796 -0.227 7.082
 @ 8
 r 0.08
 c 5.047 3.768 1.947
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="404.4" y1="392.0" x2="404.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="404.4" cy="400.7" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 519</text>
+<circle cx="404.4" cy="392.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 966</text>
+<circle cx="404.4" cy="458.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 7</text>
+</svg>
 
 y 1
 @ 9
@@ -45984,6 +46714,18 @@ c -1.110 -2.921 7.554
 @ 8
 r 0.08
 c 5.047 3.768 1.947
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="405.6" y1="392.0" x2="405.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="405.6" cy="400.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 524</text>
+<circle cx="405.6" cy="392.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 962</text>
+<circle cx="405.6" cy="448.9" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 14</text>
+</svg>
 
 y 1
 @ 9
@@ -47613,6 +48355,18 @@ c 5.047 3.768 1.947
 c -5.644 -0.536 4.628
 c -1.021 -0.922 8.964
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="406.8" y1="392.0" x2="406.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="406.8" cy="400.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 525</text>
+<circle cx="406.8" cy="392.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 957</text>
+<circle cx="406.8" cy="434.5" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 41</text>
+</svg>
 
 y 1
 @ 9
@@ -49274,6 +50028,18 @@ c 1.584 5.077 6.544
 c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="408.0" y1="392.0" x2="408.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="408.0" cy="400.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 525</text>
+<circle cx="408.0" cy="392.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 959</text>
+<circle cx="408.0" cy="428.2" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 66</text>
+</svg>
 
 y 1
 @ 9
@@ -50957,6 +51723,18 @@ c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -2.255 4.306 6.162
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="409.2" y1="392.0" x2="409.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="409.2" cy="400.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 525</text>
+<circle cx="409.2" cy="392.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 961</text>
+<circle cx="409.2" cy="425.0" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 84</text>
+</svg>
 
 y 1
 @ 9
@@ -52647,6 +53425,18 @@ c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -2.255 4.306 6.162
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="410.4" y1="392.0" x2="410.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="410.4" cy="400.6" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 525</text>
+<circle cx="410.4" cy="392.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 957</text>
+<circle cx="410.4" cy="423.5" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 94</text>
+</svg>
 
 y 1
 @ 9
@@ -54350,6 +55140,18 @@ c -5.298 2.718 6.861
 c -3.190 2.177 9.178
 r 0.16
 c 5.047 3.768 1.947
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="411.6" y1="392.0" x2="411.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="411.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 529</text>
+<circle cx="411.6" cy="392.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 953</text>
+<circle cx="411.6" cy="422.0" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 105</text>
+</svg>
 
 y 1
 @ 9
@@ -56061,6 +56863,18 @@ r 0.16
 c 5.047 3.768 1.947
 c -5.644 -0.536 4.628
 c -1.021 -0.922 8.964
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="412.8" y1="392.0" x2="412.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="412.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="412.8" cy="393.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 931</text>
+<circle cx="412.8" cy="419.2" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 130</text>
+</svg>
 
 y 1
 @ 9
@@ -57785,6 +58599,18 @@ c 1.584 5.077 6.544
 c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="414.0" y1="392.0" x2="414.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="414.0" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="414.0" cy="393.1" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 919</text>
+<circle cx="414.0" cy="417.2" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 151</text>
+</svg>
 
 y 1
 @ 9
@@ -59552,6 +60378,18 @@ c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -2.255 4.306 6.162
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="415.2" y1="392.0" x2="415.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="415.2" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="415.2" cy="393.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 925</text>
+<circle cx="415.2" cy="414.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 183</text>
+</svg>
 
 y 1
 @ 9
@@ -61357,6 +62195,18 @@ c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -2.255 4.306 6.162
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="416.4" y1="392.0" x2="416.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="416.4" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="416.4" cy="393.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 931</text>
+<circle cx="416.4" cy="412.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 211</text>
+</svg>
 
 y 1
 @ 9
@@ -63202,6 +64052,18 @@ c -2.255 4.306 6.162
 c -3.190 2.177 9.178
 r 0.24
 c 5.047 3.768 1.947
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="417.6" y1="392.0" x2="417.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="417.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="417.6" cy="393.0" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 931</text>
+<circle cx="417.6" cy="410.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 245</text>
+</svg>
 
 y 1
 @ 9
@@ -65075,6 +65937,18 @@ r 0.24
 c 5.047 3.768 1.947
 c -5.644 -0.536 4.628
 c -1.021 -0.922 8.964
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="418.8" y1="392.0" x2="418.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="418.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="418.8" cy="393.1" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 919</text>
+<circle cx="418.8" cy="409.0" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 280</text>
+</svg>
 
 y 1
 @ 9
@@ -66968,6 +67842,18 @@ c 1.584 5.077 6.544
 c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="420.0" y1="392.0" x2="420.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="420.0" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="420.0" cy="393.3" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 905</text>
+<circle cx="420.0" cy="407.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 310</text>
+</svg>
 
 y 1
 @ 9
@@ -68876,6 +69762,18 @@ c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -2.255 4.306 6.162
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="421.2" y1="392.0" x2="421.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="421.2" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="421.2" cy="393.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 895</text>
+<circle cx="421.2" cy="406.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 332</text>
+</svg>
 
 y 1
 @ 9
@@ -70810,6 +71708,18 @@ c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -2.255 4.306 6.162
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="422.3" y1="392.0" x2="422.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="422.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="422.3" cy="393.4" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 898</text>
+<circle cx="422.3" cy="405.9" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 353</text>
+</svg>
 
 y 1
 @ 9
@@ -72773,6 +73683,18 @@ c -1.021 -0.922 8.964
 c -3.059 -3.001 9.204
 c -2.255 4.306 6.162
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="423.5" y1="392.0" x2="423.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="423.5" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="423.5" cy="393.4" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 902</text>
+<circle cx="423.5" cy="405.0" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 376</text>
+</svg>
 
 y 1
 @ 9
@@ -74763,6 +75685,18 @@ c -1.274 5.468 7.075
 c -2.255 4.306 6.162
 c -5.298 2.718 6.861
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="424.7" y1="392.0" x2="424.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="424.7" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="424.7" cy="393.4" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 902</text>
+<circle cx="424.7" cy="404.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 402</text>
+</svg>
 
 y 1
 @ 9
@@ -76778,6 +77712,18 @@ c -1.274 5.468 7.075
 c -2.255 4.306 6.162
 c -5.298 2.718 6.861
 c -3.190 2.177 9.178
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="425.9" y1="392.0" x2="425.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="425.9" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="425.9" cy="393.5" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 893</text>
+<circle cx="425.9" cy="403.2" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 432</text>
+</svg>
 
 y 1
 @ 9
@@ -78836,6 +79782,18 @@ c -2.255 4.306 6.162
 c -5.298 2.718 6.861
 c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="427.1" y1="392.0" x2="427.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="427.1" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="427.1" cy="393.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 887</text>
+<circle cx="427.1" cy="401.9" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 474</text>
+</svg>
 
 y 1
 @ 9
@@ -80893,6 +81851,18 @@ c -2.255 4.306 6.162
 c -5.298 2.718 6.861
 c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="428.3" y1="392.0" x2="428.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="428.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="428.3" cy="393.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 885</text>
+<circle cx="428.3" cy="401.8" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 479</text>
+</svg>
 
 y 1
 @ 9
@@ -82950,6 +83920,18 @@ c -2.255 4.306 6.162
 c -5.298 2.718 6.861
 c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="429.5" y1="392.0" x2="429.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="429.5" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="429.5" cy="393.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 885</text>
+<circle cx="429.5" cy="401.8" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 479</text>
+</svg>
 
 y 1
 @ 9
@@ -85005,6 +85987,18 @@ c -5.298 2.718 6.861
 c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="430.7" y1="392.0" x2="430.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="430.7" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="430.7" cy="393.6" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 885</text>
+<circle cx="430.7" cy="401.8" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 479</text>
+</svg>
 
 y 1
 @ 9
@@ -87062,6 +88056,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="431.9" y1="392.0" x2="431.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="431.9" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="431.9" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 883</text>
+<circle cx="431.9" cy="401.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 484</text>
+</svg>
 
 y 1
 @ 9
@@ -89117,6 +90123,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="433.1" y1="392.0" x2="433.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="433.1" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="433.1" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="433.1" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -91172,6 +92190,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="434.3" y1="392.0" x2="434.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="434.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="434.3" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="434.3" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -93227,6 +94257,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="435.5" y1="392.0" x2="435.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="435.5" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="435.5" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="435.5" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -95282,6 +96324,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="436.7" y1="392.0" x2="436.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="436.7" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="436.7" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="436.7" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -97336,6 +98390,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="437.9" y1="392.0" x2="437.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="437.9" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="437.9" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="437.9" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -99389,6 +100455,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="439.1" y1="392.0" x2="439.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="439.1" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="439.1" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="439.1" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -101442,6 +102520,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="440.3" y1="392.0" x2="440.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="440.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="440.3" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="440.3" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -103494,6 +104584,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="441.5" y1="392.0" x2="441.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="441.5" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="441.5" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="441.5" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -105546,6 +106648,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="442.6" y1="392.0" x2="442.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="442.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="442.6" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="442.6" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -107598,6 +108712,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="443.8" y1="392.0" x2="443.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="443.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="443.8" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="443.8" cy="401.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 486</text>
+</svg>
 
 y 1
 @ 9
@@ -109644,6 +110770,18 @@ c -3.190 2.177 9.178
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="445.0" y1="392.0" x2="445.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="445.0" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="445.0" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="445.0" cy="401.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 482</text>
+</svg>
 
 y 1
 @ 9
@@ -111680,6 +112818,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="446.2" y1="392.0" x2="446.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="446.2" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="446.2" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="446.2" cy="401.9" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 474</text>
+</svg>
 
 y 1
 @ 9
@@ -113711,6 +114861,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="447.4" y1="392.0" x2="447.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="447.4" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="447.4" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="447.4" cy="402.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 470</text>
+</svg>
 
 y 1
 @ 9
@@ -115737,6 +116899,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="448.6" y1="392.0" x2="448.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="448.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="448.6" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="448.6" cy="402.2" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 466</text>
+</svg>
 
 y 1
 @ 9
@@ -117748,6 +118922,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="449.8" y1="392.0" x2="449.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="449.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="449.8" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="449.8" cy="402.5" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 454</text>
+</svg>
 
 y 1
 @ 9
@@ -119754,6 +120940,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="451.0" y1="392.0" x2="451.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="451.0" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="451.0" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="451.0" cy="402.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 450</text>
+</svg>
 
 y 1
 @ 9
@@ -121745,6 +122943,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="452.2" y1="392.0" x2="452.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="452.2" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="452.2" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="452.2" cy="403.0" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 438</text>
+</svg>
 
 y 1
 @ 9
@@ -123736,6 +124946,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="453.4" y1="392.0" x2="453.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="453.4" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="453.4" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="453.4" cy="403.0" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 438</text>
+</svg>
 
 y 1
 @ 9
@@ -125722,6 +126944,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="454.6" y1="392.0" x2="454.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="454.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="454.6" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="454.6" cy="403.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 434</text>
+</svg>
 
 y 1
 @ 9
@@ -127698,6 +128932,18 @@ c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 2.431 -5.234 8.386
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="455.8" y1="392.0" x2="455.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="455.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="455.8" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="455.8" cy="403.4" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 426</text>
+</svg>
 
 y 1
 @ 9
@@ -129664,6 +130910,18 @@ c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="457.0" y1="392.0" x2="457.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="457.0" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="457.0" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="457.0" cy="403.6" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 418</text>
+</svg>
 
 y 1
 @ 9
@@ -131625,6 +132883,18 @@ c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="458.2" y1="392.0" x2="458.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="458.2" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="458.2" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="458.2" cy="403.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 414</text>
+</svg>
 
 y 1
 @ 9
@@ -133571,6 +134841,18 @@ c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="459.4" y1="392.0" x2="459.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="459.4" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="459.4" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="459.4" cy="404.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 402</text>
+</svg>
 
 y 1
 @ 9
@@ -135507,6 +136789,18 @@ c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="460.6" y1="392.0" x2="460.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="460.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="460.6" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="460.6" cy="404.4" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 394</text>
+</svg>
 
 y 1
 @ 9
@@ -137438,6 +138732,18 @@ c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="461.8" y1="392.0" x2="461.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="461.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="461.8" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="461.8" cy="404.5" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 390</text>
+</svg>
 
 y 1
 @ 9
@@ -139359,6 +140665,18 @@ c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
 c 0.687 -2.004 9.818
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="462.9" y1="392.0" x2="462.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="462.9" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="462.9" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="462.9" cy="404.8" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 382</text>
+</svg>
 
 y 1
 @ 9
@@ -141265,6 +142583,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="464.1" y1="392.0" x2="464.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="464.1" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="464.1" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="464.1" cy="405.2" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 370</text>
+</svg>
 
 y 1
 @ 9
@@ -143161,6 +144491,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="465.3" y1="392.0" x2="465.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="465.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="465.3" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="465.3" cy="405.5" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 362</text>
+</svg>
 
 y 1
 @ 9
@@ -145052,6 +146394,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="466.5" y1="392.0" x2="466.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="466.5" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="466.5" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="466.5" cy="405.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 358</text>
+</svg>
 
 y 1
 @ 9
@@ -146943,6 +148297,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="467.7" y1="392.0" x2="467.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="467.7" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="467.7" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="467.7" cy="405.7" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 358</text>
+</svg>
 
 y 1
 @ 9
@@ -148829,6 +150195,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="468.9" y1="392.0" x2="468.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="468.9" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="468.9" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="468.9" cy="405.8" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 354</text>
+</svg>
 
 y 1
 @ 9
@@ -150710,6 +152088,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="470.1" y1="392.0" x2="470.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="470.1" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="470.1" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="470.1" cy="406.0" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 350</text>
+</svg>
 
 y 1
 @ 9
@@ -152586,6 +153976,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="471.3" y1="392.0" x2="471.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="471.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="471.3" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="471.3" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -154462,6 +155864,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="472.5" y1="392.0" x2="472.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="472.5" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="472.5" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="472.5" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -156338,6 +157752,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="473.7" y1="392.0" x2="473.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="473.7" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="473.7" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="473.7" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -158214,6 +159640,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="474.9" y1="392.0" x2="474.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="474.9" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="474.9" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="474.9" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -160090,6 +161528,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="476.1" y1="392.0" x2="476.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="476.1" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="476.1" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="476.1" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -161966,6 +163416,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="477.3" y1="392.0" x2="477.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="477.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="477.3" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="477.3" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -163842,6 +165304,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="478.5" y1="392.0" x2="478.5" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="478.5" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="478.5" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="478.5" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -165718,6 +167192,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="479.7" y1="392.0" x2="479.7" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="479.7" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="479.7" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="479.7" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -167594,6 +169080,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="480.9" y1="392.0" x2="480.9" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="480.9" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="480.9" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="480.9" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -169470,6 +170968,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="482.1" y1="392.0" x2="482.1" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="482.1" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="482.1" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="482.1" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -171346,6 +172856,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="483.3" y1="392.0" x2="483.3" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="483.3" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="483.3" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="483.3" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -173222,6 +174744,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="484.4" y1="392.0" x2="484.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="484.4" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="484.4" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="484.4" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -175098,6 +176632,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="485.6" y1="392.0" x2="485.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="485.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="485.6" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="485.6" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -176974,6 +178520,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="486.8" y1="392.0" x2="486.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="486.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="486.8" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="486.8" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -178850,6 +180408,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="488.0" y1="392.0" x2="488.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="488.0" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="488.0" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="488.0" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -180726,6 +182296,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="489.2" y1="392.0" x2="489.2" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="489.2" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="489.2" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="489.2" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -182602,6 +184184,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="490.4" y1="392.0" x2="490.4" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="490.4" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="490.4" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="490.4" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -184478,6 +186072,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="491.6" y1="392.0" x2="491.6" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="491.6" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="491.6" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="491.6" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -186354,6 +187960,18 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="492.8" y1="392.0" x2="492.8" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="492.8" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="492.8" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="492.8" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>
 
 y 1
 @ 9
@@ -188230,3 +189848,15 @@ c -6.389 1.505 8.693
 c -3.982 3.281 9.358
 c -2.576 0.874 9.988
 c -2.495 -3.572 8.693
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" font-family="Helvetica, Arial, sans-serif">
+<line x1="494.0" y1="392.0" x2="494.0" y2="484.0" stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>
+<circle cx="494.0" cy="400.5" r="2.5" fill="rgb(120,80,45)" stroke="white" stroke-width="0.8"/>
+<circle cx="302.0" cy="380.0" r="3" fill="rgb(120,80,45)"/>
+<text x="308.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">branches 530</text>
+<circle cx="494.0" cy="393.7" r="2.5" fill="rgb(40,140,55)" stroke="white" stroke-width="0.8"/>
+<circle cx="376.0" cy="380.0" r="3" fill="rgb(40,140,55)"/>
+<text x="382.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">leaves 880</text>
+<circle cx="494.0" cy="406.1" r="2.5" fill="rgb(225,95,145)" stroke="white" stroke-width="0.8"/>
+<circle cx="440.0" cy="380.0" r="3" fill="rgb(225,95,145)"/>
+<text x="446.0" y="383.0" font-size="9.5" fill="rgb(40,40,40)">petals 346</text>
+</svg>

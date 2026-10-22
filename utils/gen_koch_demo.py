@@ -8,6 +8,7 @@ Features:
 - Buds and leaves (`c`) that swell smoothly from radius 0 as shoots extend
 - Blossoms that open across the crown and scatter petals in the late breeze
 - Layers: 1 = wood, 2 = foliage, 3 = blossoms (toggle with F1/F2/F3 in Yaplot)
+- SVG overlay: number of branches, leaves and petals vs. time on a log scale
 
 Regenerate: python3 utils/gen_koch_demo.py -o help.yap
 """
@@ -401,7 +402,9 @@ def emit_frame(
     leaves: list[LeafCluster],
     blossoms: list[Blossom],
     t: float,
-) -> list[str]:
+) -> tuple[list[str], dict[str, int]]:
+    """Return the frame's commands and the number of branches, leaves and petals drawn."""
+
     def xf(p: Vec3) -> Vec3:
         return p
 
@@ -594,7 +597,114 @@ def emit_frame(
             lines.append(f"r {r_val:.2f}")
             lines.extend(b_cmds)
 
-    return lines
+    counts = {
+        "branches": sum(len(c) for c in thick_buckets.values()) + len(fine_twigs),
+        "leaves": sum(len(c) for c in leaf_buckets.values()),
+        "petals": sum(
+            len(c) for (pal, _), c in blossom_buckets.items() if pal == 7
+        ),
+    }
+    return lines, counts
+
+
+CURVES = [
+    ("branches", "rgb(120,80,45)"),
+    ("leaves", "rgb(40,140,55)"),
+    ("petals", "rgb(225,95,145)"),
+]
+PANEL = (292.0, 368.0, 212.0, 136.0)  # x, y, width, height in the 512x512 viewBox
+SVG_OPEN = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" '
+    'font-family="Helvetica, Arial, sans-serif">'
+)
+
+
+class CountPlot:
+    """SVG overlay plotting log10(count) of branches, leaves and petals against time.
+
+    The curves and axes go into the global block once; each frame only adds the
+    time cursor, the current points and the legend with current counts.
+    """
+
+    def __init__(self, history: list[dict[str, int]]):
+        self.history = history
+        peak = max(max(h.values()) for h in history)
+        self.decades = max(1, math.ceil(math.log10(max(peak, 2))))
+        x, y, w, h = PANEL
+        self.x0, self.x1 = x + 36.0, x + w - 10.0
+        self.y0, self.y1 = y + 24.0, y + h - 20.0
+
+    def px(self, i: int) -> float:
+        return self.x0 + (self.x1 - self.x0) * i / max(len(self.history) - 1, 1)
+
+    def py(self, n: int) -> float:
+        return self.y1 - (self.y1 - self.y0) * math.log10(n) / self.decades
+
+    def static_svg(self) -> list[str]:
+        x, y, w, h = PANEL
+        out = [
+            SVG_OPEN,
+            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="white" '
+            'fill-opacity="0.7" stroke="rgb(90,110,130)" stroke-width="0.8"/>',
+        ]
+        for k in range(self.decades + 1):
+            yy = self.py(10**k)
+            out.append(
+                f'<line x1="{self.x0:.1f}" y1="{yy:.1f}" x2="{self.x1:.1f}" y2="{yy:.1f}" '
+                'stroke="rgb(170,170,170)" stroke-width="0.5"/>'
+            )
+            out.append(
+                f'<text x="{self.x0 - 4:.1f}" y="{yy + 3:.1f}" font-size="9" '
+                f'text-anchor="end" fill="rgb(60,60,60)">{10**k}</text>'
+            )
+        out.append(
+            f'<polyline points="{self.x0:.1f},{self.y0:.1f} {self.x0:.1f},{self.y1:.1f} '
+            f'{self.x1:.1f},{self.y1:.1f}" fill="none" stroke="rgb(60,60,60)" stroke-width="0.8"/>'
+        )
+        out.append(
+            f'<text x="{(self.x0 + self.x1) / 2:.1f}" y="{y + h - 6:.1f}" font-size="9" '
+            'text-anchor="middle" fill="rgb(60,60,60)">time</text>'
+        )
+        for key, color in CURVES:
+            runs: list[list[str]] = [[]]
+            for i, counts in enumerate(self.history):
+                if counts[key] > 0:
+                    runs[-1].append(f"{self.px(i):.1f},{self.py(counts[key]):.1f}")
+                elif runs[-1]:
+                    runs.append([])
+            for run in runs:
+                if len(run) >= 2:
+                    out.append(
+                        f'<polyline points="{" ".join(run)}" fill="none" '
+                        f'stroke="{color}" stroke-width="1.5"/>'
+                    )
+        out.append("</svg>")
+        return out
+
+    def frame_svg(self, i: int) -> list[str]:
+        x, y, _, _ = PANEL
+        cx = self.px(i)
+        out = [
+            SVG_OPEN,
+            f'<line x1="{cx:.1f}" y1="{self.y0:.1f}" x2="{cx:.1f}" y2="{self.y1:.1f}" '
+            'stroke="rgb(60,60,60)" stroke-width="0.8" stroke-dasharray="2,2"/>',
+        ]
+        for j, (key, color) in enumerate(CURVES):
+            n = self.history[i][key]
+            if n > 0:
+                out.append(
+                    f'<circle cx="{cx:.1f}" cy="{self.py(n):.1f}" r="2.5" fill="{color}" '
+                    'stroke="white" stroke-width="0.8"/>'
+                )
+            lx = x + (10.0, 84.0, 148.0)[j]
+            ly = y + 15.0
+            out.append(f'<circle cx="{lx:.1f}" cy="{ly - 3:.1f}" r="3" fill="{color}"/>')
+            out.append(
+                f'<text x="{lx + 6:.1f}" y="{ly:.1f}" font-size="9.5" '
+                f'fill="rgb(40,40,40)">{key} {n}</text>'
+            )
+        out.append("</svg>")
+        return out
 
 
 def main() -> None:
@@ -639,15 +749,25 @@ def main() -> None:
         'message "  [ / ] and * / /     : Field of view & zoom"',
         'message "  v (or 0v..3v)       : Set on-screen info verbosity"',
         'message "  q                   : Quit"',
-        "",
     ]
 
+    frames: list[list[str]] = []
+    history: list[dict[str, int]] = []
     for i in range(args.frames):
-        if i > 0:
-            out.append("")
         u = i / max(args.frames - 1, 1)
         t = 1.02 * (u**0.90)
-        out.extend(emit_frame(segments, apical_buds, leaves, blossoms, t))
+        lines, counts = emit_frame(segments, apical_buds, leaves, blossoms, t)
+        frames.append(lines)
+        history.append(counts)
+
+    plot = CountPlot(history)
+    out.extend(plot.static_svg())
+    out.append("")
+    for i, lines in enumerate(frames):
+        if i > 0:
+            out.append("")
+        out.extend(lines)
+        out.extend(plot.frame_svg(i))
 
     args.output.write_text("\n".join(out) + "\n", encoding="utf-8")
     print(
