@@ -1,6 +1,7 @@
 *.o
 yaplot
-common.htest.yap
+include/common.h
+test.yap
 xi.yap
 .yapviewstack
 mukaibara.py

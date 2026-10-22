@@ -1,3 +1,9 @@
+2026-10 / Version 5.4.1
+	Homebrew formula を本体リポジトリで配布（homebrew-yaplot は廃止）
+	ffmpeg のパスを BINDIR ではなく BREW_PREFIX から決める（Homebrew 版で R が動かなかった）
+	include/common.h を追跡対象から外し、PKGDATADIR 指定が効くように
+	-V でバージョンを表示して終了
+
 2026-10 / Version 5.4
 	SVG オーバーレイ: .yap に SVG を直接書いて画面固定の 2D HUD を重ねる
 	（global ブロック内は全フレーム共通、フレーム内はそのフレームのみ）

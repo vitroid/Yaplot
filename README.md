@@ -18,7 +18,14 @@ It is the least beautiful and not durable for presentation, but enough quick and
 
 ### Mac
 
-See https://github.com/vitroid/homebrew-yaplot .
+The Homebrew formula lives in this repository.
+
+            prompt% brew tap vitroid/yaplot https://github.com/vitroid/Yaplot
+            prompt% brew trust vitroid/yaplot
+            prompt% brew install vitroid/yaplot/yaplot
+
+(`brew trust` is needed only on Homebrew versions that refuse untrusted taps.)
+If you have tapped the old `vitroid/homebrew-yaplot`, run `brew untap vitroid/yaplot` first.
 
 ### General install procedure
 
@@ -169,7 +176,16 @@ yaplot の画像は、本格的なプレゼンテーションに使用できる�
 
 ## インストール
 
-現在、yaplot は SDL2 と Cairo を使って書かれています。インストールする前にあらかじめ SDL2、Cairo、libpng、librsvg、pkg-config をインストールしておいて下さい。Mac OS では、[HomeBrew](https://brew.sh)をおすすめします。
+Mac では Homebrew で入れられます（formula はこのリポジトリにあります）。
+
+            prompt% brew tap vitroid/yaplot https://github.com/vitroid/Yaplot
+            prompt% brew trust vitroid/yaplot
+            prompt% brew install vitroid/yaplot/yaplot
+
+（`brew trust` は、信頼していない tap を拒否する新しい Homebrew でのみ必要です。）
+以前の `vitroid/homebrew-yaplot` を tap している場合は、先に `brew untap vitroid/yaplot` して下さい。
+
+ソースからビルドする場合：現在、yaplot は SDL2 と Cairo を使って書かれています。インストールする前にあらかじめ SDL2、Cairo、libpng、librsvg、pkg-config をインストールしておいて下さい。Mac OS では、[HomeBrew](https://brew.sh)をおすすめします。
 
             prompt% brew install pkg-config sdl2 cairo libpng librsvg
 
