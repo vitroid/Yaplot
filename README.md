@@ -102,6 +102,7 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 - Numeric keys followed by "g" or Enter:Jump to the frame specified by numeric keys. Single "g" to the first frame, single "G" to the last frame.
 - SPACE:Stop all automatic actions(Rotation and animation)
 - "+" and "-":Change rendering fidelity.
+- "d":Cycle depth-splat shadow density (Reality 2–4). Numeric prefix `0d`..`3d` sets the level; `0` is off.
 - Insert and Delete, or "(" and ")":Gradate line thickness.
 - Function keys, or numeric keys followed by "F":Toggle show/hide of the layer.
 - "v":Change verbosity.

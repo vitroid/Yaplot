@@ -1,3 +1,8 @@
+2026-10 / Version 5.3
+	Reality 2〜4 に depth-splat 影（`d` / `0d`..`3d`、濃さ 0〜3）
+	global ブロックの `splat {0..3}`
+	A8 円マスク LRU キャッシュ等で描画を高速化、ドラッグ中の割り込み修正
+
 2026-10 / Version 5.2.1
 	macOS トラックパッド: AppKit の phase でピンチ／ロール／FOV を復活
 	慣性スクロールを除外し、ジェスチャ終了後の click-drag 連動を解消

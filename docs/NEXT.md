@@ -9,4 +9,4 @@
   - [x] Emscripten + Canvas 2D (`src/web.c`) 足場
   - [ ] ブラウザで gray100 背景すら出ない問題の切り分け
   - [ ] Colabへの組みこみ
-- [ ] 二本指操作の再構築
+- [x] 二本指操作の再構築（5.2.1: AppKit phase でピンチ／ロール／FOV）
