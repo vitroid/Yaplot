@@ -6,6 +6,7 @@
 #include "macos_gestures.h"
 #include "os.h"
 #include "yaplot.h"
+#include <cairo-pdf.h>
 #include <cairo.h>
 #include <librsvg/rsvg.h>
 #include <math.h>
@@ -42,6 +43,20 @@ static int window_id_to_index(Ginfo *g, Winfo *w, Uint32 windowID)
 			return i;
 	}
 	return -1;
+}
+
+static int no_interrupt; /* while set, drawing is not interrupted by events */
+
+static void setup_cr(cairo_t *cr)
+{
+	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+	cairo_set_font_size(cr, 14);
+	cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_NORMAL,
+			       CAIRO_FONT_WEIGHT_NORMAL);
+#ifdef CAIRO_ANTIALIAS_FAST
+	cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);
+#endif
 }
 
 /* --- Drawing (Cairo, unchanged from GTK backend) --- */
@@ -296,6 +311,16 @@ void drawsvg2fb(Winfo *w, void *svg)
 	SvgOverlay *s = (SvgOverlay *)svg;
 	if (!s)
 		return;
+	if (cairo_surface_get_type(cairo_get_target(w->cr)) !=
+	    CAIRO_SURFACE_TYPE_IMAGE) {
+		/* vector output (PDF snapshot): draw the SVG as vectors */
+		RsvgRectangle viewport = {0, 0, w->screenwidth,
+					  w->screenheight};
+		cairo_save(w->cr);
+		rsvg_handle_render_document(s->handle, w->cr, &viewport, NULL);
+		cairo_restore(w->cr);
+		return;
+	}
 	if (s->width != w->screenwidth || s->height != w->screenheight)
 		svg_render(s, w->screenwidth, w->screenheight);
 	if (!s->image)
@@ -902,15 +927,7 @@ static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
 		w[i].surface = cairo_image_surface_create(
 		    CAIRO_FORMAT_ARGB32, w[i].screenwidth, w[i].screenheight);
 		w[i].cr = cairo_create(w[i].surface);
-		cairo_set_line_join(w[i].cr, CAIRO_LINE_JOIN_ROUND);
-		cairo_set_line_cap(w[i].cr, CAIRO_LINE_CAP_ROUND);
-		cairo_set_font_size(w[i].cr, 14);
-		cairo_select_font_face(w[i].cr, "Helvetica",
-				       CAIRO_FONT_SLANT_NORMAL,
-				       CAIRO_FONT_WEIGHT_NORMAL);
-#ifdef CAIRO_ANTIALIAS_FAST
-		cairo_set_antialias(w[i].cr, CAIRO_ANTIALIAS_FAST);
-#endif
+		setup_cr(w[i].cr);
 		if (ctx && ctx->renderer) {
 			ctx->texture = SDL_CreateTexture(
 			    ctx->renderer, SDL_PIXELFORMAT_ARGB8888,
@@ -1078,15 +1095,7 @@ void W_Init2(Winfo *w, Ginfo *g)
 		w[i].surface = cairo_image_surface_create(
 		    CAIRO_FORMAT_ARGB32, w[i].screenwidth, w[i].screenheight);
 		w[i].cr = cairo_create(w[i].surface);
-		cairo_set_line_join(w[i].cr, CAIRO_LINE_JOIN_ROUND);
-		cairo_set_line_cap(w[i].cr, CAIRO_LINE_CAP_ROUND);
-		cairo_set_font_size(w[i].cr, 14);
-		cairo_select_font_face(w[i].cr, "Helvetica",
-				       CAIRO_FONT_SLANT_NORMAL,
-				       CAIRO_FONT_WEIGHT_NORMAL);
-#ifdef CAIRO_ANTIALIAS_FAST
-		cairo_set_antialias(w[i].cr, CAIRO_ANTIALIAS_FAST);
-#endif
+		setup_cr(w[i].cr);
 		if (debug)
 			fprintf(stderr, "SDL2 window %d: %dx%d\n", i,
 				w[i].screenwidth, w[i].screenheight);
@@ -1096,6 +1105,8 @@ void W_Init2(Winfo *w, Ginfo *g)
 
 int existevent(Ginfo *g)
 {
+	if (g == NULL && no_interrupt)
+		return 0;
 	if (have_saved_event) {
 		if (g == NULL && saved_event.type == SDL_MOUSEMOTION)
 			return 0;
@@ -1155,10 +1166,24 @@ void W_SaveSnapShot(Winfo *w, int windowid)
 	}
 #endif
 	{
+		/* Snapshot: redraw the same frame as vectors into a PDF. */
 		char filename[1024];
-		snprintf(filename, sizeof(filename), "yaplot%02d_%05d.png",
+		cairo_surface_t *pdf;
+		cairo_t *screen_cr = w->cr;
+
+		snprintf(filename, sizeof(filename), "yaplot%02d_%05d.pdf",
 			 windowid, (int)w->currentframe);
-		cairo_surface_write_to_png(w->surface, filename);
+		pdf = cairo_pdf_surface_create(filename, w->screenwidth,
+					       w->screenheight);
+		w->cr = cairo_create(pdf);
+		setup_cr(w->cr);
+		no_interrupt = 1;
+		Redraw(*w->oo, w, 0, g_internal->verbose);
+		no_interrupt = 0;
+		cairo_destroy(w->cr);
+		cairo_surface_finish(pdf);
+		cairo_surface_destroy(pdf);
+		w->cr = screen_cr;
 	}
 }
 

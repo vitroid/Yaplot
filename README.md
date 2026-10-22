@@ -59,7 +59,7 @@ You can alter modes by "s" key. All the windows are in synchronous mode by defau
 
 If no command file is specified, a 3D growing-tree demo (`help.yap`) is shown (layers `F1`: wood, `F2`: foliage, `F3`: blossoms). Regenerate it with `python3 utils/gen_koch_demo.py`. Docs live in this README.
 
-By specifying "RECORD" option in Makefile, recording feature becomes available. When "r" key is pressed, hardcopies of the windows are saved in yaplotxx_yyyyy.gif(xx is window No.、yyyyy is frame No.) To stop recording, press "r" again.
+When "r" key is pressed, the current frame and the following frames are saved as vector PDF files yaplotxx_yyyyy.pdf (xx is window No., yyyyy is frame No.); SVG overlays stay as vectors, while depth-splat shadows are embedded as small bitmaps. "R" records an h264 video yaplotxx.mp4 through ffmpeg. To stop recording, press the same key again.
 
 If "u" is pressed, current view information (eye position, field of view, etc.) is saved in ".yapviewstack" file of the current directory. If "o" is pressed, last view information is recovered from ".yapviewstack" file. It is useful to share the view information on multiple yaplot.
 
@@ -91,7 +91,7 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 - Tab:Undo rotation.
 - "\*" and "/":Scale up and down
 - "[" and "]":Zoom in and out
-- "r":Start/stop recording snapshots. (PNG)
+- "r":Start/stop recording snapshots. (PDF)
 - "R":Start/stop recording snapshots. (h264 video)
 - "u":pUsh; Push current view information in the view stack.
 - "o":pOp; Pop current view information from the view stack.
@@ -203,7 +203,7 @@ yaplot にはレイヤの概念があります。標準ではレイヤは 1 か�
 
 同期モード、非同期モードの切り替えは"s"キーで行えます。デフォル トではすべての窓は同期モードになっています。また、非同期モードか ら同期モードの戻る場合には、その窓の視野描画情報はほかの同期モー ドの窓と同一に戻されます。
 
-Makefile で RECORD オプションを追加してあると、録画機能が使えます。"r"キーを押すと、現在表示されているフレーム以降を次々に gif ファイルに保存していきます。録画を停止するには、再度"r"を押すか、"q"(yaplot の終了)を押して下さい。ファイル名は、yaplotxx_yyyyy.gif(xx の部分がウィンドウの番号、yyyyy がフレーム番号)となります。
+"r"キーを押すと、現在表示されているフレーム以降を次々にベクタ形式の PDF ファイルに保存していきます。ファイル名は、yaplotxx_yyyyy.pdf(xx の部分がウィンドウの番号、yyyyy がフレーム番号)となります。SVG オーバーレイはベクタのまま保存され、奥行きスプラットの影は小さなビットマップとして埋め込まれます。"R"キーでは ffmpeg を通して h264 動画 yaplotxx.mp4 を保存します。録画を停止するには、同じキーを再度押すか、"q"(yaplot の終了)を押して下さい。
 
 "u"(pUsh)を押すと、現在の視野情報をカレントディレクトリの ".yapviewstack"ファイルの末尾に追加します。また、"o"(pOp)を押すとカレ ントディレクトリの".yapviewstack"ファイルの末尾行を読み込み、現在の視 野情報とします。"u"とくみあわせることで、異なる yaplot や、異なる window の間で同じ視点を共有することができます。
 
@@ -226,7 +226,7 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
 - Tab:回転する前の状態にもどす。
 - "\*"と"/":ズームインとアウト(望遠と広角)
 - "["と"]":視野角を広げる/狭める
-- "r":録画開始/終了 (PNG)
+- "r":録画開始/終了 (PDF)
 - "R":録画開始/終了 (h264 movie)
 - "u":pUsh; 現在の視野情報をカレントディレクトリの".yapviewstack"ファイルの末尾に追加します。
 - "o":pOp; カレントディレクトリの".yapviewstack"ファイルの末尾行を読み込み、現在の視野情報とします。
