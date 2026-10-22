@@ -1,3 +1,10 @@
+2026-10 / Version 5.4
+	SVG オーバーレイ: .yap に SVG を直接書いて画面固定の 2D HUD を重ねる
+	（global ブロック内は全フレーム共通、フレーム内はそのフレームのみ）
+	スナップショット r を PDF 化（3D はビットマップ、SVG とステータス表示はベクタ）
+	help.yap に枝・葉・花びらの個数の時間変化（対数軸）を表示、splat を 1 に
+	librsvg に依存
+
 2026-10 / Version 5.3
 	Reality 2〜4 に depth-splat 影（`d` / `0d`..`3d`、濃さ 0〜3）
 	global ブロックの `splat {0..3}`
