@@ -2206,6 +2206,48 @@ void W_InitActionVarsOne(Winfo *w, int cachesize)
 	W_resetcenter(w);
 }
 
+void W_ReplaceInput(Ginfo *g, Winfo *w, FILE *file, const char *name)
+{
+	Winfo *fresh = W_Init(1);
+	int cachesize = w->c ? w->c->n : 1;
+	int i;
+
+	Cache_Destroy(w->c);
+	for (i = 0; i < w->nsvg_global; i++)
+		svg_close(w->svg_global[i]);
+	free(w->svg_global);
+	if (w->inputfile && w->inputfile != stdin)
+		fclose(w->inputfile);
+	free(w->framepos->a);
+	free(w->framepos);
+
+	/* keep display-backend state, reset everything read from the file */
+	fresh->inputfile = file;
+	snprintf(fresh->inputfilename, sizeof(fresh->inputfilename), "%s",
+		 name);
+	fresh->screenwidth = w->screenwidth;
+	fresh->screenheight = w->screenheight;
+	fresh->window = w->window;
+	fresh->drawarea = w->drawarea;
+#ifndef __EMSCRIPTEN__
+	fresh->surface = w->surface;
+	fresh->cr = w->cr;
+#endif
+#ifdef FFMPEG
+	fresh->pffmpeg = w->pffmpeg;
+#endif
+	fresh->RecordMode = w->RecordMode;
+	fresh->async = w->async;
+	fresh->lastColor = g->numColors - 1;
+	for (i = 0; i < g->numColors; i++)
+		fresh->colortable[i] = g->mastercolortable[i];
+	*w = *fresh;
+	free(fresh);
+
+	W_LoadGlobalDefaults(w, g);
+	W_InitActionVarsOne(w, cachesize);
+}
+
 void W_InitActionVars(Ginfo *g, Winfo w[], int cachesize)
 {
 	int i;

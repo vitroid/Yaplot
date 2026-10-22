@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define YAP_SHIFT_MASK 1
 
@@ -34,7 +35,8 @@ enum {
 	EV_RESIZE,
 	EV_REDRAW,
 	EV_PINCH,
-	EV_ROTATE
+	EV_ROTATE,
+	EV_OPEN
 };
 
 typedef struct {
@@ -657,6 +659,35 @@ static void handle_mouse_motion(int i, int x, int y, int buttons)
 	}
 }
 
+/* File dropped on the page: JS has written it to DROP_PATH in MEMFS. */
+#define DROP_PATH "/dropped.yap"
+
+EMSCRIPTEN_KEEPALIVE void yap_web_file_dropped(void)
+{
+	WebEvent e;
+	memset(&e, 0, sizeof(e));
+	e.type = EV_OPEN;
+	evq_push(&e);
+}
+
+static void open_dropped_file(Ginfo *g, Winfo w[], int i)
+{
+	char name[256];
+	FILE *file = fopen(DROP_PATH, "r");
+
+	if (!file) {
+		fprintf(stderr, "drop: cannot open %s\n", DROP_PATH);
+		return;
+	}
+	/* the previous drop is still open via w->inputfile; MEMFS keeps it */
+	unlink(DROP_PATH);
+	EM_ASM({ stringToUTF8(Module['yapDroppedName'] || 'dropped.yap', $0,
+			      $1); },
+	       name, (int)sizeof(name));
+	W_ReplaceInput(g, &w[i], file, name);
+	fprintf(stderr, "opened %s\n", name);
+}
+
 void handleevent(Ginfo *g, Winfo w[])
 {
 	WebEvent *e = &saved_event;
@@ -718,6 +749,9 @@ void handleevent(Ginfo *g, Winfo w[])
 				if (!w[i].async || j == i)
 					WindowRoll(&w[j], pitch);
 		}
+		break;
+	case EV_OPEN:
+		open_dropped_file(g, w, i);
 		break;
 	case EV_REDRAW: {
 		int j;
@@ -1091,6 +1125,25 @@ EM_JS(void, install_gesture_listeners, (void), {
 	});
 });
 
+/* Drag & drop a .yap anywhere on the page to replace the displayed file */
+EM_JS(void, install_drop_listener, (void), {
+	window.addEventListener('dragover', function(ev) {
+		ev.preventDefault();
+		ev.dataTransfer.dropEffect = 'copy';
+	});
+	window.addEventListener('drop', function(ev) {
+		ev.preventDefault();
+		var f = ev.dataTransfer.files[0];
+		if (!f)
+			return;
+		f.arrayBuffer().then(function(buf) {
+			FS.writeFile('/dropped.yap', new Uint8Array(buf));
+			Module['yapDroppedName'] = f.name;
+			_yap_web_file_dropped();
+		});
+	});
+});
+
 void W_Init2(Winfo *w, Ginfo *g)
 {
 	int i, j;
@@ -1115,6 +1168,7 @@ void W_Init2(Winfo *w, Ginfo *g)
 			console.error('yapCtx is null');
 	});
 	install_gesture_listeners();
+	install_drop_listener();
 
 	emscripten_set_keydown_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, NULL, 1,
 					on_key_down);

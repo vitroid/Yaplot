@@ -42,7 +42,7 @@ EMCC ?= emcc
 WASM_CFLAGS = -O2 -Wall -Werror -Werror=vla -I./include
 WASM_CFLAGS += -DHELPFILE=\"/help.yap\" -DDEFAULTPALETTE=\"/yaplot.col\"
 WASM_LDFLAGS = -s ALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8MB
-WASM_LDFLAGS += -sEXPORTED_RUNTIME_METHODS=UTF8ToString
+WASM_LDFLAGS += -sEXPORTED_RUNTIME_METHODS=UTF8ToString,stringToUTF8,FS
 WASM_LDFLAGS += --preload-file yaplot.col@/yaplot.col
 WASM_LDFLAGS += --preload-file help.yap@/help.yap
 WASM_LDFLAGS += --preload-file test/global.yap@/global.yap

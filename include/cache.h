@@ -8,6 +8,7 @@ typedef struct {
 } Cache;
 
 Cache *Cache_Init(int n, void (*destructor)(void *));
+void Cache_Destroy(Cache *c);
 void **Cache_ptr(Cache *c, int i);
 
 #endif

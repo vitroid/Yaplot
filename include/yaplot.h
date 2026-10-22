@@ -13,6 +13,8 @@ void W_Sync(Winfo *to, Winfo *from);
 void W_setvectors(Winfo *w);
 Winfo *W_Init(int n);
 void W_LoadGlobalDefaults(Winfo *w, Ginfo *g);
+/* Replace the input of window w with an already opened file; resets view. */
+void W_ReplaceInput(Ginfo *g, Winfo *w, FILE *file, const char *name);
 void EyeMotion(Winfo *w, float prop);
 int Realize(NewOinfo *o, Winfo *w);
 void DrawOverlays(NewOinfo *o, Winfo *w, float framerate, int verbose);
