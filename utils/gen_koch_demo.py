@@ -734,7 +734,7 @@ def main() -> None:
         "y 1",
         "a 0",
         "reality 3",
-        "splat 3",
+        "splat 1",
         "fov 45",
         "verbose 1",
         "rotation 0.5",
