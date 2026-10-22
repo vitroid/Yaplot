@@ -4,8 +4,8 @@
 class Yaplot < Formula
   desc "Yet another plotter in 3D - easy 3D modeller and animator"
   homepage "https://github.com/vitroid/Yaplot"
-  url "https://github.com/vitroid/Yaplot/archive/v5.1.2.tar.gz"
-  sha256 "53349f08385759b664a50d24de51dbacac601aab0319346ab470c45454939395"
+  url "https://github.com/vitroid/Yaplot/archive/v5.2.1.tar.gz"
+  sha256 "6bad973ec3deaa95d8de9bd2dcd60bb153e626fd725ec06dcbab3a682a21310c"
   license "MIT"
 
   depends_on "pkg-config" => :build
