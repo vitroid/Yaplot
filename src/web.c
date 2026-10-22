@@ -405,18 +405,12 @@ static void handle_key(int i, int key, int modstatus)
 			eStopRecording(g, w);
 			return;
 		}
-		if (key == 'q') {
+		if (key == 'q')
 			eStopRecording(g, w);
-			eQuit(g, w, i);
-		}
 		return;
 	}
 
 	switch (key) {
-	case 'q':
-		(void)eQuit(g, w, i);
-		SetLastCommand(0, "q", "quit");
-		break;
 	case 'g':
 	case WK_ENTER: {
 		int p = (modstatus && prefix == 0) ? LASTFRAME : prefix;
