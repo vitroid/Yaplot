@@ -32,7 +32,9 @@ enum {
 	EV_MOUSEMOVE,
 	EV_WHEEL,
 	EV_RESIZE,
-	EV_REDRAW
+	EV_REDRAW,
+	EV_PINCH,
+	EV_ROTATE
 };
 
 typedef struct {
@@ -43,6 +45,7 @@ typedef struct {
 	int buttons;
 	int wheel;
 	int width, height;
+	float amount; /* pinch magnification / rotation degrees (clockwise) */
 } WebEvent;
 
 /* Special key codes (negative to avoid clash with printable) */
@@ -451,9 +454,39 @@ static void handle_key(int i, int key, int modstatus)
 		(void)eStartRecording(g, w, 1, 1);
 		SetLastCommand(0, "r", "start recording");
 		break;
+	case 'u':
+		(void)ePushView(g, w, i);
+		SetLastCommand(0, "u", "push view");
+		break;
+	case 'o':
+		(void)ePopView(g, w, i);
+		SetLastCommand(0, "o", "pop view");
+		break;
 	case 'v':
-		(void)eToggleVerbosity(g, w, i);
-		SetLastCommand(0, "v", "toggle verbosity");
+		if (prefix > 0) {
+			g->verbose = (prefix > MAXVERBOSE) ? MAXVERBOSE : prefix;
+			SetLastCommand(g->verbose, "v", "verbosity %d");
+		} else {
+			(void)eToggleVerbosity(g, w, i);
+			SetLastCommand(0, "v", "toggle verbosity");
+		}
+		break;
+	case 'd':
+		if (prefix > 0) {
+			char sval = (char)((prefix > 3) ? 3 : prefix);
+			int j;
+			for (j = 0; j < g->nwindow; j++) {
+				if (w[i].async && j != i)
+					continue;
+				w[j].splat = sval;
+				if (sval && w[j].reality < 2)
+					w[j].reality = 3;
+			}
+			SetLastCommand(sval, "d", "depth splat %d");
+		} else {
+			(void)eCycleSplat(g, w, i);
+			SetLastCommand(0, "d", "cycle depth splat");
+		}
 		break;
 	case WK_PAGEUP:
 	case 'p': {
@@ -673,6 +706,19 @@ void handleevent(Ginfo *g, Winfo w[])
 		}, e->width, e->height);
 		w[i].status |= REDRAW;
 		break;
+	case EV_PINCH:
+		if (e->amount != 0.0f)
+			(void)eZoomFactor(g, w, i, expf(e->amount));
+		break;
+	case EV_ROTATE:
+		if (e->amount != 0.0f) {
+			float pitch = e->amount * (float)M_PI / 180.0f;
+			int j;
+			for (j = 0; j < g->nwindow; j++)
+				if (!w[i].async || j == i)
+					WindowRoll(&w[j], pitch);
+		}
+		break;
 	case EV_REDRAW: {
 		int j;
 		for (j = 0; j < g->nwindow; j++)
@@ -780,6 +826,32 @@ static int map_dom_key(const EmscriptenKeyboardEvent *ke, int *out_key)
 	return 0;
 }
 
+/* Toggles / digits must not auto-repeat; motion and FOV keys may. */
+static int key_allows_repeat(int key)
+{
+	switch (key) {
+	case '[':
+	case ']':
+	case WK_LEFT:
+	case WK_RIGHT:
+	case WK_UP:
+	case WK_DOWN:
+	case 'h':
+	case 'j':
+	case 'k':
+	case 'l':
+	case '*':
+	case '/':
+	case 'n':
+	case 'p':
+	case WK_PAGEUP:
+	case WK_PAGEDOWN:
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *ke,
 			   void *user)
 {
@@ -787,11 +859,16 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *ke,
 	int key;
 	(void)type;
 	(void)user;
-	if (ke->repeat)
-		return EM_FALSE;
+	if (ke->ctrlKey || ke->metaKey || ke->altKey)
+		return EM_FALSE; /* leave browser shortcuts alone */
 	memset(&e, 0, sizeof(e));
 	if (!map_dom_key(ke, &key))
 		return EM_FALSE;
+	/* DOM reports Shift+n as "N"; handlers expect 'n' plus the shift bit. */
+	if (key >= 'A' && key <= 'Z')
+		key += 'a' - 'A';
+	if (ke->repeat && !key_allows_repeat(key))
+		return EM_TRUE;
 	e.type = EV_KEY;
 	e.key = key;
 	e.mod = ke->shiftKey ? YAP_SHIFT_MASK : 0;
@@ -848,13 +925,50 @@ static EM_BOOL on_mouse_move(int type, const EmscriptenMouseEvent *me,
 static EM_BOOL on_wheel(int type, const EmscriptenWheelEvent *we, void *user)
 {
 	WebEvent e;
+	static double last_wheel_ms;
+	double now;
 	(void)type;
 	(void)user;
 	memset(&e, 0, sizeof(e));
+	if (we->mouse.ctrlKey) {
+		/* Chromium/Firefox deliver trackpad pinch as ctrl+wheel. */
+		double dy = we->deltaY;
+		if (we->deltaMode == DOM_DELTA_LINE)
+			dy *= 16.0;
+		e.type = EV_PINCH;
+		e.amount = (float)(-dy * 0.01);
+		evq_push(&e);
+		return EM_TRUE;
+	}
+	if (we->deltaY == 0)
+		return EM_TRUE;
+	now = emscripten_get_now();
+	if (last_wheel_ms != 0 && now - last_wheel_ms < 100)
+		return EM_TRUE;
+	last_wheel_ms = now;
 	e.type = EV_WHEEL;
 	e.wheel = (we->deltaY < 0) ? 1 : -1;
 	evq_push(&e);
 	return EM_TRUE;
+}
+
+/* Safari trackpad gestures and two-finger touch, forwarded from JS. */
+EMSCRIPTEN_KEEPALIVE void yap_web_pinch(float magnification)
+{
+	WebEvent e;
+	memset(&e, 0, sizeof(e));
+	e.type = EV_PINCH;
+	e.amount = magnification;
+	evq_push(&e);
+}
+
+EMSCRIPTEN_KEEPALIVE void yap_web_rotate(float degrees_clockwise)
+{
+	WebEvent e;
+	memset(&e, 0, sizeof(e));
+	e.type = EV_ROTATE;
+	e.amount = degrees_clockwise;
+	evq_push(&e);
 }
 
 static EM_BOOL on_resize(int type, const EmscriptenUiEvent *ui, void *user)
@@ -918,6 +1032,65 @@ void G_Init2(Ginfo *g)
 	G_loadpalettes(g);
 }
 
+/* Safari trackpad gestures and two-finger touch -> yap_web_pinch/rotate */
+EM_JS(void, install_gesture_listeners, (void), {
+	var canvas = Module['canvas'];
+	canvas.style.touchAction = 'none';
+
+	/* Safari: trackpad pinch/rotate (cumulative scale, degrees cw) */
+	var gs = {scale : 1, rot : 0};
+	canvas.addEventListener('gesturestart', function(ev) {
+		ev.preventDefault();
+		gs.scale = ev.scale;
+		gs.rot = ev.rotation;
+	});
+	canvas.addEventListener('gesturechange', function(ev) {
+		ev.preventDefault();
+		if (ev.scale > 0 && gs.scale > 0)
+			_yap_web_pinch(Math.log(ev.scale / gs.scale));
+		_yap_web_rotate(ev.rotation - gs.rot);
+		gs.scale = ev.scale;
+		gs.rot = ev.rotation;
+	});
+	canvas.addEventListener('gestureend',
+				function(ev) { ev.preventDefault(); });
+
+	/* Touch screens: two-finger pinch and twist */
+	var tp = null;
+	function two(ev) {
+		var a = ev.touches[0];
+		var b = ev.touches[1];
+		var dx = b.clientX - a.clientX;
+		var dy = b.clientY - a.clientY;
+		return {d : Math.hypot(dx, dy), ang : Math.atan2(dy, dx)};
+	}
+	canvas.addEventListener('touchstart', function(ev) {
+		if (ev.touches.length == 2) {
+			ev.preventDefault();
+			tp = two(ev);
+		}
+	}, {passive : false});
+	canvas.addEventListener('touchmove', function(ev) {
+		if (ev.touches.length != 2 || !tp)
+			return;
+		ev.preventDefault();
+		var t = two(ev);
+		var da = t.ang - tp.ang;
+		if (da > Math.PI)
+			da -= 2 * Math.PI;
+		if (da < -Math.PI)
+			da += 2 * Math.PI;
+		if (tp.d > 0 && t.d > 0)
+			_yap_web_pinch(Math.log(t.d / tp.d));
+		_yap_web_rotate(da * 180 / Math.PI);
+		tp = t;
+	}, {passive : false});
+	canvas.addEventListener('touchend', function(ev) {
+		if (ev.touches.length < 2)
+			tp = null;
+	});
+});
+
 void W_Init2(Winfo *w, Ginfo *g)
 {
 	int i, j;
@@ -941,6 +1114,7 @@ void W_Init2(Winfo *w, Ginfo *g)
 		if (!Module['yapCtx'])
 			console.error('yapCtx is null');
 	});
+	install_gesture_listeners();
 
 	emscripten_set_keydown_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, NULL, 1,
 					on_key_down);
