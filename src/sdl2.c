@@ -212,9 +212,54 @@ void clearfb(Winfo *w)
 
 typedef struct {
 	RsvgHandle *handle;
-	cairo_surface_t *image; /* rasterized at width x height */
-	int width, height;
+	int width, height;	/* window size of the last render; 0 = not yet */
+	cairo_surface_t *image; /* inked area only; NULL if nothing is drawn */
+	int x, y;		/* position of image in the window */
 } SvgOverlay;
+
+/* Record once to get the ink extents, then rasterize only that area. */
+static void svg_render(SvgOverlay *s, int width, int height)
+{
+	cairo_rectangle_t extents = {0, 0, width, height};
+	RsvgRectangle viewport = {0, 0, width, height};
+	GError *err = NULL;
+	cairo_surface_t *rec;
+	cairo_t *cr;
+	double ix, iy, iw, ih;
+	int x1, y1;
+
+	if (s->image)
+		cairo_surface_destroy(s->image);
+	s->image = NULL;
+	s->width = width;
+	s->height = height;
+
+	rec = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA,
+					     &extents);
+	cr = cairo_create(rec);
+	if (!rsvg_handle_render_document(s->handle, cr, &viewport, &err)) {
+		fprintf(stderr, "svg render failed: %s\n",
+			err ? err->message : "unknown error");
+		if (err)
+			g_error_free(err);
+	}
+	cairo_destroy(cr);
+
+	cairo_recording_surface_ink_extents(rec, &ix, &iy, &iw, &ih);
+	s->x = (int)floor(ix);
+	s->y = (int)floor(iy);
+	x1 = (int)ceil(ix + iw);
+	y1 = (int)ceil(iy + ih);
+	if (x1 > s->x && y1 > s->y) {
+		s->image = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+						      x1 - s->x, y1 - s->y);
+		cr = cairo_create(s->image);
+		cairo_set_source_surface(cr, rec, -s->x, -s->y);
+		cairo_paint(cr);
+		cairo_destroy(cr);
+	}
+	cairo_surface_destroy(rec);
+}
 
 void *svg_open(const char *data, size_t len)
 {
@@ -251,34 +296,12 @@ void drawsvg2fb(Winfo *w, void *svg)
 	SvgOverlay *s = (SvgOverlay *)svg;
 	if (!s)
 		return;
-	if (!s->image || s->width != w->screenwidth ||
-	    s->height != w->screenheight) {
-		RsvgRectangle viewport;
-		GError *err = NULL;
-		cairo_t *cr;
-
-		if (s->image)
-			cairo_surface_destroy(s->image);
-		s->width = w->screenwidth;
-		s->height = w->screenheight;
-		s->image = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-						      s->width, s->height);
-		cr = cairo_create(s->image);
-		viewport.x = 0;
-		viewport.y = 0;
-		viewport.width = s->width;
-		viewport.height = s->height;
-		if (!rsvg_handle_render_document(s->handle, cr, &viewport,
-						 &err)) {
-			fprintf(stderr, "svg render failed: %s\n",
-				err ? err->message : "unknown error");
-			if (err)
-				g_error_free(err);
-		}
-		cairo_destroy(cr);
-	}
+	if (s->width != w->screenwidth || s->height != w->screenheight)
+		svg_render(s, w->screenwidth, w->screenheight);
+	if (!s->image)
+		return;
 	cairo_save(w->cr);
-	cairo_set_source_surface(w->cr, s->image, 0, 0);
+	cairo_set_source_surface(w->cr, s->image, s->x, s->y);
 	cairo_paint(w->cr);
 	cairo_restore(w->cr);
 }
