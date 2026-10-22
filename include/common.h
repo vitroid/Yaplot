@@ -27,7 +27,7 @@
 #ifndef TRUE
 #define TRUE 1
 #endif
-#define VERSION "5.2.1"
+#define VERSION "5.3"
 
 typedef struct _Vertex {
 	struct _Vertex *next;
@@ -158,6 +158,7 @@ typedef struct WINFO {
 	int df;
 	float realcurrent;
 	char reality;
+	char splat; /* depth-cue levels 0..3 (key d), Reality 2–4 */
 	float eyep[3], lookp[3], up[3];
 	float e[3], u[3], h[3];
 	float fov;

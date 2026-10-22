@@ -207,6 +207,7 @@
 #include "varray.h"
 #include <ctype.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -602,6 +603,29 @@ int eToggleSlicing(Ginfo *g, Winfo w[], int i)
 	return TRUE;
 }
 
+int eCycleSplat(Ginfo *g, Winfo w[], int i)
+{
+	/* Same rotation sense as eToggleVerbosity: count down and wrap. */
+	char next = (char)(w[i].splat - 1);
+	if (next < 0)
+		next = 3;
+
+	if (w[i].async) {
+		w[i].splat = next;
+		if (w[i].splat && w[i].reality < 2)
+			w[i].reality = 3;
+		w[i].status |= REDRAW;
+	} else {
+		for (i = 0; i < g->nwindow; i++) {
+			w[i].splat = next;
+			if (next && w[i].reality < 2)
+				w[i].reality = 3;
+			w[i].status |= REDRAW;
+		}
+	}
+	return TRUE;
+}
+
 int eSliceMove(Ginfo *g, Winfo w[], int i, float delta)
 {
 	if (w[i].slice) {
@@ -762,6 +786,7 @@ void W_Sync(Winfo *to, Winfo *from)
 	to->df = from->df;
 	to->realcurrent = from->realcurrent;
 	to->reality = from->reality;
+	to->splat = from->splat;
 	to->eyep[0] = from->eyep[0];
 	to->eyep[1] = from->eyep[1];
 	to->eyep[2] = from->eyep[2];
@@ -1058,7 +1083,8 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 
 	while (fgets(readstr, YAP_LINE_MAX, w->inputfile) != NULL) {
 		int is_reality = 0, is_fov = 0, is_verbose = 0, is_message = 0;
-		int is_rotation = 0, is_fps = 0, is_thick = 0, layer_mode = -1;
+		int is_rotation = 0, is_fps = 0, is_thick = 0, is_splat = 0;
+		int layer_mode = -1;
 		string = skipspaces(readstr);
 		if (*string == '\n' || *string == '\0')
 			break;
@@ -1077,6 +1103,8 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 			is_fov = 1;
 		else if (strcmp(token, "verbose") == 0)
 			is_verbose = 1;
+		else if (strcmp(token, "splat") == 0)
+			is_splat = 1;
 		else if (strcmp(token, "rotation") == 0 ||
 			 strcmp(token, "rotate") == 0)
 			is_rotation = 1;
@@ -1122,6 +1150,17 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 				if (vval > MAXVERBOSE)
 					vval = MAXVERBOSE;
 				g->verbose = vval;
+			}
+		} else if (is_splat) {
+			int sval = 0;
+			if (sscanf(rest, "%d", &sval) == 1) {
+				if (sval < 0)
+					sval = 0;
+				if (sval > 3)
+					sval = 3;
+				w->splat = (char)sval;
+				if (w->splat && w->reality < 2)
+					w->reality = 3;
 			}
 		} else if (is_rotation) {
 			float wh = 0.0f, wb = 0.0f, wp = 0.0f;
@@ -1822,6 +1861,14 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 		sprintf(num, "Reality %d (+ -)", w->reality);
 		drawstring2fb(w, 5, base, num, strlen(num));
 		base += 14;
+		if (w->splat)
+			setfgcolor(w, 2);
+		else
+			setfgcolor(w, 0);
+		sprintf(num, "Splat %d (d)", w->splat);
+		drawstring2fb(w, 5, base, num, strlen(num));
+		base += 14;
+		setfgcolor(w, 2);
 		sprintf(num, "Screen Depth Ratio %5.2f (* /)", w->depthratio);
 		drawstring2fb(w, 5, base, num, strlen(num));
 		base += 14;
@@ -1939,6 +1986,7 @@ Winfo *W_Init(int n)
 		w[i].async = 0;
 		w[i].RecordMode = 0;
 		w[i].slice = FALSE;
+		w[i].splat = 0;
 		w[i].def_radius = 1;
 		w[i].def_layer = 1;
 		w[i].def_fillcolor = 2;
@@ -2050,6 +2098,7 @@ void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
 				if (w[i].df != 0) {
 					/*o->nextframe += o->df;*/
 					w[i].realcurrent += w[i].df * delta;
+					stopped = 0;
 					if (debug) {
 						fprintf(
 						    stderr,
@@ -2085,6 +2134,9 @@ void EventLoop(Ainfo *a, Ginfo *g, Winfo *w)
 					if (w[i].df != 0) {
 						stopped = 0;
 					}
+				}
+				if (w[i].status & REDRAW) {
+					stopped = 0;
 				}
 			}
 		}

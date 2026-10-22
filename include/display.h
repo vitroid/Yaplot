@@ -11,6 +11,7 @@ void drawstick2fb(Winfo *w, int x0, int y0, int x1, int y1, int r, int fill,
 void setlinewidth(Winfo *w, float thick);
 void setfgcolor(Winfo *w, int palette);
 void settpcolor(Winfo *w, int palette);
+void setrgba(Winfo *w, float r, float g, float b, float a);
 void drawstring2fb(Winfo *w, int x, int y, char *str, int length);
 void setsolidfill(Winfo *w);
 void setstippledfill(Winfo *w);

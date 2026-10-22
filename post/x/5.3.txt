@@ -1,0 +1,3 @@
+Yaplot 5.3: depth-splat shadows on Reality 2–4. Press d (or 0d..3d) to cycle density; set `splat {0..3}` in the global block. Faster CPU path via cached circle masks, plus smoother redraw while dragging.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.3

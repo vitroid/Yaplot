@@ -102,6 +102,7 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 - Numeric keys followed by "g" or Enter:Jump to the frame specified by numeric keys. Single "g" to the first frame, single "G" to the last frame.
 - SPACE:Stop all automatic actions(Rotation and animation)
 - "+" and "-":Change rendering fidelity.
+- "d":Cycle depth-splat shadow density (Reality 2–4). Numeric prefix `0d`..`3d` sets the level; `0` is off.
 - Insert and Delete, or "(" and ")":Gradate line thickness.
 - Function keys, or numeric keys followed by "F":Toggle show/hide of the layer.
 - "v":Change verbosity.
@@ -130,7 +131,7 @@ One line of the command files corresponds to one command. A command consists of 
     y {layer}:Change current layer(default layer=1)
     a {arrowtype}:Change current arrow type(default type = 0)
     Empty line:End of a frame.
-    global: Optional block at the start of the file. After a line whose first token is `global`, the following `@` / `r` / `y` / `a` (and long names color/palette/radius/layer/arrow) until the next empty line set defaults for every subsequent frame. In addition, UI defaults can be set: `reality {0..4}` (initial rendering quality), `fov {degrees}` (camera field of view, default 45), `verbose {0..3}` (on-screen info verbosity), `thickness {n}` / `thick {n}` (line width gradation, default 2), `rotation {wh} [{wb} [{wp}]]` / `rotate ...` (initial auto-rotation speeds for heading, banking, roll), `fps {df}` / `autoplay {df}` (initial animation speed in frames/sec), `hide {l1} ...` / `show {l1} ...` / `layers {l1} ...` (initial layer visibility), and `message {text}` (or `msg` / `echo`; quoted `"..."` supported) to print a line to stderr on load. Drawing commands in the block are ignored. Leading `#` comments before `global` are allowed.
+    global: Optional block at the start of the file. After a line whose first token is `global`, the following `@` / `r` / `y` / `a` (and long names color/palette/radius/layer/arrow) until the next empty line set defaults for every subsequent frame. In addition, UI defaults can be set: `reality {0..4}` (initial rendering quality), `splat {0..3}` (depth-splat shadow level, Reality 2..4), `fov {degrees}` (camera field of view, default 45), `verbose {0..3}` (on-screen info verbosity), `thickness {n}` / `thick {n}` (line width gradation, default 2), `rotation {wh} [{wb} [{wp}]]` / `rotate ...` (initial auto-rotation speeds for heading, banking, roll), `fps {df}` / `autoplay {df}` (initial animation speed in frames/sec), `hide {l1} ...` / `show {l1} ...` / `layers {l1} ...` (initial layer visibility), and `message {text}` (or `msg` / `echo`; quoted `"..."` supported) to print a line to stderr on load. Drawing commands in the block are ignored. Leading `#` comments before `global` are allowed.
 
 You can use long command names instead of single letters: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color (or palette), layer, arrow, comment. Example: `line 0 0 0 1 1 1` is the same as `l 0 0 0 1 1 1`.
 
@@ -253,7 +254,7 @@ Makefile で RECORD オプションを追加してあると、録画機能が使
     y {layer}:レイヤを切り替えます(default layer=1)
     a {arrowtype}: Stickの描き方を変更します。(0=通常、1=矢印、2=ダート。Default = 0)
     空行:1フレームの終わりをあらわします。
-    global: ファイル先頭のオプションブロック。先頭トークンが `global` の行のあと、次の空行までの `@` / `r` / `y` / `a`（および color/palette/radius/layer/arrow）が以降の全フレームの初期値になります。また UI の初期状態として、`reality {0..4}`（表示品位）、`fov {degrees}`（カメラ画角・度数法、既定45）、`verbose {0..3}`（画面ステータス表示の詳細度）、`thickness {n}` / `thick {n}`（線幅変化の度合、既定2）、`rotation {wh} [{wb} [{wp}]]` / `rotate ...`（横・縦・ロールの自動回転速度）、`fps {df}` / `autoplay {df}`（自動アニメーション速度・秒間フレーム数）、`hide {l1} ...` / `show {l1} ...` / `layers {l1} ...`（レイヤの初期表示・非表示）、および `message {text}`（`msg` / `echo` も可。`"..."` 引用符対応、読み込み時に stderr へ出力）を指定できます。ブロック内の描画命令は無視されます。`global` の前の `#` コメントは許可されます。
+    global: ファイル先頭のオプションブロック。先頭トークンが `global` の行のあと、次の空行までの `@` / `r` / `y` / `a`（および color/palette/radius/layer/arrow）が以降の全フレームの初期値になります。また UI の初期状態として、`reality {0..4}`（表示品位）、`splat {0..3}`（奥行きスプラット影レベル、Reality 2〜4）、`fov {degrees}`（カメラ画角・度数法、既定45）、`verbose {0..3}`（画面ステータス表示の詳細度）、`thickness {n}` / `thick {n}`（線幅変化の度合、既定2）、`rotation {wh} [{wb} [{wp}]]` / `rotate ...`（横・縦・ロールの自動回転速度）、`fps {df}` / `autoplay {df}`（自動アニメーション速度・秒間フレーム数）、`hide {l1} ...` / `show {l1} ...` / `layers {l1} ...`（レイヤの初期表示・非表示）、および `message {text}`（`msg` / `echo` も可。`"..."` 引用符対応、読み込み時に stderr へ出力）を指定できます。ブロック内の描画命令は無視されます。`global` の前の `#` コメントは許可されます。
 
 1文字コマンドの代わりに長い名前も使えます: line, stick, polygon, circle, ring, triangle, square, pentagon, hexagon, text, radius, color（または palette）, layer, arrow, comment。例: `line 0 0 0 1 1 1` は `l 0 0 0 1 1 1` と同じです。
 

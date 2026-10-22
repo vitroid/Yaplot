@@ -14,6 +14,7 @@ r 0.30
 y 1
 a 0
 reality 3
+splat 3
 fov 45
 verbose 1
 rotation 0.5
@@ -24,7 +25,7 @@ message "  SPACE / !           : Stop animation+rotation / Stop rotation only"
 message "  g / G               : First / last frame"
 message "  Mouse drag / Arrows : Rotate view (TAB to reset)"
 message "  F1 / F2 / F3        : Toggle Ground+Wood / Foliage / Blossoms"
-message "  + / -               : Change rendering reality (0..4)"
+message "  + / - and d         : Reality (0..4) and depth splat shadow (0..3)"
 message "  [ / ] and * / /     : Field of view & zoom"
 message "  v (or 0v..3v)       : Set on-screen info verbosity"
 message "  q                   : Quit"

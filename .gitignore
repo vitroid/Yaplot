@@ -8,3 +8,5 @@ wa.*
 xi.*
 *.png
 docs/
+CS1.yap
+__pycache__
