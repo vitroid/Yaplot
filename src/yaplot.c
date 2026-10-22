@@ -1222,6 +1222,7 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 	w->def_fillcolor = 2;
 	w->def_linecolor = 0;
 	w->def_arrowtype = 0;
+	w->def_center = 0;
 
 	if (!w->inputfile)
 		return;
@@ -1258,6 +1259,7 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 
 	while (fgets(readstr, YAP_LINE_MAX, w->inputfile) != NULL) {
 		int is_reality = 0, is_fov = 0, is_verbose = 0, is_message = 0;
+		int is_center = 0;
 		int is_rotation = 0, is_fps = 0, is_thick = 0, is_splat = 0;
 		int is_layername = 0;
 		int layer_mode = -1;
@@ -1303,6 +1305,8 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 			layer_mode = 2;
 		else if (strcmp(token, "layername") == 0)
 			is_layername = 1;
+		else if (strcmp(token, "center") == 0)
+			is_center = 1;
 		else if (strcmp(token, "message") == 0 ||
 			 strcmp(token, "msg") == 0 ||
 			 strcmp(token, "echo") == 0)
@@ -1369,6 +1373,8 @@ void W_LoadGlobalDefaults(Winfo *w, Ginfo *g)
 			apply_global_layers(w, rest, layer_mode);
 		} else if (is_layername) {
 			apply_layer_name(w, rest);
+		} else if (is_center) {
+			w->def_center = 1;
 		} else if (is_message) {
 			print_global_message(rest);
 		} else if (ch == 'r') {
@@ -2319,7 +2325,10 @@ void W_InitActionVarsOne(Winfo *w, int cachesize)
 	w->currentframe = 0;
 	w->realcurrent = 0;
 	W_setvectors(w);
-	W_resetcenter(w);
+	if (w->def_center)
+		W_setcenter(w);
+	else
+		W_resetcenter(w);
 }
 
 void W_ReplaceInput(Ginfo *g, Winfo *w, FILE *file, const char *name)

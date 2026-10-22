@@ -202,6 +202,8 @@ typedef struct WINFO {
 	int def_fillcolor;
 	int def_linecolor;
 	int def_arrowtype;
+	/* global の center。最初のフレームを中央表示にする */
+	int def_center;
 	/* global ブロック由来の全フレーム共通 SVG オーバーレイ */
 	void **svg_global;
 	int nsvg_global;
