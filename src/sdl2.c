@@ -1166,10 +1166,20 @@ void W_SaveSnapShot(Winfo *w, int windowid)
 	}
 #endif
 	{
-		/* Snapshot: redraw the same frame as vectors into a PDF. */
+		/* Snapshot PDF: the 3D scene as a bitmap (hardcopy of the
+		   screen), SVG overlays and status text as vectors on top. */
 		char filename[1024];
-		cairo_surface_t *pdf;
+		cairo_surface_t *scene, *pdf;
 		cairo_t *screen_cr = w->cr;
+
+		no_interrupt = 1;
+		scene = cairo_image_surface_create(
+		    CAIRO_FORMAT_ARGB32, w->screenwidth, w->screenheight);
+		w->cr = cairo_create(scene);
+		setup_cr(w->cr);
+		clearfb(w);
+		Realize(*w->oo, w);
+		cairo_destroy(w->cr);
 
 		snprintf(filename, sizeof(filename), "yaplot%02d_%05d.pdf",
 			 windowid, (int)w->currentframe);
@@ -1177,12 +1187,14 @@ void W_SaveSnapShot(Winfo *w, int windowid)
 					       w->screenheight);
 		w->cr = cairo_create(pdf);
 		setup_cr(w->cr);
-		no_interrupt = 1;
-		Redraw(*w->oo, w, 0, g_internal->verbose);
+		cairo_set_source_surface(w->cr, scene, 0, 0);
+		cairo_paint(w->cr);
+		DrawOverlays(*w->oo, w, 0, g_internal->verbose);
 		no_interrupt = 0;
 		cairo_destroy(w->cr);
 		cairo_surface_finish(pdf);
 		cairo_surface_destroy(pdf);
+		cairo_surface_destroy(scene);
 		w->cr = screen_cr;
 	}
 }

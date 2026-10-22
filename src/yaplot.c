@@ -1996,19 +1996,25 @@ void InsertFrameInfo(Winfo *w, float framerate, int verbose)
 	}
 }
 
-int Redraw(NewOinfo *o, Winfo *w, float framerate, int verbose)
+/* Everything drawn on top of the 3D scene: SVG overlays and status text. */
+void DrawOverlays(NewOinfo *o, Winfo *w, float framerate, int verbose)
 {
 	int i;
 
-	quick_sort(o->prims->a, w->nrealize);
-	clearfb(w);
-	if (Realize(o, w))
-		return 1;
 	for (i = 0; i < w->nsvg_global; i++)
 		drawsvg2fb(w, w->svg_global[i]);
 	for (i = 0; i < o->nsvg; i++)
 		drawsvg2fb(w, o->svgs[i]);
 	InsertFrameInfo(w, framerate, verbose);
+}
+
+int Redraw(NewOinfo *o, Winfo *w, float framerate, int verbose)
+{
+	quick_sort(o->prims->a, w->nrealize);
+	clearfb(w);
+	if (Realize(o, w))
+		return 1;
+	DrawOverlays(o, w, framerate, verbose);
 	exposefb(w);
 	return 0;
 }

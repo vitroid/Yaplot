@@ -14,7 +14,8 @@ void W_setvectors(Winfo *w);
 Winfo *W_Init(int n);
 void W_LoadGlobalDefaults(Winfo *w, Ginfo *g);
 void EyeMotion(Winfo *w, float prop);
-int Redraw(NewOinfo *o, Winfo *w, float framerate, int verbose);
+int Realize(NewOinfo *o, Winfo *w);
+void DrawOverlays(NewOinfo *o, Winfo *w, float framerate, int verbose);
 #ifndef HAVE_POWIF
 float powi(float x, int n);
 #endif
