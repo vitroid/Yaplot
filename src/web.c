@@ -328,9 +328,11 @@ void drawsvg2fb(Winfo *w, void *svg)
 		var ctx = Module['yapCtx'];
 		if (!e || !ctx || !e.img.complete || !e.img.naturalWidth)
 			return;
-		var iw = e.img.naturalWidth, ih = e.img.naturalHeight;
+		var iw = e.img.naturalWidth;
+		var ih = e.img.naturalHeight;
 		var k = Math.min($1 / iw, $2 / ih);
-		var dw = iw * k, dh = ih * k;
+		var dw = iw * k;
+		var dh = ih * k;
 		ctx.drawImage(e.img, ($1 - dw) / 2, ($2 - dh) / 2, dw, dh);
 	}, s->id, w->screenwidth, w->screenheight);
 }
