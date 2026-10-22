@@ -84,8 +84,9 @@ All the repeatable commands ( except "g" and "f" ) are relative, i.e., pressing 
 - Up and down arrow, or "j" and "k":Pitching rotation.
 - Left and right arrow, or "h" and "l":Heading rotation.
 - Mouse drag with left button:Rotate immediately
-- Trackpad pinch:Scale up and down (same as "*" / "/")
-- Trackpad rotate gesture:Roll the object around the view axis (clockwise)
+- macOS trackpad pinch:Scale up and down (same as "*" / "/")
+- macOS trackpad rotate gesture:Roll the object around the view axis (clockwise)
+- Two-finger scroll / mouse wheel:Change field of view (same as "[" / "]"). On macOS, trackpad inertia is ignored so FOV stops when fingers lift. Pinch and rotate are macOS-only; elsewhere use keys.
 - Pause or "!":Stop automatic rotation.
 - Tab:Undo rotation.
 - "\*" and "/":Scale up and down

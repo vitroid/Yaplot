@@ -3,6 +3,7 @@
  * Window and event handling: SDL2. Drawing: Cairo (same as before).
  */
 #include "display.h"
+#include "macos_gestures.h"
 #include "os.h"
 #include "yaplot.h"
 #include <cairo.h>
@@ -653,15 +654,32 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 }
 
 /*
- * Do not map the mouse wheel to FOV. macOS trackpad inertia keeps sending
- * SDL_MOUSEWHEEL after fingers lift, so the view would keep changing.
- * Use "[" / "]" instead.
+ * On macOS, FOV comes from AppKit scroll (momentum filtered). SDL_MOUSEWHEEL
+ * is ignored there to avoid double application and inertia. Elsewhere the
+ * wheel drives FOV with light throttling.
  */
+#ifdef __APPLE__
 static void handle_mousewheel(int i, float y)
 {
 	(void)i;
 	(void)y;
 }
+#else
+static Uint32 last_wheel_ms;
+
+static void handle_mousewheel(int i, float y)
+{
+	Uint32 now;
+
+	if (y == 0.0f)
+		return;
+	now = SDL_GetTicks();
+	if (last_wheel_ms != 0 && (now - last_wheel_ms) < 100)
+		return;
+	last_wheel_ms = now;
+	eWiden(g_internal, w_internal, i, (y > 0.0f) ? 1 : -1);
+}
+#endif
 
 /* Toggles / digits must not auto-repeat; motion and FOV keys may. */
 static int key_allows_repeat(SDL_Keycode key)
@@ -703,6 +721,58 @@ static int focused_window_index(Ginfo *g, Winfo *w)
 			return i;
 	}
 	return 0;
+}
+
+/* AppKit gesture callbacks (Darwin). Do not touch AbsoluteRotationMode. */
+void yap_on_pinch(float magnification)
+{
+	const float zoom_k = 1.0f;
+	int i;
+
+	if (!g_internal || !w_internal || magnification == 0.0f)
+		return;
+	i = focused_window_index(g_internal, w_internal);
+	(void)eZoomFactor(g_internal, w_internal, i,
+			  expf(zoom_k * magnification));
+}
+
+void yap_on_rotate(float degrees_clockwise)
+{
+	Winfo *w;
+	Ginfo *g;
+	float pitch;
+	int i;
+
+	if (!g_internal || !w_internal || degrees_clockwise == 0.0f)
+		return;
+	w = w_internal;
+	g = g_internal;
+	i = focused_window_index(g, w);
+	/* NSEvent.rotation is degrees, clockwise-positive; WindowRoll too. */
+	pitch = degrees_clockwise * (float)M_PI / 180.0f;
+	if (w[i].async)
+		WindowRoll(&w[i], pitch);
+	else {
+		int j;
+		for (j = 0; j < g->nwindow; j++)
+			WindowRoll(&w[j], pitch);
+	}
+}
+
+void yap_on_scroll(float precise_y)
+{
+	static Uint32 last_ms;
+	Uint32 now;
+	int i;
+
+	if (!g_internal || !w_internal || precise_y == 0.0f)
+		return;
+	now = SDL_GetTicks();
+	if (last_ms != 0 && (now - last_ms) < 100)
+		return;
+	last_ms = now;
+	i = focused_window_index(g_internal, w_internal);
+	eWiden(g_internal, w_internal, i, (precise_y > 0.0f) ? 1 : -1);
 }
 
 static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
@@ -796,7 +866,7 @@ void handleevent(Ginfo *g, Winfo w[])
 			handle_mousewheel(i, e->wheel.preciseY);
 		break;
 	case SDL_MULTIGESTURE:
-		/* Disabled: two-finger pinch/roll fights trackpad click-drag. */
+		/* Pinch/roll handled by AppKit on macOS; ignore SDL path. */
 		break;
 	case SDL_FINGERUP:
 	case SDL_FINGERDOWN:
@@ -816,7 +886,7 @@ void G_Init0(int *argc, char **argv[])
 {
 	(void)argc;
 	(void)argv;
-	/* Keep mouse and touch separate; multigesture (pinch/roll) is off. */
+	/* Keep mouse and touch separate; macOS gestures use AppKit. */
 	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -922,6 +992,7 @@ void W_Init2(Winfo *w, Ginfo *g)
 			fprintf(stderr, "SDL2 window %d: %dx%d\n", i,
 				w[i].screenwidth, w[i].screenheight);
 	}
+	yap_macos_gestures_start();
 }
 
 int existevent(Ginfo *g)
