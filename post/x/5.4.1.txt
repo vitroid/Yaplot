@@ -1,0 +1,8 @@
+Yaplot 5.4.1: the Homebrew formula now lives in the main repo.
+
+brew tap vitroid/yaplot https://github.com/vitroid/Yaplot
+brew install vitroid/yaplot/yaplot
+
+Also fixes video recording (R) in Homebrew builds and adds yaplot -V.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.4.1

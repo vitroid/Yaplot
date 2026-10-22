@@ -1,10 +1,4 @@
-
 PROG = yaplot
-
-ALL_SRC = $(wildcard src/*.c)
-DESKTOP_SRC = $(filter-out src/web.c,$(ALL_SRC))
-WASM_SRC = $(filter-out src/sdl2.c,$(ALL_SRC))
-OBJS = $(DESKTOP_SRC:.c=.o)
 
 BREW_PREFIX ?= /opt/homebrew
 PKG_CONFIG  ?= $(BREW_PREFIX)/bin/pkg-config
@@ -14,16 +8,32 @@ SDL2_LDFLAGS = $(shell $(PKG_CONFIG) sdl2 --libs)
 CAIRO_CFLAGS = $(shell $(PKG_CONFIG) cairo --cflags)
 CAIRO_LDFLAGS = $(shell $(PKG_CONFIG) cairo --libs)
 PNG_LDFLAGS  = $(shell $(PKG_CONFIG) libpng --libs)
-LDFLAGS      = $(SDL2_LDFLAGS) $(CAIRO_LDFLAGS) $(PNG_LDFLAGS) -lm
+RSVG_CFLAGS  = $(shell $(PKG_CONFIG) librsvg-2.0 --cflags)
+RSVG_LDFLAGS = $(shell $(PKG_CONFIG) librsvg-2.0 --libs)
+LDFLAGS      = $(SDL2_LDFLAGS) $(CAIRO_LDFLAGS) $(PNG_LDFLAGS) $(RSVG_LDFLAGS) -lm
 
-PKGDATADIR = /opt/homebrew/share/yaplot
-BINDIR     = /opt/homebrew/bin
+PKGDATADIR = $(BREW_PREFIX)/share/yaplot
+BINDIR     = $(BREW_PREFIX)/bin
+FFMPEG_BINDIR = $(BREW_PREFIX)/bin
 
-VERSION = 5.1
+VERSION = 5.4.1
 
 CFLAGS  = -g -Wall -Werror -Werror=vla -I./include
-CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS)
-CFLAGS += -DFFMPEG=\"'$(BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
+CFLAGS += $(SDL2_CFLAGS) $(CAIRO_CFLAGS) $(RSVG_CFLAGS)
+CFLAGS += -DFFMPEG=\"'$(FFMPEG_BINDIR)/ffmpeg -r %d -i - -y -pix_fmt yuv420p'\"
+
+UNAME_S := $(shell uname -s)
+C_SRC = $(filter-out src/macos_gestures_stub.c src/web.c,$(wildcard src/*.c))
+WASM_SRC = $(filter-out src/sdl2.c src/macos_gestures_stub.c,$(wildcard src/*.c))
+
+ifeq ($(UNAME_S),Darwin)
+  GESTURE_OBJ = src/macos_gestures.o
+  LDFLAGS += -framework AppKit
+else
+  GESTURE_OBJ = src/macos_gestures_stub.o
+endif
+
+OBJS = $(C_SRC:.c=.o) $(GESTURE_OBJ)
 
 HEADERS = $(filter-out include/common.h,$(wildcard include/*.h)) include/common.h
 
@@ -52,6 +62,9 @@ $(OBJS): $(HEADERS)
 src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+src/macos_gestures.o: src/macos_gestures.m
+	$(CC) $(CFLAGS) -fobjc-arc -c $< -o $@
+
 install: $(PROG)
 	install $(PROG) $(BINDIR)
 	install -d $(PKGDATADIR)
@@ -59,7 +72,7 @@ install: $(PROG)
 
 tarball:
 	mkdir Yaplot-$(VERSION)
-	cp $(DESKTOP_SRC) Makefile Yaplot-$(VERSION)/
+	cp $(C_SRC) src/macos_gestures.m src/macos_gestures_stub.c Makefile Yaplot-$(VERSION)/
 	tar zcf Yaplot-$(VERSION).tar.gz Yaplot-$(VERSION)
 
 .PHONY: wasm

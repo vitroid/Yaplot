@@ -1,0 +1,5 @@
+Yaplot 5.1.1 (bugfix).
+
+Emergency trackpad fixes: pinch/roll disabled for now (they broke click-drag), mouse-wheel FOV turned off (macOS inertia kept scrolling after lift—use [ ] instead), key repeat restored for motion keys.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.1.1

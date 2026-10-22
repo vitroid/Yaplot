@@ -128,9 +128,11 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 	char *b, *palfile = NULL, c;
 	errflg = 0;
 
-	G_Init0(&argc, &argv);
-	while ((c = getopt(argc, argv, ":de:l:u:c:q:")) != EOF)
+	while ((c = getopt(argc, argv, ":de:l:u:c:q:V")) != EOF)
 		switch (c) {
+		case 'V':
+			printf("Yaplot ver. %s\n", VERSION);
+			exit(0);
 		case 'e':
 			b = optarg;
 			Eyex = atof(strtok(b, ","));
@@ -170,6 +172,7 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 			fprintf(stderr, "Unrecognized option: - %c\n", optopt);
 			errflg++;
 		}
+	G_Init0(&argc, &argv);
 	if (debug)
 		fprintf(stderr, "GetOptions1::\n");
 	g->palettefile = FindPalette(palfile);
@@ -188,12 +191,16 @@ Winfo *GetOptions(int argc, char *argv[], Ainfo *a, Ginfo *g)
 			"\t-q n    \tset cache size to n frames (default=1)\n");
 		fprintf(stderr, "\t-c filename\tspecify palette file(default: "
 				"yaplot.col)\n");
+		fprintf(stderr, "\t-V      \tprint version and exit\n");
 		fprintf(stderr, "\t If no palette file is found, envvar "
 				"YAPLOTCOL is checked,\n");
 		fprintf(stderr, "\t and then $HOME/yaplot.col is searched.\n");
 		g->nwindow = 1;
 		w = W_Init(1);
-		strcpy(w[0].inputfilename, HELPFILE);
+		if (access("help.yap", R_OK) == 0)
+			strcpy(w[0].inputfilename, "help.yap");
+		else
+			strcpy(w[0].inputfilename, HELPFILE);
 
 	} else {
 		g->nwindow = argc - optind;

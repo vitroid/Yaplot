@@ -31,7 +31,8 @@ enum {
 	EV_MOUSEUP,
 	EV_MOUSEMOVE,
 	EV_WHEEL,
-	EV_RESIZE
+	EV_RESIZE,
+	EV_REDRAW
 };
 
 typedef struct {
@@ -235,6 +236,15 @@ void settpcolor(Winfo *w, int palette)
 	stroke_a = 0.5f;
 }
 
+void setrgba(Winfo *w, float r, float g, float b, float a)
+{
+	(void)w;
+	stroke_r = r;
+	stroke_g = g;
+	stroke_b = b;
+	stroke_a = a;
+}
+
 void overridepalette(Winfo *w, int palette, int red, int green, int blue)
 {
 	w->colortable[palette].red = (unsigned short)(red << 8);
@@ -254,6 +264,75 @@ void drawstring2fb(Winfo *w, int x, int y, char *str, int length)
 		var s = UTF8ToString($2);
 		ctx.fillText(s, $0, $1);
 	}, x, y, str);
+}
+
+/* --- SVG overlays (decoded asynchronously by the browser as <img>) --- */
+
+typedef struct {
+	int id; /* index into Module['yapSvgs'] */
+} SvgOverlay;
+
+EMSCRIPTEN_KEEPALIVE void yap_web_svg_loaded(void)
+{
+	WebEvent e;
+	memset(&e, 0, sizeof(e));
+	e.type = EV_REDRAW;
+	evq_push(&e);
+}
+
+void *svg_open(const char *data, size_t len)
+{
+	SvgOverlay *s;
+	int id = EM_ASM_INT({
+		var svgs = Module['yapSvgs'] || (Module['yapSvgs'] = []);
+		var text = UTF8ToString($0, $1);
+		var url = URL.createObjectURL(
+		    new Blob([text], {type : 'image/svg+xml'}));
+		var img = new Image();
+		img.onload = function() { _yap_web_svg_loaded(); };
+		img.onerror = function() {
+			console.error('svg ignored: failed to decode');
+		};
+		img.src = url;
+		svgs.push({img : img, url : url});
+		return svgs.length - 1;
+	}, data, (int)len);
+	s = calloc(1, sizeof(SvgOverlay));
+	s->id = id;
+	return s;
+}
+
+void svg_close(void *svg)
+{
+	SvgOverlay *s = (SvgOverlay *)svg;
+	if (!s)
+		return;
+	EM_ASM({
+		var e = Module['yapSvgs'][$0];
+		if (e) {
+			URL.revokeObjectURL(e.url);
+			Module['yapSvgs'][$0] = null;
+		}
+	}, s->id);
+	free(s);
+}
+
+void drawsvg2fb(Winfo *w, void *svg)
+{
+	SvgOverlay *s = (SvgOverlay *)svg;
+	if (!s)
+		return;
+	/* Fit into the whole window, keeping aspect ratio (like rsvg). */
+	EM_ASM({
+		var e = Module['yapSvgs'][$0];
+		var ctx = Module['yapCtx'];
+		if (!e || !ctx || !e.img.complete || !e.img.naturalWidth)
+			return;
+		var iw = e.img.naturalWidth, ih = e.img.naturalHeight;
+		var k = Math.min($1 / iw, $2 / ih);
+		var dw = iw * k, dh = ih * k;
+		ctx.drawImage(e.img, ($1 - dw) / 2, ($2 - dh) / 2, dw, dh);
+	}, s->id, w->screenwidth, w->screenheight);
 }
 
 void setsolidfill(Winfo *w)
@@ -592,6 +671,12 @@ void handleevent(Ginfo *g, Winfo w[])
 		}, e->width, e->height);
 		w[i].status |= REDRAW;
 		break;
+	case EV_REDRAW: {
+		int j;
+		for (j = 0; j < g->nwindow; j++)
+			w[j].status |= REDRAW;
+		break;
+	}
 	default:
 		break;
 	}

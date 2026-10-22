@@ -3,9 +3,12 @@
  * Window and event handling: SDL2. Drawing: Cairo (same as before).
  */
 #include "display.h"
+#include "macos_gestures.h"
 #include "os.h"
 #include "yaplot.h"
+#include <cairo-pdf.h>
 #include <cairo.h>
+#include <librsvg/rsvg.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,6 +43,20 @@ static int window_id_to_index(Ginfo *g, Winfo *w, Uint32 windowID)
 			return i;
 	}
 	return -1;
+}
+
+static int no_interrupt; /* while set, drawing is not interrupted by events */
+
+static void setup_cr(cairo_t *cr)
+{
+	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+	cairo_set_font_size(cr, 14);
+	cairo_select_font_face(cr, "Helvetica", CAIRO_FONT_SLANT_NORMAL,
+			       CAIRO_FONT_WEIGHT_NORMAL);
+#ifdef CAIRO_ANTIALIAS_FAST
+	cairo_set_antialias(cr, CAIRO_ANTIALIAS_FAST);
+#endif
 }
 
 /* --- Drawing (Cairo, unchanged from GTK backend) --- */
@@ -163,6 +180,11 @@ void settpcolor(Winfo *w, int palette)
 	    (float)w->colortable[palette].blue / 65536.0, 0.5);
 }
 
+void setrgba(Winfo *w, float r, float g, float b, float a)
+{
+	cairo_set_source_rgba(w->cr, r, g, b, a);
+}
+
 void overridepalette(Winfo *w, int palette, int red, int green, int blue)
 {
 	w->colortable[palette].red = (unsigned short)(red << 8);
@@ -201,6 +223,114 @@ void clearfb(Winfo *w)
 	cairo_paint(w->cr);
 }
 
+/* --- SVG overlay (librsvg) --- */
+
+typedef struct {
+	RsvgHandle *handle;
+	int width, height;	/* window size of the last render; 0 = not yet */
+	cairo_surface_t *image; /* inked area only; NULL if nothing is drawn */
+	int x, y;		/* position of image in the window */
+} SvgOverlay;
+
+/* Record once to get the ink extents, then rasterize only that area. */
+static void svg_render(SvgOverlay *s, int width, int height)
+{
+	cairo_rectangle_t extents = {0, 0, width, height};
+	RsvgRectangle viewport = {0, 0, width, height};
+	GError *err = NULL;
+	cairo_surface_t *rec;
+	cairo_t *cr;
+	double ix, iy, iw, ih;
+	int x1, y1;
+
+	if (s->image)
+		cairo_surface_destroy(s->image);
+	s->image = NULL;
+	s->width = width;
+	s->height = height;
+
+	rec = cairo_recording_surface_create(CAIRO_CONTENT_COLOR_ALPHA,
+					     &extents);
+	cr = cairo_create(rec);
+	if (!rsvg_handle_render_document(s->handle, cr, &viewport, &err)) {
+		fprintf(stderr, "svg render failed: %s\n",
+			err ? err->message : "unknown error");
+		if (err)
+			g_error_free(err);
+	}
+	cairo_destroy(cr);
+
+	cairo_recording_surface_ink_extents(rec, &ix, &iy, &iw, &ih);
+	s->x = (int)floor(ix);
+	s->y = (int)floor(iy);
+	x1 = (int)ceil(ix + iw);
+	y1 = (int)ceil(iy + ih);
+	if (x1 > s->x && y1 > s->y) {
+		s->image = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+						      x1 - s->x, y1 - s->y);
+		cr = cairo_create(s->image);
+		cairo_set_source_surface(cr, rec, -s->x, -s->y);
+		cairo_paint(cr);
+		cairo_destroy(cr);
+	}
+	cairo_surface_destroy(rec);
+}
+
+void *svg_open(const char *data, size_t len)
+{
+	GError *err = NULL;
+	RsvgHandle *handle;
+	SvgOverlay *s;
+
+	handle = rsvg_handle_new_from_data((const guint8 *)data, len, &err);
+	if (!handle) {
+		fprintf(stderr, "svg ignored: %s\n",
+			err ? err->message : "parse error");
+		if (err)
+			g_error_free(err);
+		return NULL;
+	}
+	s = calloc(1, sizeof(SvgOverlay));
+	s->handle = handle;
+	return s;
+}
+
+void svg_close(void *svg)
+{
+	SvgOverlay *s = (SvgOverlay *)svg;
+	if (!s)
+		return;
+	if (s->image)
+		cairo_surface_destroy(s->image);
+	g_object_unref(s->handle);
+	free(s);
+}
+
+void drawsvg2fb(Winfo *w, void *svg)
+{
+	SvgOverlay *s = (SvgOverlay *)svg;
+	if (!s)
+		return;
+	if (cairo_surface_get_type(cairo_get_target(w->cr)) !=
+	    CAIRO_SURFACE_TYPE_IMAGE) {
+		/* vector output (PDF snapshot): draw the SVG as vectors */
+		RsvgRectangle viewport = {0, 0, w->screenwidth,
+					  w->screenheight};
+		cairo_save(w->cr);
+		rsvg_handle_render_document(s->handle, w->cr, &viewport, NULL);
+		cairo_restore(w->cr);
+		return;
+	}
+	if (s->width != w->screenwidth || s->height != w->screenheight)
+		svg_render(s, w->screenwidth, w->screenheight);
+	if (!s->image)
+		return;
+	cairo_save(w->cr);
+	cairo_set_source_surface(w->cr, s->image, s->x, s->y);
+	cairo_paint(w->cr);
+	cairo_restore(w->cr);
+}
+
 static void present_window(Winfo *w)
 {
 	SDL2Context *ctx = (SDL2Context *)w->drawarea;
@@ -226,6 +356,40 @@ void exposefb(Winfo *w)
 /* --- Event handling --- */
 
 static int originx, originy;
+static int mouse_dragging;
+
+static void end_left_drag(Ginfo *g, Winfo *w, int i)
+{
+	int j;
+
+	(void)SDL_CaptureMouse(SDL_FALSE);
+	mouse_dragging = 0;
+	if (i >= 0 && w[i].async) {
+		w[i].wp = w[i].wb = w[i].wh = 0;
+		w[i].AbsoluteRotationMode = 0;
+		return;
+	}
+	for (j = 0; j < g->nwindow; j++) {
+		w[j].wp = w[j].wb = w[j].wh = 0;
+		w[j].AbsoluteRotationMode = 0;
+	}
+}
+
+static void begin_left_drag(Ginfo *g, Winfo *w, int i, int x, int y)
+{
+	int j;
+
+	originx = x;
+	originy = y;
+	mouse_dragging = 1;
+	(void)SDL_CaptureMouse(SDL_TRUE);
+	if (w[i].async) {
+		w[i].AbsoluteRotationMode = 1;
+		return;
+	}
+	for (j = 0; j < g->nwindow; j++)
+		w[j].AbsoluteRotationMode = 1;
+}
 
 static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 {
@@ -338,8 +502,40 @@ static void handle_key(int i, SDL_Keycode key, Uint16 modstate)
 			break;
 #endif
 		case SDLK_v:
-			(void)eToggleVerbosity(g, w, i);
-			SetLastCommand(0, "v", "toggle verbosity");
+			if (prefix > 0) {
+				g->verbose = (prefix > MAXVERBOSE) ? MAXVERBOSE
+								   : prefix;
+				for (int wi = 0; wi < g->nwindow; wi++)
+					w[wi].status |= REDRAW;
+				SetLastCommand(g->verbose, "v",
+					       "verbosity %d");
+			} else {
+				(void)eToggleVerbosity(g, w, i);
+				SetLastCommand(0, "v", "toggle verbosity");
+			}
+			break;
+		case SDLK_d:
+			if (prefix > 0) {
+				char sval = (char)((prefix > 3) ? 3 : prefix);
+				if (w[i].async) {
+					w[i].splat = sval;
+					if (sval && w[i].reality < 2)
+						w[i].reality = 3;
+					w[i].status |= REDRAW;
+				} else {
+					for (int wi = 0; wi < g->nwindow;
+					     wi++) {
+						w[wi].splat = sval;
+						if (sval && w[wi].reality < 2)
+							w[wi].reality = 3;
+						w[wi].status |= REDRAW;
+					}
+				}
+				SetLastCommand(sval, "d", "depth splat %d");
+			} else {
+				(void)eCycleSplat(g, w, i);
+				SetLastCommand(0, "d", "cycle depth splat");
+			}
 			break;
 		case SDLK_PAGEUP:
 		case SDLK_p: {
@@ -555,6 +751,12 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 {
 	Winfo *w = w_internal;
 	Ginfo *g = g_internal;
+
+	/* Button released outside the window: motion may arrive without UP. */
+	if (mouse_dragging && !(state & SDL_BUTTON_LMASK)) {
+		end_left_drag(g, w, i);
+		return;
+	}
 	if (state & SDL_BUTTON_LMASK) {
 		if (originx != x || originy != y) {
 			float tick = (SDL_GetModState() & KMOD_SHIFT)
@@ -575,33 +777,60 @@ static void handle_mouse_motion(int i, int x, int y, Uint32 state)
 	}
 }
 
-static void handle_mousewheel(int i, int y)
+/*
+ * On macOS, FOV comes from AppKit scroll (momentum filtered). SDL_MOUSEWHEEL
+ * is ignored there to avoid double application and inertia. Elsewhere the
+ * wheel drives FOV with light throttling.
+ */
+#ifdef __APPLE__
+static void handle_mousewheel(int i, float y)
 {
-	if (y != 0) {
-		int fov_change = (y > 0) ? 1 : -1;
-		eWiden(g_internal, w_internal, i, fov_change);
-	}
+	(void)i;
+	(void)y;
 }
+#else
+static Uint32 last_wheel_ms;
 
-/* Pinch scale / rotate. dDist>0 = fingers apart; SDL dTheta is CCW-positive. */
-static void handle_multigesture(int i, float dTheta, float dDist)
+static void handle_mousewheel(int i, float y)
 {
-	Winfo *w = w_internal;
-	Ginfo *g = g_internal;
-	const float zoom_k = 3.0f;
+	Uint32 now;
 
-	if (dDist != 0.0f)
-		(void)eZoomFactor(g, w, i, expf(zoom_k * dDist));
+	if (y == 0.0f)
+		return;
+	now = SDL_GetTicks();
+	if (last_wheel_ms != 0 && (now - last_wheel_ms) < 100)
+		return;
+	last_wheel_ms = now;
+	eWiden(g_internal, w_internal, i, (y > 0.0f) ? 1 : -1);
+}
+#endif
 
-	if (dTheta != 0.0f) {
-		float pitch = -dTheta; /* object-clockwise positive */
-		if (w[i].async)
-			WindowRoll(&w[i], pitch);
-		else {
-			int j;
-			for (j = 0; j < g->nwindow; j++)
-				WindowRoll(&w[j], pitch);
-		}
+/* Toggles / digits must not auto-repeat; motion and FOV keys may. */
+static int key_allows_repeat(SDL_Keycode key)
+{
+	switch (key) {
+	case SDLK_LEFTBRACKET:
+	case SDLK_RIGHTBRACKET:
+	case SDLK_LEFT:
+	case SDLK_RIGHT:
+	case SDLK_UP:
+	case SDLK_DOWN:
+	case SDLK_h:
+	case SDLK_j:
+	case SDLK_k:
+	case SDLK_l:
+	case SDLK_ASTERISK:
+	case SDLK_KP_MULTIPLY:
+	case SDLK_SLASH:
+	case SDLK_KP_DIVIDE:
+	case SDLK_n:
+	case SDLK_p:
+	case SDLK_PAGEUP:
+	case SDLK_PAGEDOWN:
+	case SDLK_8:
+		return 1;
+	default:
+		return 0;
 	}
 }
 
@@ -618,11 +847,73 @@ static int focused_window_index(Ginfo *g, Winfo *w)
 	return 0;
 }
 
+/* AppKit gesture callbacks (Darwin). Do not touch AbsoluteRotationMode. */
+void yap_on_pinch(float magnification)
+{
+	const float zoom_k = 1.0f;
+	int i;
+
+	if (!g_internal || !w_internal || magnification == 0.0f)
+		return;
+	i = focused_window_index(g_internal, w_internal);
+	(void)eZoomFactor(g_internal, w_internal, i,
+			  expf(zoom_k * magnification));
+}
+
+void yap_on_rotate(float degrees_clockwise)
+{
+	Winfo *w;
+	Ginfo *g;
+	float pitch;
+	int i;
+
+	if (!g_internal || !w_internal || degrees_clockwise == 0.0f)
+		return;
+	w = w_internal;
+	g = g_internal;
+	i = focused_window_index(g, w);
+	/* NSEvent.rotation is degrees, clockwise-positive; WindowRoll too. */
+	pitch = degrees_clockwise * (float)M_PI / 180.0f;
+	if (w[i].async)
+		WindowRoll(&w[i], pitch);
+	else {
+		int j;
+		for (j = 0; j < g->nwindow; j++)
+			WindowRoll(&w[j], pitch);
+	}
+}
+
+void yap_on_scroll(float precise_y)
+{
+	static Uint32 last_ms;
+	Uint32 now;
+	int i;
+
+	if (!g_internal || !w_internal || precise_y == 0.0f)
+		return;
+	now = SDL_GetTicks();
+	if (last_ms != 0 && (now - last_ms) < 100)
+		return;
+	last_ms = now;
+	i = focused_window_index(g_internal, w_internal);
+	eWiden(g_internal, w_internal, i, (precise_y > 0.0f) ? 1 : -1);
+}
+
 static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
 {
 	int i = window_id_to_index(g, w, ev->windowID);
 	if (i < 0)
 		return;
+	if (ev->event == SDL_WINDOWEVENT_FOCUS_LOST) {
+		if (mouse_dragging)
+			end_left_drag(g, w, i);
+		return;
+	}
+	if (ev->event == SDL_WINDOWEVENT_EXPOSED ||
+	    ev->event == SDL_WINDOWEVENT_SHOWN) {
+		w[i].status |= REDRAW;
+		return;
+	}
 	if (ev->event == SDL_WINDOWEVENT_RESIZED) {
 		SDL2Context *ctx = (SDL2Context *)w[i].drawarea;
 		if (w[i].surface)
@@ -636,15 +927,7 @@ static void handle_window_event(Ginfo *g, Winfo *w, const SDL_WindowEvent *ev)
 		w[i].surface = cairo_image_surface_create(
 		    CAIRO_FORMAT_ARGB32, w[i].screenwidth, w[i].screenheight);
 		w[i].cr = cairo_create(w[i].surface);
-		cairo_set_line_join(w[i].cr, CAIRO_LINE_JOIN_ROUND);
-		cairo_set_line_cap(w[i].cr, CAIRO_LINE_CAP_ROUND);
-		cairo_set_font_size(w[i].cr, 14);
-		cairo_select_font_face(w[i].cr, "Helvetica",
-				       CAIRO_FONT_SLANT_NORMAL,
-				       CAIRO_FONT_WEIGHT_NORMAL);
-#ifdef CAIRO_ANTIALIAS_FAST
-		cairo_set_antialias(w[i].cr, CAIRO_ANTIALIAS_FAST);
-#endif
+		setup_cr(w[i].cr);
 		if (ctx && ctx->renderer) {
 			ctx->texture = SDL_CreateTexture(
 			    ctx->renderer, SDL_PIXELFORMAT_ARGB8888,
@@ -666,40 +949,25 @@ void handleevent(Ginfo *g, Winfo w[])
 		break;
 	case SDL_KEYDOWN:
 		i = window_id_to_index(g, w, e->key.windowID);
-		if (i >= 0 && !e->key.repeat)
+		if (i >= 0 &&
+		    (!e->key.repeat ||
+		     key_allows_repeat(e->key.keysym.sym)))
 			handle_key(i, e->key.keysym.sym, e->key.keysym.mod);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 		if (e->button.button == SDL_BUTTON_LEFT) {
 			i = window_id_to_index(g, w, e->button.windowID);
-			if (i >= 0) {
-				originx = e->button.x;
-				originy = e->button.y;
-				if (w[i].async)
-					w[i].AbsoluteRotationMode = 1;
-				else {
-					int j;
-					for (j = 0; j < g->nwindow; j++)
-						w[j].AbsoluteRotationMode = 1;
-				}
-			}
+			if (i >= 0)
+				begin_left_drag(g, w, i, e->button.x,
+						e->button.y);
 		}
 		break;
 	case SDL_MOUSEBUTTONUP:
 		if (e->button.button == SDL_BUTTON_LEFT) {
 			i = window_id_to_index(g, w, e->button.windowID);
-			if (i >= 0) {
-				if (w[i].async) {
-					w[i].wp = w[i].wb = w[i].wh = 0;
-					w[i].AbsoluteRotationMode = 0;
-				} else {
-					int j;
-					for (j = 0; j < g->nwindow; j++) {
-						w[j].wp = w[j].wb = w[j].wh = 0;
-						w[j].AbsoluteRotationMode = 0;
-					}
-				}
-			}
+			if (i < 0)
+				i = focused_window_index(g, w);
+			end_left_drag(g, w, i);
 		}
 		break;
 	case SDL_MOUSEMOTION:
@@ -711,11 +979,13 @@ void handleevent(Ginfo *g, Winfo w[])
 	case SDL_MOUSEWHEEL:
 		i = window_id_to_index(g, w, e->wheel.windowID);
 		if (i >= 0)
-			handle_mousewheel(i, e->wheel.y);
+			handle_mousewheel(i, e->wheel.preciseY);
 		break;
 	case SDL_MULTIGESTURE:
-		i = focused_window_index(g, w);
-		handle_multigesture(i, e->mgesture.dTheta, e->mgesture.dDist);
+		/* Pinch/roll handled by AppKit on macOS; ignore SDL path. */
+		break;
+	case SDL_FINGERUP:
+	case SDL_FINGERDOWN:
 		break;
 	case SDL_WINDOWEVENT:
 		handle_window_event(g, w, &e->window);
@@ -732,8 +1002,9 @@ void G_Init0(int *argc, char **argv[])
 {
 	(void)argc;
 	(void)argv;
-	/* Help synthesize touch events so SDL_MULTIGESTURE can fire */
-	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "1");
+	/* Keep mouse and touch separate; macOS gestures use AppKit. */
+	SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
+	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
 		exit(1);
@@ -824,19 +1095,12 @@ void W_Init2(Winfo *w, Ginfo *g)
 		w[i].surface = cairo_image_surface_create(
 		    CAIRO_FORMAT_ARGB32, w[i].screenwidth, w[i].screenheight);
 		w[i].cr = cairo_create(w[i].surface);
-		cairo_set_line_join(w[i].cr, CAIRO_LINE_JOIN_ROUND);
-		cairo_set_line_cap(w[i].cr, CAIRO_LINE_CAP_ROUND);
-		cairo_set_font_size(w[i].cr, 14);
-		cairo_select_font_face(w[i].cr, "Helvetica",
-				       CAIRO_FONT_SLANT_NORMAL,
-				       CAIRO_FONT_WEIGHT_NORMAL);
-#ifdef CAIRO_ANTIALIAS_FAST
-		cairo_set_antialias(w[i].cr, CAIRO_ANTIALIAS_FAST);
-#endif
+		setup_cr(w[i].cr);
 		if (debug)
 			fprintf(stderr, "SDL2 window %d: %dx%d\n", i,
 				w[i].screenwidth, w[i].screenheight);
 	}
+	yap_macos_gestures_start();
 }
 
 /*
@@ -846,11 +1110,44 @@ void W_Init2(Winfo *w, Ginfo *g)
  */
 int existevent(Ginfo *g)
 {
-	(void)g;
-	if (have_saved_event)
+	if (g == NULL && no_interrupt)
+		return 0;
+	if (have_saved_event) {
+		if (g == NULL && saved_event.type == SDL_MOUSEMOTION)
+			return 0;
 		return 1;
-	if (SDL_PollEvent(&saved_event)) {
+	}
+	while (SDL_PollEvent(&saved_event)) {
+		switch (saved_event.type) {
+		case SDL_MOUSEMOTION:
+			/* Ignore passive mouse movement when not dragging. */
+			if (!mouse_dragging &&
+			    !(saved_event.motion.state & SDL_BUTTON_LMASK))
+				continue;
+			break;
+		case SDL_QUIT:
+		case SDL_KEYDOWN:
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			break;
+		case SDL_WINDOWEVENT:
+			if (saved_event.window.event !=
+				SDL_WINDOWEVENT_RESIZED &&
+			    saved_event.window.event !=
+				SDL_WINDOWEVENT_EXPOSED &&
+			    saved_event.window.event !=
+				SDL_WINDOWEVENT_SHOWN &&
+			    saved_event.window.event !=
+				SDL_WINDOWEVENT_FOCUS_LOST)
+				continue;
+			break;
+		default:
+			/* Ignore KEYUP, MOUSEWHEEL, MULTIGESTURE, etc. */
+			continue;
+		}
 		have_saved_event = 1;
+		if (g == NULL && saved_event.type == SDL_MOUSEMOTION)
+			return 0;
 		return 1;
 	}
 	return 0;
@@ -874,10 +1171,36 @@ void W_SaveSnapShot(Winfo *w, int windowid)
 	}
 #endif
 	{
+		/* Snapshot PDF: the 3D scene as a bitmap (hardcopy of the
+		   screen), SVG overlays and status text as vectors on top. */
 		char filename[1024];
-		snprintf(filename, sizeof(filename), "yaplot%02d_%05d.png",
+		cairo_surface_t *scene, *pdf;
+		cairo_t *screen_cr = w->cr;
+
+		no_interrupt = 1;
+		scene = cairo_image_surface_create(
+		    CAIRO_FORMAT_ARGB32, w->screenwidth, w->screenheight);
+		w->cr = cairo_create(scene);
+		setup_cr(w->cr);
+		clearfb(w);
+		Realize(*w->oo, w);
+		cairo_destroy(w->cr);
+
+		snprintf(filename, sizeof(filename), "yaplot%02d_%05d.pdf",
 			 windowid, (int)w->currentframe);
-		cairo_surface_write_to_png(w->surface, filename);
+		pdf = cairo_pdf_surface_create(filename, w->screenwidth,
+					       w->screenheight);
+		w->cr = cairo_create(pdf);
+		setup_cr(w->cr);
+		cairo_set_source_surface(w->cr, scene, 0, 0);
+		cairo_paint(w->cr);
+		DrawOverlays(*w->oo, w, 0, g_internal->verbose);
+		no_interrupt = 0;
+		cairo_destroy(w->cr);
+		cairo_surface_finish(pdf);
+		cairo_surface_destroy(pdf);
+		cairo_surface_destroy(scene);
+		w->cr = screen_cr;
 	}
 }
 

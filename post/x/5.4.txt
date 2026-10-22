@@ -1,0 +1,3 @@
+Yaplot 5.4: SVG overlays. Paste SVG (e.g. straight from matplotlib) into a .yap file to put plots, legends and captions on top of the 3D view — per frame or for all frames, still one portable file. Press r to save PDF snapshots with crisp vector overlays.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.4

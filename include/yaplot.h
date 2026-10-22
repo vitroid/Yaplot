@@ -12,8 +12,10 @@ void WindowRoll(Winfo *w, float pitch);
 void W_Sync(Winfo *to, Winfo *from);
 void W_setvectors(Winfo *w);
 Winfo *W_Init(int n);
-void W_LoadGlobalDefaults(Winfo *w);
+void W_LoadGlobalDefaults(Winfo *w, Ginfo *g);
 void EyeMotion(Winfo *w, float prop);
+int Realize(NewOinfo *o, Winfo *w);
+void DrawOverlays(NewOinfo *o, Winfo *w, float framerate, int verbose);
 #ifndef HAVE_POWIF
 float powi(float x, int n);
 #endif
@@ -37,6 +39,8 @@ int eResetView(Ginfo *g, Winfo w[], int i, float eyex, float eyey, float eyez);
 int eToggleLayer(Ginfo *g, Winfo w[], int i, int layer);
 int eToggleCentering(Ginfo *g, Winfo w[], int i);
 int eToggleSlicing(Ginfo *g, Winfo w[], int i);
+/* Cycle splat level like verbosity (d): 3→2→1→0→3→… */
+int eCycleSplat(Ginfo *g, Winfo w[], int i);
 int eSliceMove(Ginfo *g, Winfo w[], int i, float delta);
 void W_setcenter(Winfo *w);
 void W_resetcenter(Winfo *w);

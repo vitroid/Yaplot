@@ -1,0 +1,4 @@
+Yaplot 5.2 is out: the startup demo (help.yap) is now a 3D growing & blooming tree animation, and the `global` block supports UI defaults (`reality`, `fov`, `verbose`, `thickness`, `rotation`, `fps`, `hide`/`show`/`layers`, and `message`), plus `0v`..`3v` verbosity shortcuts.
+
+https://github.com/vitroid/Yaplot/releases/tag/v5.2
+#Yaplot #3D #visualization #C #SDL2 #Cairo

@@ -11,6 +11,7 @@ void drawstick2fb(Winfo *w, int x0, int y0, int x1, int y1, int r, int fill,
 void setlinewidth(Winfo *w, float thick);
 void setfgcolor(Winfo *w, int palette);
 void settpcolor(Winfo *w, int palette);
+void setrgba(Winfo *w, float r, float g, float b, float a);
 void drawstring2fb(Winfo *w, int x, int y, char *str, int length);
 void setsolidfill(Winfo *w);
 void setstippledfill(Winfo *w);
@@ -28,5 +29,9 @@ void overridepalette(Winfo *w, int palette, int red, int green, int blue);
 void W_SaveSnapShot(Winfo *w, int i);
 void W_StartRecording(Winfo *w, int mode, int windowid, int fps);
 void W_StopRecording(Winfo *w);
+/* SVG オーバーレイ（画面座標、ウィンドウ全体をビューポートとする） */
+void *svg_open(const char *data, size_t len);
+void svg_close(void *svg);
+void drawsvg2fb(Winfo *w, void *svg);
 
 #endif
