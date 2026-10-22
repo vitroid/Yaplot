@@ -2,7 +2,7 @@
 
 Usage in Colab:
 
-    !pip install -q yaplotlib
+    !pip install -q --force-reinstall --no-deps git+https://github.com/vitroid/yaplotlib.git
     !wget -q -N https://vitroid.github.io/Yaplot/yaplot_view.py
     from yaplotlib import Yaplot
     from yaplot_view import show
